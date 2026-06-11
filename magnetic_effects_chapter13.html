@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Chapter 13: Magnetic Effects | Codexsec</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+<script id="tailwind-config">
+tailwind.config = {
+  darkMode:"class",
+  theme:{
+    extend:{
+      colors:{
+        "primary":"#ffd475","on-secondary-fixed":"#001b3d","surface-variant":"#353534",
+        "secondary-container":"#044f9b","secondary":"#a9c7ff","on-secondary":"#003062",
+        "surface-container-highest":"#353534","surface-container-low":"#1c1b1b",
+        "primary-container":"#e2b859","on-background":"#e5e2e1","on-secondary-container":"#a2c4ff",
+        "outline-variant":"#4e4637","on-surface":"#e5e2e1","inverse-primary":"#785a00",
+        "surface-container":"#201f1f","error-container":"#93000a","tertiary":"#cdd8ff",
+        "on-primary":"#3f2e00","background":"#131313","tertiary-container":"#a4bcff",
+        "on-primary-container":"#624800","on-tertiary":"#102d67","surface-container-high":"#2a2a2a",
+        "surface":"#131313","primary-fixed-dim":"#ecc161","outline":"#9a8f7e",
+        "primary-fixed":"#ffdf9d","error":"#ffb4ab","on-primary-fixed":"#251a00",
+        "surface-bright":"#3a3939","inverse-surface":"#e5e2e1","on-surface-variant":"#d1c5b1",
+      },
+      borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},
+      fontFamily:{"headline-lg":["Hanken Grotesk"],"display-lg":["Hanken Grotesk"],"label-caps":["Space Grotesk"],"body-md":["Hanken Grotesk"],"body-lg":["Hanken Grotesk"],"headline-md":["Hanken Grotesk"]},
+      fontSize:{
+        "headline-lg":["48px",{"lineHeight":"56px","fontWeight":"400"}],
+        "display-lg":["72px",{"lineHeight":"84px","letterSpacing":"0.05em","fontWeight":"300"}],
+        "label-caps":["12px",{"lineHeight":"16px","letterSpacing":"0.15em","fontWeight":"600"}],
+        "body-md":["16px",{"lineHeight":"24px","fontWeight":"400"}],
+        "body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],
+        "headline-md":["32px",{"lineHeight":"40px","fontWeight":"500"}]
+      }
+    }
+  }
+}
+</script>
+<style>
+  body{background-color:#0a0a0a;color:#e5e2e1;scroll-behavior:smooth;font-family:'Hanken Grotesk',sans-serif;}
+  .glass-panel{background:rgba(18,18,18,0.7);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);}
+  .gold-border{border:1px solid rgba(255,212,117,0.25);}
+  .stardust{background-image:radial-gradient(circle at 2px 2px,rgba(255,255,255,0.04) 1px,transparent 0);background-size:36px 36px;}
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;}
+  .glow-gold{box-shadow:0 0 30px rgba(255,212,117,0.15);}
+  .glow-gold:hover{box-shadow:0 0 40px rgba(255,212,117,0.3);}
+  .section-tag{font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:0.2em;font-weight:700;text-transform:uppercase;}
+  input[type=range]{-webkit-appearance:none;height:4px;border-radius:4px;background:rgba(255,255,255,0.1);outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#ffd475;cursor:pointer;border:2px solid #131313;box-shadow:0 0 8px rgba(255,212,117,0.5);}
+  .formula-box{background:rgba(255,212,117,0.05);border:1px solid rgba(255,212,117,0.2);border-radius:8px;padding:16px 24px;font-family:'Space Grotesk',sans-serif;font-size:15px;color:#ffd475;text-align:center;letter-spacing:0.05em;}
+  .theory-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:24px;}
+  .tab-btn{font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:0.15em;font-weight:600;padding:10px 20px;border:1px solid rgba(255,255,255,0.1);cursor:pointer;transition:all 0.2s;background:transparent;color:#9a8f7e;}
+  .tab-btn.active{background:#ffd475;color:#131313;border-color:#ffd475;}
+  .tab-btn:hover:not(.active){background:rgba(255,255,255,0.05);color:#e5e2e1;}
+  .sim-canvas{border:1px solid rgba(255,255,255,0.06);border-radius:12px;background:#0d0d0d;}
+  .wire-toggle{width:56px;height:28px;background:rgba(255,255,255,0.1);border-radius:14px;cursor:pointer;transition:all 0.3s;position:relative;border:1px solid rgba(255,255,255,0.15);}
+  .wire-toggle.on{background:#ffd475;}
+  .wire-toggle::after{content:'';position:absolute;width:22px;height:22px;background:#fff;border-radius:50%;top:2px;left:2px;transition:all 0.3s;}
+  .wire-toggle.on::after{transform:translateX(28px);background:#131313;}
+  .result-badge{font-family:'Space Grotesk',sans-serif;font-size:13px;letter-spacing:0.1em;font-weight:600;padding:6px 14px;border-radius:4px;}
+  .nav-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);cursor:pointer;transition:all 0.3s;}
+  .nav-dot.active{background:#ffd475;width:24px;border-radius:4px;}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  @keyframes spin-slow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  @keyframes pulse-gold{0%,100%{opacity:0.5}50%{opacity:1}}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  .float-anim{animation:float 4s ease-in-out infinite;}
+  .fade-in{animation:fadeInUp 0.6s ease forwards;}
+  select{background:#1c1b1b;border:1px solid rgba(255,255,255,0.1);color:#e5e2e1;padding:8px 12px;border-radius:6px;font-family:'Space Grotesk',sans-serif;font-size:12px;outline:none;}
+  .key-point{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;}
+  .key-point-dot{width:6px;height:6px;border-radius:50%;background:#ffd475;margin-top:9px;flex-shrink:0;}
+  .interactive-label{font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:0.12em;color:#9a8f7e;font-weight:600;}
+  .value-display{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;color:#ffd475;}
+  .scrollbar-hide::-webkit-scrollbar{display:none;}
+  .chapter-nav{position:fixed;right:24px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;gap:8px;align-items:flex-end;}
+  @media(max-width:768px){.chapter-nav{display:none;}}
+</style>
+<link rel="stylesheet" href="site-nav.css">
+</head>
+<body class="stardust overflow-x-hidden">
+
+<!-- TOP NAV -->
+<nav id="topNav" class="fixed top-0 w-full z-50 border-b border-white/5 transition-all duration-300" style="background:rgba(10,10,10,0.85);backdrop-filter:blur(20px);">
+  <div class="flex justify-between items-center px-8 md:px-20 py-5 max-w-7xl mx-auto">
+    <div class="font-bold text-2xl tracking-tight text-on-surface cursor-pointer" style="font-family:'Hanken Grotesk',sans-serif;">Codexsec</div>
+    <div class="hidden md:flex gap-8 items-center">
+      <a class="section-tag text-primary border-b-2 border-primary pb-1" href="#">Chapters</a>
+      <a class="section-tag text-on-surface-variant hover:text-on-surface transition-colors" href="#">Resources</a>
+      <a class="section-tag text-on-surface-variant hover:text-on-surface transition-colors" href="#">Practice</a>
+    </div>
+    <div class="flex gap-3 items-center">
+      <span class="section-tag text-on-surface-variant bg-white/5 px-3 py-1 rounded">CH. 13</span>
+      <span class="material-symbols-outlined text-on-surface cursor-pointer hover:bg-white/5 p-2 rounded-full transition-all">search</span>
+    </div>
+  </div>
+</nav>
+
+<!-- CHAPTER NAV DOTS -->
+<div class="chapter-nav" id="chapterNav">
+  <div class="nav-dot active" data-section="hero" title="Overview"></div>
+  <div class="nav-dot" data-section="s1" title="Field Lines"></div>
+  <div class="nav-dot" data-section="s2" title="Straight Wire"></div>
+  <div class="nav-dot" data-section="s3" title="Solenoid"></div>
+  <div class="nav-dot" data-section="s4" title="Force on Conductor"></div>
+  <div class="nav-dot" data-section="s5" title="Motor"></div>
+  <div class="nav-dot" data-section="s6" title="EMI"></div>
+  <div class="nav-dot" data-section="s7" title="Domestic Wiring"></div>
+</div>
+
+<!-- HERO -->
+<header id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+  <div class="absolute inset-0 z-0">
+    <canvas id="heroCanvas" class="w-full h-full opacity-40"></canvas>
+    <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black z-10"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 z-10"></div>
+  </div>
+  <div class="relative z-20 text-center max-w-5xl mx-auto px-8">
+    <div class="section-tag text-primary mb-6 block opacity-80">NCERT CLASS 10 SCIENCE · CHAPTER 13 · PAGES 223–241</div>
+    <h1 class="text-6xl md:text-8xl font-light tracking-tight text-white mb-6" style="font-family:'Hanken Grotesk',sans-serif;line-height:1.05;">
+      Magnetic Effects<br><span class="text-primary" style="font-weight:600;">of Electric Current</span>
+    </h1>
+    <p class="text-lg text-on-surface-variant max-w-2xl mx-auto mb-12 leading-relaxed">
+      Explore how flowing charge conjures invisible force fields — from the right-hand rule to electric motors, electromagnetic induction, and domestic wiring.
+    </p>
+    <div class="flex flex-wrap gap-4 justify-center">
+      <div class="glass-panel gold-border px-6 py-3 rounded-full flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-primary"></span>
+        <span class="section-tag text-primary">7 Interactive Labs</span>
+      </div>
+      <div class="glass-panel px-6 py-3 rounded-full flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-secondary"></span>
+        <span class="section-tag text-on-surface-variant">Complete Theory</span>
+      </div>
+      <div class="glass-panel px-6 py-3 rounded-full flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-tertiary"></span>
+        <span class="section-tag text-on-surface-variant">All NCERT Concepts</span>
+      </div>
+    </div>
+    <div class="mt-16 flex justify-center">
+      <div class="flex flex-col items-center gap-2 cursor-pointer" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">
+        <span class="section-tag text-on-surface-variant">Scroll to explore</span>
+        <span class="material-symbols-outlined text-primary animate-bounce">keyboard_arrow_down</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ SECTION 1: MAGNETIC FIELDS & FIELD LINES ============ -->
+<section id="s1" class="py-32 px-8 md:px-20 max-w-7xl mx-auto">
+  <div class="mb-16">
+    <span class="section-tag text-primary mb-3 block">SECTION 01</span>
+    <h2 class="text-5xl font-light text-white mb-6" style="font-family:'Hanken Grotesk',sans-serif;">Magnetic Fields <span class="text-primary font-semibold">&amp; Field Lines</span></h2>
+    <div class="w-16 h-0.5 bg-primary mb-8"></div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+    <!-- Theory -->
+    <div class="space-y-6">
+      <div class="theory-card">
+        <h3 class="text-white font-semibold text-lg mb-4" style="font-family:'Hanken Grotesk',sans-serif;">What is a Magnetic Field?</h3>
+        <p class="text-on-surface-variant leading-relaxed mb-4">A <span class="text-primary font-semibold">magnetic field</span> is a region surrounding a magnet or current-carrying conductor where its magnetic force can be detected. It is a <em>vector quantity</em> — it has both magnitude and direction.</p>
+        <div class="formula-box">B = F / (qv sin θ)</div>
+        <p class="text-on-surface-variant text-sm mt-3 leading-relaxed">Where B = magnetic field strength (Tesla), F = force, q = charge, v = velocity, θ = angle between v and B.</p>
+      </div>
+
+      <div class="theory-card">
+        <h3 class="text-white font-semibold text-lg mb-4">Properties of Magnetic Field Lines</h3>
+        <div class="key-point"><div class="key-point-dot"></div><p class="text-on-surface-variant">Lines <span class="text-white">emerge from the North Pole</span> and merge at the South Pole <em>outside</em> the magnet.</p></div>
+        <div class="key-point"><div class="key-point-dot"></div><p class="text-on-surface-variant">Inside the magnet, direction is from South Pole to North Pole — forming <span class="text-white">continuous closed loops</span>.</p></div>
+        <div class="key-point"><div class="key-point-dot"></div><p class="text-on-surface-variant">Closer field lines → <span class="text-primary">stronger magnetic field</span>. Widely spaced → weaker field.</p></div>
+        <div class="key-point"><div class="key-point-dot"></div><p class="text-on-surface-variant"><span class="text-white font-semibold">Critical Rule:</span> No two magnetic field lines ever intersect. If they did, a compass needle at the intersection would point in two directions simultaneously — physically impossible.</p></div>
+      </div>
+    </div>
+
+    <!-- Interactive Bar Magnet -->
+    <div class="glass-panel gold-border rounded-2xl p-6 flex flex-col">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <span class="section-tag text-primary">INTERACTIVE SIM</span>
+          <h3 class="text-white font-semibold mt-1">Bar Magnet Field Lines</h3>
+        </div>
+        <button onclick="toggleMagnetPoles()" class="tab-btn active" id="poleBtn">Flip Poles</button>
+      </div>
+      <canvas id="magnetCanvas" class="sim-canvas flex-grow rounded-xl" width="500" height="320"></canvas>
+      <div class="flex items-center gap-4 mt-4">
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 rounded-sm" style="background:#ff4444;"></div>
+          <span class="interactive-label">North Pole</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-4 h-4 rounded-sm" style="background:#4488ff;"></div>
+          <span class="interactive-label">South Pole</span>
+        </div>
+        <div class="flex items-center gap-2 ml-auto">
+          <span class="interactive-label">Field lines:</span>
+          <select id="fieldDensity" onchange="drawMagnet()">
+            <option value="12">Sparse</option>
+            <option value="20" selected>Normal</option>
+            <option value="32">Dense</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 2: STRAIGHT WIRE & RIGHT-HAND RULE ============ -->
+<section id="s2" class="py-32 px-8 md:px-20" style="background:rgba(255,255,255,0.01);border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04);">
+  <div class="max-w-7xl mx-auto">
+    <div class="mb-16">
+      <span class="section-tag text-secondary mb-3 block">SECTION 02</span>
+      <h2 class="text-5xl font-light text-white mb-6">Conductor Geometries <span class="text-secondary font-semibold">&amp; Induced Fields</span></h2>
+      <div class="w-16 h-0.5 bg-secondary mb-8"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div class="theory-card md:col-span-1">
+        <h3 class="text-white font-semibold text-lg mb-4">1. Straight Wire</h3>
+        <p class="text-on-surface-variant leading-relaxed mb-4">A current-carrying straight conductor produces a magnetic field in the form of <span class="text-white">concentric circles</span> centred at every point along the wire.</p>
+        <div class="formula-box mb-4">B = μ₀I / (2πr)</div>
+        <p class="text-sm text-on-surface-variant mb-4">Where μ₀ = 4π × 10⁻⁷ T·m/A (permeability of free space), I = current (A), r = distance from wire (m).</p>
+        <div style="background:rgba(255,212,117,0.08);border-radius:8px;padding:16px;border-left:3px solid #ffd475;">
+          <p class="section-tag text-primary mb-2">RIGHT-HAND THUMB RULE</p>
+          <p class="text-on-surface-variant text-sm">Hold the wire in your right hand with the <span class="text-primary">thumb pointing along the current</span>. Your curled fingers show the direction of the magnetic field lines.</p>
+        </div>
+      </div>
+
+      <!-- Straight Wire Interactive -->
+      <div class="glass-panel rounded-2xl p-6 md:col-span-2">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <span class="section-tag text-secondary">INTERACTIVE SIM</span>
+            <h3 class="text-white font-semibold mt-1">Right-Hand Thumb Rule</h3>
+          </div>
+          <div class="flex gap-2 items-center">
+            <span class="interactive-label">Current Direction:</span>
+            <div class="wire-toggle on" id="wireToggle" onclick="toggleWireDir()"></div>
+            <span class="section-tag" id="wireLabel" style="color:#ffd475;">UPWARD ↑</span>
+          </div>
+        </div>
+        <canvas id="wireCanvas" class="sim-canvas w-full rounded-xl" width="600" height="300"></canvas>
+        <div class="grid grid-cols-3 gap-4 mt-4">
+          <div>
+            <span class="interactive-label block mb-1">Current (I)</span>
+            <input type="range" id="wireI" min="1" max="10" value="5" class="w-full" oninput="drawWire()">
+            <span class="section-tag text-primary" id="wireIVal">5 A</span>
+          </div>
+          <div>
+            <span class="interactive-label block mb-1">Distance (r)</span>
+            <input type="range" id="wireR" min="1" max="10" value="5" class="w-full" oninput="drawWire()">
+            <span class="section-tag text-primary" id="wireRVal">5 cm</span>
+          </div>
+          <div class="flex flex-col justify-between">
+            <span class="interactive-label block mb-1">Field Strength B</span>
+            <span class="value-display" id="wireBVal">20 μT</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Circular Loop + Solenoid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="theory-card">
+        <h3 class="text-white font-semibold text-lg mb-4">2. Circular Current Loop</h3>
+        <p class="text-on-surface-variant leading-relaxed mb-4">Magnetic field lines form concentric loops around the wire. At the <span class="text-primary">centre of the loop</span>, field lines appear straight and parallel — indicating a uniform field direction.</p>
+        <div class="formula-box mb-4">B = μ₀I / (2R)</div>
+        <p class="text-sm text-on-surface-variant">Where R = radius of the loop. For N turns: B = Nμ₀I / (2R).</p>
+        <canvas id="loopCanvas" class="sim-canvas w-full mt-4 rounded-xl" width="400" height="200"></canvas>
+      </div>
+      <div class="theory-card">
+        <h3 class="text-white font-semibold text-lg mb-4">3. Solenoid</h3>
+        <p class="text-on-surface-variant leading-relaxed mb-4">A coil of many circular turns of insulated copper wire wrapped in a cylinder. The magnetic field pattern of a solenoid is nearly identical to that of a <span class="text-primary">bar magnet</span>. The interior field is <span class="text-white">uniform and parallel</span>.</p>
+        <div class="formula-box mb-4">B = μ₀nI</div>
+        <p class="text-sm text-on-surface-variant mb-4">Where n = number of turns per unit length. A ferromagnetic core (soft iron) inserted inside creates an <span class="text-primary">electromagnet</span>.</p>
+        <canvas id="solenoidMiniCanvas" class="sim-canvas w-full rounded-xl" width="400" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 3: SOLENOID INTERACTIVE ============ -->
+<section id="s3" class="py-32 px-8 md:px-20 max-w-7xl mx-auto">
+  <div class="mb-16">
+    <span class="section-tag text-tertiary mb-3 block">SECTION 03</span>
+    <h2 class="text-5xl font-light text-white mb-6">Solenoid <span class="text-tertiary font-semibold">Simulator</span></h2>
+    <div class="w-16 h-0.5 mb-8" style="background:#cdd8ff;"></div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="space-y-6">
+      <div class="theory-card">
+        <h3 class="text-white font-semibold mb-4">Control Parameters</h3>
+        <div class="space-y-5">
+          <div>
+            <div class="flex justify-between mb-2"><span class="interactive-label">Number of Turns (N)</span><span class="value-display text-base" id="solNVal">20</span></div>
+            <input type="range" id="solN" min="5" max="50" value="20" class="w-full" oninput="updateSolenoid()">
+          </div>
+          <div>
+            <div class="flex justify-between mb-2"><span class="interactive-label">Current (I) in Amps</span><span class="value-display text-base" id="solIVal">3 A</span></div>
+            <input type="range" id="solI" min="1" max="10" value="3" class="w-full" oninput="updateSolenoid()">
+          </div>
+          <div>
+            <div class="flex justify-between mb-2"><span class="interactive-label">Core Material</span></div>
+            <select id="coreType" class="w-full" onchange="updateSolenoid()">
+              <option value="1">Air Core (μᵣ = 1)</option>
+              <option value="100">Soft Iron (μᵣ ≈ 100)</option>
+              <option value="500">Silicon Steel (μᵣ ≈ 500)</option>
+            </select>
+          </div>
+          <div>
+            <div class="flex justify-between mb-2"><span class="interactive-label">Current Direction</span></div>
+            <div class="flex gap-2">
+              <button class="tab-btn active flex-1" id="solDirBtn" onclick="toggleSolDir()">→ Left to Right</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="theory-card">
+        <span class="interactive-label block mb-3">CALCULATED FIELD (B)</span>
+        <div class="value-display text-3xl mb-2" id="solBVal">37.7 μT</div>
+        <p class="text-on-surface-variant text-sm">B = μ₀ · μᵣ · (N/L) · I</p>
+        <p class="text-on-surface-variant text-sm mt-1">L = 20 cm (fixed)</p>
+        <div class="mt-4 pt-4 border-t border-white/10">
+          <div class="flex justify-between text-sm mb-2">
+            <span class="text-on-surface-variant">North Pole</span>
+            <span class="text-white font-semibold" id="solNPole">RIGHT END →</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-on-surface-variant">South Pole</span>
+            <span class="text-white font-semibold" id="solSPole">← LEFT END</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="md:col-span-2 glass-panel gold-border rounded-2xl p-6">
+      <div class="flex justify-between items-center mb-4">
+        <span class="section-tag text-tertiary">LIVE VISUALIZATION</span>
+        <span class="text-xs text-on-surface-variant" style="font-family:'Space Grotesk',sans-serif;">Field lines update in real-time</span>
+      </div>
+      <canvas id="solenoidCanvas" class="sim-canvas w-full rounded-xl" width="640" height="360"></canvas>
+      <div class="grid grid-cols-3 gap-4 mt-4 text-center">
+        <div class="theory-card">
+          <span class="interactive-label block mb-1">Turns / Length</span>
+          <span class="text-white font-semibold" id="solNL">100 /m</span>
+        </div>
+        <div class="theory-card">
+          <span class="interactive-label block mb-1">Relative Permeability</span>
+          <span class="text-white font-semibold" id="solMuR">1</span>
+        </div>
+        <div class="theory-card">
+          <span class="interactive-label block mb-1">Field Amplification</span>
+          <span class="value-display text-base" id="solAmp">1×</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 4: FORCE ON CONDUCTOR ============ -->
+<section id="s4" class="py-32 px-8 md:px-20" style="background:rgba(255,255,255,0.01);border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04);">
+  <div class="max-w-7xl mx-auto">
+    <div class="mb-16">
+      <span class="section-tag text-primary mb-3 block">SECTION 04</span>
+      <h2 class="text-5xl font-light text-white mb-6">Force on Conductor <span class="text-primary font-semibold">&amp; Fleming's Rules</span></h2>
+      <div class="w-16 h-0.5 bg-primary mb-8"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+      <!-- Theory -->
+      <div class="space-y-6">
+        <div class="theory-card">
+          <h3 class="text-white font-semibold text-lg mb-4">Force on a Current-Carrying Conductor</h3>
+          <p class="text-on-surface-variant leading-relaxed mb-4">When a current-carrying conductor is placed in an external magnetic field, it experiences a mechanical force. This force is <span class="text-primary">maximum when the current is perpendicular</span> to the field, and zero when parallel.</p>
+          <div class="formula-box mb-4">F = BIL sin θ</div>
+          <div class="grid grid-cols-2 gap-3 text-sm text-on-surface-variant">
+            <div class="theory-card py-2 text-center"><span class="text-primary font-bold text-base">F</span><br>Force (Newton)</div>
+            <div class="theory-card py-2 text-center"><span class="text-primary font-bold text-base">B</span><br>Field (Tesla)</div>
+            <div class="theory-card py-2 text-center"><span class="text-primary font-bold text-base">I</span><br>Current (Ampere)</div>
+            <div class="theory-card py-2 text-center"><span class="text-primary font-bold text-base">L</span><br>Length (metre)</div>
+          </div>
+        </div>
+        <div class="theory-card" style="border-left:3px solid #a9c7ff;">
+          <h3 class="text-white font-semibold text-lg mb-3" style="color:#a9c7ff;">Fleming's Left-Hand Rule (Motor)</h3>
+          <p class="text-on-surface-variant leading-relaxed mb-3">Stretch the <span class="text-white">thumb</span>, <span style="color:#a9c7ff;">forefinger</span>, and <span style="color:#ffd475;">middle finger</span> of the left hand mutually perpendicular:</p>
+          <div class="space-y-2 text-sm">
+            <div class="flex gap-3 items-center"><span class="w-3 h-3 rounded-sm flex-shrink-0" style="background:#a9c7ff;"></span><span class="text-on-surface-variant"><span style="color:#a9c7ff;">Forefinger</span> → Direction of <strong class="text-white">Magnetic Field (B)</strong></span></div>
+            <div class="flex gap-3 items-center"><span class="w-3 h-3 rounded-sm flex-shrink-0" style="background:#ffd475;"></span><span class="text-on-surface-variant"><span class="text-primary">Middle finger</span> → Direction of <strong class="text-white">Current (I)</strong></span></div>
+            <div class="flex gap-3 items-center"><span class="w-3 h-3 rounded-sm flex-shrink-0" style="background:#ff7a5a;"></span><span class="text-on-surface-variant"><span style="color:#ff7a5a;">Thumb</span> → Direction of <strong class="text-white">Motion / Force (F)</strong></span></div>
+          </div>
+        </div>
+        <div class="theory-card" style="border-left:3px solid #cdd8ff;">
+          <h3 class="text-white font-semibold text-lg mb-3" style="color:#cdd8ff;">Fleming's Right-Hand Rule (Generator)</h3>
+          <p class="text-on-surface-variant leading-relaxed mb-3">Same finger arrangement but with the <span class="text-white">right hand</span>:</p>
+          <div class="space-y-2 text-sm">
+            <div class="flex gap-3 items-center"><span class="w-3 h-3 rounded-sm flex-shrink-0" style="background:#cdd8ff;"></span><span class="text-on-surface-variant"><span style="color:#cdd8ff;">Forefinger</span> → Direction of <strong class="text-white">Magnetic Field (B)</strong></span></div>
+            <div class="flex gap-3 items-center"><span class="w-3 h-3 rounded-sm flex-shrink-0" style="background:#ff7a5a;"></span><span class="text-on-surface-variant"><span style="color:#ff7a5a;">Thumb</span> → Direction of <strong class="text-white">Motion of conductor</strong></span></div>
+            <div class="flex gap-3 items-center"><span class="w-3 h-3 rounded-sm flex-shrink-0" style="background:#ffd475;"></span><span class="text-on-surface-variant"><span class="text-primary">Middle finger</span> → Direction of <strong class="text-white">Induced Current</strong></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Force Calculator -->
+      <div class="glass-panel gold-border rounded-2xl p-6 flex flex-col">
+        <span class="section-tag text-primary mb-3">F = BIL sin θ CALCULATOR</span>
+        <h3 class="text-white font-semibold mb-6">Interactive Force Calculator</h3>
+        <div class="space-y-5 flex-grow">
+          <div>
+            <div class="flex justify-between mb-2"><span class="interactive-label">Magnetic Field B (Tesla)</span><span class="value-display text-base" id="calcBVal">0.5 T</span></div>
+            <input type="range" id="calcB" min="1" max="20" value="5" class="w-full" oninput="updateForce()">
+          </div>
+          <div>
+            <div class="flex justify-between mb-2"><span class="interactive-label">Current I (Ampere)</span><span class="value-display text-base" id="calcIVal">3 A</span></div>
+            <input type="range" id="calcI" min="1" max="20" value="3" class="w-full" oninput="updateForce()">
+          </div>
+          <div>
+            <div class="flex justify-between mb-2"><span class="interactive-label">Length L (metre)</span><span class="value-display text-base" id="calcLVal">0.5 m</span></div>
+            <input type="range" id="calcL" min="1" max="20" value="5" class="w-full" oninput="updateForce()">
+          </div>
+          <div>
+            <div class="flex justify-between mb-2"><span class="interactive-label">Angle θ (degrees)</span><span class="value-display text-base" id="calcAngVal">90°</span></div>
+            <input type="range" id="calcAng" min="0" max="180" value="90" class="w-full" oninput="updateForce()">
+          </div>
+        </div>
+        <canvas id="forceCanvas" class="sim-canvas rounded-xl mt-4" width="500" height="200"></canvas>
+        <div class="mt-4 pt-4 border-t border-white/10 text-center">
+          <span class="interactive-label block mb-2">CALCULATED FORCE</span>
+          <span class="text-5xl font-bold" id="forceResult" style="font-family:'Space Grotesk',sans-serif;color:#ffd475;">0.75 N</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 5: ELECTRIC MOTOR ============ -->
+<section id="s5" class="py-32 px-8 md:px-20 max-w-7xl mx-auto">
+  <div class="mb-16">
+    <span class="section-tag text-primary mb-3 block">SECTION 05</span>
+    <h2 class="text-5xl font-light text-white mb-6">Electric <span class="text-primary font-semibold">Motor</span></h2>
+    <div class="w-16 h-0.5 bg-primary mb-8"></div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="space-y-6">
+      <div class="theory-card">
+        <h3 class="text-white font-semibold text-lg mb-4">How It Works</h3>
+        <p class="text-on-surface-variant leading-relaxed mb-4">An <span class="text-primary">electric motor</span> converts <strong class="text-white">electrical energy → mechanical energy</strong>. It consists of:</p>
+        <div class="space-y-3">
+          <div class="key-point"><div class="key-point-dot"></div><p class="text-on-surface-variant"><span class="text-white">Rectangular coil</span> — placed between poles of a permanent magnet (the armature).</p></div>
+          <div class="key-point"><div class="key-point-dot"></div><p class="text-on-surface-variant"><span class="text-white">Split-ring commutator</span> — reverses current direction every half rotation to maintain continuous unidirectional rotation.</p></div>
+          <div class="key-point"><div class="key-point-dot"></div><p class="text-on-surface-variant"><span class="text-white">Carbon brushes</span> — maintain electrical contact with the commutator rings.</p></div>
+          <div class="key-point"><div class="key-point-dot"></div><p class="text-on-surface-variant"><span class="text-white">Permanent magnet</span> — provides the external field B.</p></div>
+        </div>
+      </div>
+      <div class="theory-card">
+        <span class="section-tag text-primary block mb-3">PRINCIPLE</span>
+        <p class="text-on-surface-variant text-sm leading-relaxed">When a rectangular coil carrying current I is placed in field B, forces F = BIL act on each side. The opposing forces on opposite sides create a <span class="text-primary">torque</span> that rotates the coil.</p>
+        <div class="formula-box mt-3">τ = BINA sin α</div>
+        <p class="text-on-surface-variant text-xs mt-2">τ = torque, N = turns, A = area, α = angle between coil plane and field</p>
+      </div>
+      <div class="theory-card">
+        <span class="section-tag text-primary block mb-3">MOTOR CONTROLS</span>
+        <div class="space-y-3">
+          <div>
+            <div class="flex justify-between mb-1"><span class="interactive-label">Speed</span><span class="value-display text-sm" id="motorSpeedVal">3×</span></div>
+            <input type="range" id="motorSpeed" min="1" max="10" value="3" class="w-full" oninput="updateMotor()">
+          </div>
+          <div class="flex gap-2">
+            <button class="tab-btn flex-1" id="motorPlayBtn" onclick="toggleMotor()">⏸ PAUSE</button>
+            <button class="tab-btn flex-1" onclick="reverseMotor()">↩ REVERSE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="md:col-span-2 glass-panel gold-border rounded-2xl p-6">
+      <span class="section-tag text-primary mb-3 block">LIVE MOTOR ANIMATION</span>
+      <canvas id="motorCanvas" class="sim-canvas w-full rounded-xl" width="640" height="420"></canvas>
+      <div class="grid grid-cols-3 gap-4 mt-4 text-center">
+        <div class="theory-card">
+          <span class="interactive-label block mb-1">Rotation Angle</span>
+          <span class="value-display text-base" id="motorAngleVal">0°</span>
+        </div>
+        <div class="theory-card">
+          <span class="interactive-label block mb-1">Current Direction</span>
+          <span class="text-white font-semibold text-sm" id="motorCurrentDir">A→B in left arm</span>
+        </div>
+        <div class="theory-card">
+          <span class="interactive-label block mb-1">Torque State</span>
+          <span class="value-display text-base" id="motorTorque" style="color:#4f8;">MAX</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 6: ELECTROMAGNETIC INDUCTION ============ -->
+<section id="s6" class="py-32 px-8 md:px-20" style="background:rgba(255,255,255,0.01);border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.04);">
+  <div class="max-w-7xl mx-auto">
+    <div class="mb-16">
+      <span class="section-tag text-secondary mb-3 block">SECTION 06</span>
+      <h2 class="text-5xl font-light text-white mb-6">Electromagnetic <span class="text-secondary font-semibold">Induction</span></h2>
+      <div class="w-16 h-0.5 bg-secondary mb-8"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="space-y-6">
+        <div class="theory-card">
+          <h3 class="text-white font-semibold text-lg mb-4">Faraday's Discovery</h3>
+          <p class="text-on-surface-variant leading-relaxed mb-4">The phenomenon of generating an electric current in a circuit by <span class="text-secondary">changing the magnetic flux</span> linked with it is called <span class="text-white font-semibold">Electromagnetic Induction (EMI)</span>.</p>
+          <div class="formula-box mb-4">ε = −N × (ΔΦ/Δt)</div>
+          <p class="text-sm text-on-surface-variant">ε = induced EMF, N = turns, ΔΦ/Δt = rate of change of magnetic flux.</p>
+        </div>
+        <div class="theory-card">
+          <h3 class="text-white font-semibold mb-3">Lenz's Law</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">The direction of the induced current is always such that it <span class="text-secondary">opposes the change</span> in magnetic flux that caused it. (Conservation of energy.)</p>
+        </div>
+        <div class="theory-card">
+          <h3 class="text-white font-semibold mb-3">AC Generator</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed mb-3">Converts <strong class="text-white">mechanical → electrical energy</strong>. The rotating coil in a field produces a sinusoidally alternating EMF:</p>
+          <div class="formula-box">ε = ε₀ sin(ωt)</div>
+        </div>
+        <div class="theory-card">
+          <span class="section-tag text-secondary block mb-3">EMI SIMULATION CONTROLS</span>
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between mb-1"><span class="interactive-label">Magnet Speed</span><span class="value-display text-sm" id="emiSpeedVal">3</span></div>
+              <input type="range" id="emiSpeed" min="1" max="10" value="3" class="w-full" oninput="updateEMI()">
+            </div>
+            <div>
+              <div class="flex justify-between mb-1"><span class="interactive-label">Coil Turns</span><span class="value-display text-sm" id="emiTurnsVal">20</span></div>
+              <input type="range" id="emiTurns" min="5" max="50" value="20" class="w-full" oninput="updateEMI()">
+            </div>
+            <select id="emiDir" class="w-full" onchange="updateEMI()">
+              <option value="in">Magnet moving INTO coil</option>
+              <option value="out">Magnet moving OUT of coil</option>
+              <option value="osc">Oscillating (AC generation)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="md:col-span-2 space-y-6">
+        <div class="glass-panel gold-border rounded-2xl p-6">
+          <span class="section-tag text-secondary mb-3 block">MAGNET & COIL SIMULATION</span>
+          <canvas id="emiCanvas" class="sim-canvas w-full rounded-xl" width="640" height="280"></canvas>
+          <div class="grid grid-cols-3 gap-4 mt-4 text-center">
+            <div class="theory-card">
+              <span class="interactive-label block mb-1">Induced EMF</span>
+              <span class="value-display text-base" id="emiEMFVal" style="color:#a9c7ff;">0.0 V</span>
+            </div>
+            <div class="theory-card">
+              <span class="interactive-label block mb-1">Current Direction</span>
+              <span class="text-white font-semibold text-sm" id="emiCurrentDir">Clockwise</span>
+            </div>
+            <div class="theory-card">
+              <span class="interactive-label block mb-1">Flux Change</span>
+              <span class="value-display text-base" id="emiFluxDir" style="color:#4f8;">Increasing</span>
+            </div>
+          </div>
+        </div>
+        <!-- AC waveform -->
+        <div class="glass-panel rounded-2xl p-6">
+          <span class="section-tag text-secondary mb-3 block">EMF WAVEFORM (AC)</span>
+          <canvas id="waveCanvas" class="sim-canvas w-full rounded-xl" width="640" height="160"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 7: DOMESTIC WIRING ============ -->
+<section id="s7" class="py-32 px-8 md:px-20 max-w-7xl mx-auto">
+  <div class="mb-16">
+    <span class="section-tag text-primary mb-3 block">SECTION 07</span>
+    <h2 class="text-5xl font-light text-white mb-6">Domestic Electric <span class="text-primary font-semibold">Circuits</span></h2>
+    <div class="w-16 h-0.5 bg-primary mb-8"></div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+    <div class="space-y-6">
+      <div class="theory-card">
+        <h3 class="text-white font-semibold text-lg mb-4">Three-Wire System (India)</h3>
+        <p class="text-on-surface-variant leading-relaxed mb-6">Power is supplied to Indian households through a three-wire transmission at <span class="text-primary">220 V AC at 50 Hz</span>.</p>
+        <div class="space-y-4">
+          <div class="flex items-start gap-4 p-4 rounded-lg" style="background:rgba(255,68,68,0.08);border:1px solid rgba(255,68,68,0.2);">
+            <div class="w-4 h-4 rounded-sm mt-1 flex-shrink-0" style="background:#ff4444;"></div>
+            <div>
+              <p class="text-white font-semibold mb-1">Live Wire — Red Insulation</p>
+              <p class="text-on-surface-variant text-sm">Carries high potential (220 V). It is the "hot" wire that supplies current to appliances.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 p-4 rounded-lg" style="background:rgba(40,40,200,0.08);border:1px solid rgba(80,80,255,0.2);">
+            <div class="w-4 h-4 rounded-sm mt-1 flex-shrink-0" style="background:#4466ff;"></div>
+            <div>
+              <p class="text-white font-semibold mb-1">Neutral Wire — Black Insulation</p>
+              <p class="text-on-surface-variant text-sm">Maintained at 0 V. Completes the circuit loop back to the power station.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 p-4 rounded-lg" style="background:rgba(40,160,40,0.08);border:1px solid rgba(40,200,40,0.2);">
+            <div class="w-4 h-4 rounded-sm mt-1 flex-shrink-0" style="background:#44cc44;"></div>
+            <div>
+              <p class="text-white font-semibold mb-1">Earth Wire — Green Insulation</p>
+              <p class="text-on-surface-variant text-sm">Connected to a metal plate buried in the earth. Provides a safe low-resistance path for leakage currents, protecting users from electric shock.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="theory-card">
+        <h3 class="text-white font-semibold text-lg mb-4">Safety Mechanisms</h3>
+        <div class="space-y-4">
+          <div style="background:rgba(255,180,60,0.08);border:1px solid rgba(255,180,60,0.2);border-radius:8px;padding:16px;">
+            <p class="text-white font-semibold mb-2">⚡ Short Circuit</p>
+            <p class="text-on-surface-variant text-sm">Occurs when live and neutral wires make direct contact due to damaged insulation. Resistance drops to near zero → <span style="color:#ffa040;">enormous current surge → fire hazard</span>.</p>
+            <div class="formula-box mt-2" style="font-size:12px;">R → 0, so I = V/R → ∞</div>
+          </div>
+          <div style="background:rgba(255,120,60,0.08);border:1px solid rgba(255,120,60,0.2);border-radius:8px;padding:16px;">
+            <p class="text-white font-semibold mb-2">🔌 Overloading</p>
+            <p class="text-on-surface-variant text-sm">Occurs when too many high-power appliances operate simultaneously, drawing total current exceeding the safe rating of home wiring.</p>
+          </div>
+          <div style="background:rgba(100,200,100,0.08);border:1px solid rgba(100,200,100,0.2);border-radius:8px;padding:16px;">
+            <p class="text-white font-semibold mb-2">🛡 Fuse / MCB</p>
+            <p class="text-on-surface-variant text-sm">A fuse wire of low melting point breaks the circuit when current exceeds safe limits. Modern homes use MCBs (Miniature Circuit Breakers) that trip automatically and can be reset.</p>
+            <div class="formula-box mt-2" style="font-size:12px;">Safe current rating: 5A, 15A, 20A lines</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Domestic Circuit Diagram -->
+    <div class="glass-panel gold-border rounded-2xl p-6">
+      <span class="section-tag text-primary mb-3 block">INTERACTIVE CIRCUIT</span>
+      <h3 class="text-white font-semibold mb-4">Household Wiring Simulator</h3>
+      <canvas id="domesticCanvas" class="sim-canvas w-full rounded-xl" width="600" height="380"></canvas>
+      <div class="grid grid-cols-3 gap-3 mt-4">
+        <button class="tab-btn active" id="devBtn1" onclick="toggleDevice(1)">💡 Bulb ON</button>
+        <button class="tab-btn active" id="devBtn2" onclick="toggleDevice(2)">❄️ AC ON</button>
+        <button class="tab-btn" id="devBtn3" onclick="toggleDevice(3)">🔧 Heater OFF</button>
+      </div>
+      <div class="mt-4 pt-4 border-t border-white/10 grid grid-cols-2 gap-4 text-center">
+        <div>
+          <span class="interactive-label block mb-1">Total Current Draw</span>
+          <span class="value-display" id="totalCurrent">1.5 A</span>
+        </div>
+        <div>
+          <span class="interactive-label block mb-1">Circuit Status</span>
+          <span class="result-badge" id="circuitStatus" style="background:rgba(100,220,100,0.15);color:#4f8;">SAFE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Reference Table -->
+  <div class="glass-panel rounded-2xl p-8">
+    <h3 class="text-white font-semibold text-xl mb-6">📋 Complete Formula Reference — Chapter 13</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr style="border-bottom:1px solid rgba(255,212,117,0.3);">
+            <th class="text-left pb-4 pr-8" style="font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:0.15em;color:#ffd475;">CONCEPT</th>
+            <th class="text-left pb-4 pr-8" style="font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:0.15em;color:#ffd475;">FORMULA</th>
+            <th class="text-left pb-4" style="font-family:'Space Grotesk',sans-serif;font-size:11px;letter-spacing:0.15em;color:#ffd475;">NOTES</th>
+          </tr>
+        </thead>
+        <tbody class="text-on-surface-variant">
+          <tr class="border-b border-white/5"><td class="py-3 pr-8 text-white">Straight Wire Field</td><td class="py-3 pr-8" style="font-family:'Space Grotesk',sans-serif;color:#ffd475;">B = μ₀I / 2πr</td><td class="py-3">Concentric circles; Right-hand thumb rule</td></tr>
+          <tr class="border-b border-white/5"><td class="py-3 pr-8 text-white">Circular Loop Centre</td><td class="py-3 pr-8" style="font-family:'Space Grotesk',sans-serif;color:#ffd475;">B = μ₀I / 2R</td><td class="py-3">R = radius; For N turns multiply by N</td></tr>
+          <tr class="border-b border-white/5"><td class="py-3 pr-8 text-white">Solenoid Interior</td><td class="py-3 pr-8" style="font-family:'Space Grotesk',sans-serif;color:#ffd475;">B = μ₀nI</td><td class="py-3">n = turns per unit length; uniform field</td></tr>
+          <tr class="border-b border-white/5"><td class="py-3 pr-8 text-white">Force on Conductor</td><td class="py-3 pr-8" style="font-family:'Space Grotesk',sans-serif;color:#ffd475;">F = BIL sin θ</td><td class="py-3">Max when θ = 90°; Fleming's LHR for direction</td></tr>
+          <tr class="border-b border-white/5"><td class="py-3 pr-8 text-white">Motor Torque</td><td class="py-3 pr-8" style="font-family:'Space Grotesk',sans-serif;color:#ffd475;">τ = BINA sin α</td><td class="py-3">N = turns; A = coil area; α = tilt angle</td></tr>
+          <tr class="border-b border-white/5"><td class="py-3 pr-8 text-white">Faraday's EMF</td><td class="py-3 pr-8" style="font-family:'Space Grotesk',sans-serif;color:#ffd475;">ε = −N(ΔΦ/Δt)</td><td class="py-3">Negative sign from Lenz's Law</td></tr>
+          <tr class="border-b border-white/5"><td class="py-3 pr-8 text-white">AC Generator EMF</td><td class="py-3 pr-8" style="font-family:'Space Grotesk',sans-serif;color:#ffd475;">ε = ε₀ sin(ωt)</td><td class="py-3">Peak EMF ε₀ = NBAω</td></tr>
+          <tr><td class="py-3 pr-8 text-white">Domestic Voltage (India)</td><td class="py-3 pr-8" style="font-family:'Space Grotesk',sans-serif;color:#ffd475;">220 V, 50 Hz</td><td class="py-3">Three-wire: Live (R), Neutral (Bk), Earth (G)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:#0a0a0a;border-top:1px solid rgba(255,255,255,0.05);" class="mt-20">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-8 px-8 md:px-20 py-20 max-w-7xl mx-auto">
+    <div>
+      <div class="text-2xl font-bold mb-4" style="color:#ffd475;font-family:'Hanken Grotesk',sans-serif;">Codexsec</div>
+      <p class="text-on-surface-variant text-sm leading-relaxed">Interactive NCERT Science. Chapter 13 — Magnetic Effects of Electric Current.</p>
+    </div>
+    <div>
+      <h4 class="section-tag text-white mb-6">Key Concepts</h4>
+      <ul class="space-y-3 text-on-surface-variant text-sm">
+        <li>Magnetic Field Lines</li><li>Right-Hand Thumb Rule</li><li>Solenoid & Electromagnet</li><li>Fleming's Rules</li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="section-tag text-white mb-6">Simulations</h4>
+      <ul class="space-y-3 text-on-surface-variant text-sm">
+        <li>Bar Magnet Field Viz</li><li>Force Calculator</li><li>Motor Animation</li><li>EMI Simulation</li>
+      </ul>
+    </div>
+    <div>
+      <p class="text-on-surface-variant text-xs mt-8">© 2024 Codexsec · NCERT Class 10 Physics · Chapter 13</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===================== UTILITY =====================
+const PI = Math.PI;
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,mn,mx){return Math.max(mn,Math.min(mx,v));}
+
+// ===================== HERO CANVAS =====================
+(function(){
+  const c=document.getElementById('heroCanvas');
+  if(!c)return;
+  const ctx=c.getContext('2d');
+  let t=0,pts=[];
+  function resize(){c.width=c.offsetWidth*devicePixelRatio;c.height=c.offsetHeight*devicePixelRatio;}
+  resize();window.addEventListener('resize',()=>{resize();});
+  const N=120;
+  for(let i=0;i<N;i++){pts.push({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.002,vy:(Math.random()-.5)*.002,r:Math.random()*2+1,a:Math.random()*PI*2});}
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    const W=c.width,H=c.height;
+    // Animated field lines
+    ctx.lineWidth=1;
+    const nLines=18;
+    for(let i=0;i<nLines;i++){
+      const phase=i/nLines*PI*2+t*0.3;
+      ctx.beginPath();
+      ctx.strokeStyle=`rgba(255,212,117,${0.06+0.04*Math.sin(phase)})`;
+      const yBase=H*(i+.5)/nLines;
+      ctx.moveTo(0,yBase);
+      for(let x=0;x<=W;x+=4){
+        const y=yBase+Math.sin(x/W*PI*3+t+phase)*50;
+        ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+    }
+    // Particles
+    pts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;p.a+=0.02;
+      if(p.x<0)p.x=1;if(p.x>1)p.x=0;
+      if(p.y<0)p.y=1;if(p.y>1)p.y=0;
+      ctx.beginPath();
+      const px=p.x*W,py=p.y*H;
+      const grd=ctx.createRadialGradient(px,py,0,px,py,p.r*3);
+      grd.addColorStop(0,'rgba(255,212,117,0.8)');
+      grd.addColorStop(1,'rgba(255,212,117,0)');
+      ctx.fillStyle=grd;
+      ctx.arc(px,py,p.r*1.5,0,PI*2);
+      ctx.fill();
+    });
+    t+=0.005;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ===================== BAR MAGNET =====================
+let magnetFlipped=false;
+function toggleMagnetPoles(){magnetFlipped=!magnetFlipped;drawMagnet();}
+function drawMagnet(){
+  const c=document.getElementById('magnetCanvas');
+  if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width=c.offsetWidth*devicePixelRatio;
+  const H=c.height=c.offsetHeight*devicePixelRatio;
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2,cy=H/2;
+  const mW=W*0.22,mH=H*0.14;
+  
+  // Draw field lines
+  const nLines=parseInt(document.getElementById('fieldDensity').value);
+  const north={x:cx-mW/2,y:cy};
+  const south={x:cx+mW/2,y:cy};
+  if(magnetFlipped){north.x=cx+mW/2;south.x=cx-mW/2;}
+  
+  for(let i=0;i<nLines;i++){
+    const angle=i/nLines*PI*2;
+    drawFieldLine(ctx,north,south,angle,W,H,cx,cy,mW);
+  }
+  
+  // Draw magnet body
+  const bodyX=(magnetFlipped?cx+mW/2:cx-mW/2)-mW/2;
+  const bodyGrd=ctx.createLinearGradient(bodyX,cy-mH/2,bodyX+mW,cy+mH/2);
+  bodyGrd.addColorStop(0,magnetFlipped?'#4466ff':'#ff4444');
+  bodyGrd.addColorStop(0.5,magnetFlipped?'#334':'#334');
+  bodyGrd.addColorStop(1,magnetFlipped?'#ff4444':'#4466ff');
+  ctx.fillStyle=bodyGrd;
+  ctx.shadowColor='rgba(255,212,117,0.3)';ctx.shadowBlur=10;
+  roundRect(ctx,cx-mW,cy-mH/2,mW*2,mH,6);
+  ctx.fill();ctx.shadowBlur=0;
+  
+  // Labels
+  ctx.font=`bold ${mH*0.45}px "Space Grotesk",sans-serif`;
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillStyle=magnetFlipped?'#4466ff':'#ff4444';
+  ctx.fillText('N',cx-mW/2*1.4,cy);
+  ctx.fillStyle=magnetFlipped?'#ff4444':'#4466ff';
+  ctx.fillText('S',cx+mW/2*1.4,cy);
+}
+
+function drawFieldLine(ctx,N,S,angle,W,H,cx,cy,mW){
+  const steps=120;
+  const scale=mW*0.8;
+  ctx.beginPath();
+  let px=N.x+Math.cos(angle)*scale*.5;
+  let py=N.y+Math.sin(angle)*scale*.5;
+  ctx.moveTo(px,py);
+  for(let s=1;s<=steps;s++){
+    const bx=fieldBx(px,py,N,S,mW);
+    const by=fieldBy(px,py,N,S,mW);
+    const mag=Math.sqrt(bx*bx+by*by)||1;
+    px+=bx/mag*mW*0.028;
+    py+=by/mag*mW*0.028;
+    if(px<1||px>W-1||py<1||py>H-1)break;
+    ctx.lineTo(px,py);
+  }
+  const dist=Math.hypot(N.x-S.x,N.y-S.y);
+  const brightness=clamp(0.1,0.5,1/(1+dist/mW));
+  ctx.strokeStyle=`rgba(255,212,117,0.4)`;
+  ctx.lineWidth=1.5;
+  ctx.stroke();
+  // Arrow
+  ctx.fillStyle='rgba(255,212,117,0.6)';
+  ctx.beginPath();
+  const dx=(px-N.x),dy=(py-N.y),m=Math.sqrt(dx*dx+dy*dy)||1;
+  const ax=dx/m*8,ay=dy/m*8;
+  const hx=px+ax,hy=py+ay;
+  ctx.moveTo(hx,hy);
+  ctx.lineTo(hx-ax*1.5+ay*0.7,hy-ay*1.5-ax*0.7);
+  ctx.lineTo(hx-ax*1.5-ay*0.7,hy-ay*1.5+ax*0.7);
+  ctx.closePath();ctx.fill();
+}
+
+function fieldBx(x,y,N,S,scale){
+  const r1x=x-N.x,r1y=y-N.y,r1=Math.hypot(r1x,r1y)||0.001;
+  const r2x=x-S.x,r2y=y-S.y,r2=Math.hypot(r2x,r2y)||0.001;
+  return r1x/(r1*r1*r1)-r2x/(r2*r2*r2);
+}
+function fieldBy(x,y,N,S,scale){
+  const r1x=x-N.x,r1y=y-N.y,r1=Math.hypot(r1x,r1y)||0.001;
+  const r2x=x-S.x,r2y=y-S.y,r2=Math.hypot(r2x,r2y)||0.001;
+  return r1y/(r1*r1*r1)-r2y/(r2*r2*r2);
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r);ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h);ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r);ctx.arcTo(x,y,x+r,y,r);ctx.closePath();
+}
+
+// ===================== STRAIGHT WIRE =====================
+let wireUp=true;
+function toggleWireDir(){
+  wireUp=!wireUp;
+  document.getElementById('wireToggle').classList.toggle('on',wireUp);
+  document.getElementById('wireLabel').textContent=wireUp?'UPWARD ↑':'DOWNWARD ↓';
+  drawWire();
+}
+function drawWire(){
+  const c=document.getElementById('wireCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width=c.offsetWidth*devicePixelRatio,H=c.height=c.offsetHeight*devicePixelRatio;
+  ctx.clearRect(0,0,W,H);
+  const I=parseInt(document.getElementById('wireI').value);
+  const r=parseInt(document.getElementById('wireR').value);
+  document.getElementById('wireIVal').textContent=I+' A';
+  document.getElementById('wireRVal').textContent=r+' cm';
+  const B=(4*PI*1e-7*I/(2*PI*r/100)*1e6).toFixed(1);
+  document.getElementById('wireBVal').textContent=B+' μT';
+  const cx=W/2,cy=H/2;
+  // Concentric circles
+  const nCircles=8;
+  for(let i=1;i<=nCircles;i++){
+    const rad=i*(Math.min(W,H)*0.06)*I/5;
+    if(rad>Math.min(W,H)*0.48)break;
+    ctx.beginPath();
+    ctx.arc(cx,cy,rad,0,PI*2);
+    const alpha=0.5*(1-i/nCircles);
+    ctx.strokeStyle=`rgba(169,199,255,${alpha+0.1})`;
+    ctx.lineWidth=1.5;
+    ctx.stroke();
+    // Arrow on circle
+    const aAngle=wireUp?PI/4:-PI/4;
+    const ax=cx+Math.cos(aAngle)*rad;
+    const ay=cy+Math.sin(aAngle)*rad;
+    const tan1=wireUp?aAngle+PI/2:aAngle-PI/2;
+    drawArrow(ctx,ax,ay,tan1,8,`rgba(169,199,255,${alpha+0.2})`);
+  }
+  // Wire cross section
+  ctx.beginPath();
+  ctx.arc(cx,cy,W*0.025,0,PI*2);
+  const grd=ctx.createRadialGradient(cx,cy,0,cx,cy,W*0.025);
+  grd.addColorStop(0,'#ffd475');grd.addColorStop(1,'rgba(255,212,117,0.3)');
+  ctx.fillStyle=grd;ctx.fill();
+  ctx.strokeStyle='rgba(255,212,117,0.8)';ctx.lineWidth=2;ctx.stroke();
+  // Show current direction symbol
+  ctx.font=`bold ${W*0.03}px "Space Grotesk"`;
+  ctx.fillStyle='#131313';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(wireUp?'•':'×',cx,cy);
+  // Label
+  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font=`${W*0.022}px "Space Grotesk"`;
+  ctx.fillText(wireUp?'⊙ current out of page':'⊗ current into page',cx,cy+H*0.38);
+  ctx.fillStyle='rgba(169,199,255,0.7)';
+  ctx.fillText('Magnetic field circles (anticlockwise for ↑, clockwise for ↓)',cx,cy+H*0.46);
+}
+
+function drawArrow(ctx,x,y,angle,size,color){
+  ctx.save();ctx.translate(x,y);ctx.rotate(angle);
+  ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-size,size/2);ctx.lineTo(-size,-size/2);ctx.closePath();
+  ctx.fillStyle=color;ctx.fill();ctx.restore();
+}
+
+// ===================== CIRCULAR LOOP =====================
+function drawLoop(){
+  const c=document.getElementById('loopCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width=c.offsetWidth*devicePixelRatio,H=c.height=c.offsetHeight*devicePixelRatio;
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2,cy=H/2,R=Math.min(W,H)*0.35;
+  // Field lines inside
+  for(let i=-3;i<=3;i++){
+    ctx.beginPath();ctx.moveTo(cx+i*R*0.12,cy-R*0.85);ctx.lineTo(cx+i*R*0.12,cy+R*0.85);
+    const a=0.1+0.3*(1-Math.abs(i)/3.5);
+    ctx.strokeStyle=`rgba(169,199,255,${a})`;ctx.lineWidth=1.2;ctx.stroke();
+    if(i===0){// Arrow on centre line
+      const ay=cy+R*0.2;
+      ctx.beginPath();ctx.moveTo(cx,ay-10);ctx.lineTo(cx-5,ay+2);ctx.lineTo(cx+5,ay+2);ctx.closePath();
+      ctx.fillStyle='rgba(169,199,255,0.6)';ctx.fill();
+    }
+  }
+  // Loop
+  ctx.beginPath();ctx.ellipse(cx,cy,R,R*0.28,0,0,PI*2);
+  ctx.strokeStyle='rgba(255,212,117,0.9)';ctx.lineWidth=3;ctx.stroke();
+  // Current direction arrows
+  [0.3,0.7,1.3,1.7].forEach(f=>{
+    const a=f*PI;
+    const x=cx+Math.cos(a)*R,y=cy+Math.sin(a)*R*0.28;
+    const tan=a+PI/2;
+    drawArrow(ctx,x,y,tan,8,'rgba(255,212,117,0.8)');
+  });
+  ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font=`${W*0.025}px "Space Grotesk"`;ctx.textAlign='center';
+  ctx.fillText('I →',cx+R+W*0.04,cy-R*0.1);
+}
+
+// ===================== SOLENOID MINI =====================
+function drawSolenoidMini(){
+  const c=document.getElementById('solenoidMiniCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width=c.offsetWidth*devicePixelRatio,H=c.height=c.offsetHeight*devicePixelRatio;
+  ctx.clearRect(0,0,W,H);
+  const nTurns=14,solX=W*0.08,solY=H*0.35,solW=W*0.84,solH=H*0.3;
+  const dx=solW/nTurns;
+  // Interior field
+  for(let fx=0;fx<=10;fx++){
+    const x=solX+dx+fx*(solW-2*dx)/10;
+    ctx.beginPath();ctx.moveTo(x,solY);ctx.lineTo(x+15,solY+solH/2);ctx.lineTo(x,solY+solH);
+    ctx.strokeStyle='rgba(169,199,255,0.08)';ctx.lineWidth=1;ctx.stroke();
+  }
+  // Field lines inside
+  [0.3,0.5,0.7].forEach(fy=>{
+    ctx.beginPath();ctx.moveTo(solX,solY+solH*fy);ctx.lineTo(solX+solW,solY+solH*fy);
+    ctx.strokeStyle='rgba(169,199,255,0.5)';ctx.lineWidth=1.5;ctx.stroke();
+    drawArrow(ctx,solX+solW*0.6,solY+solH*fy,0,8,'rgba(169,199,255,0.7)');
+  });
+  // Draw turns
+  for(let i=0;i<=nTurns;i++){
+    const x=solX+i*dx;
+    ctx.beginPath();ctx.ellipse(x,solY+solH/2,dx*0.4,solH/2,0,0,PI*2);
+    ctx.strokeStyle=`rgba(255,212,117,${i%2===0?0.9:0.3})`;ctx.lineWidth=2;ctx.stroke();
+  }
+  // N S labels
+  ctx.font=`bold ${H*0.18}px "Space Grotesk"`;ctx.textBaseline='middle';
+  ctx.fillStyle='#ff4444';ctx.textAlign='left';ctx.fillText('N',W*0.01,H/2);
+  ctx.fillStyle='#4466ff';ctx.textAlign='right';ctx.fillText('S',W*0.99,H/2);
+}
+
+// ===================== SOLENOID INTERACTIVE =====================
+let solDir=1;
+function toggleSolDir(){
+  solDir*=-1;
+  document.getElementById('solDirBtn').textContent=solDir>0?'→ Left to Right':'← Right to Left';
+  updateSolenoid();
+}
+function updateSolenoid(){
+  const N=parseInt(document.getElementById('solN').value);
+  const I=parseInt(document.getElementById('solI').value);
+  const muR=parseInt(document.getElementById('coreType').value);
+  document.getElementById('solNVal').textContent=N;
+  document.getElementById('solIVal').textContent=I+' A';
+  document.getElementById('solMuR').textContent=muR;
+  document.getElementById('solAmp').textContent=muR+'×';
+  const L=0.2,n=N/L;
+  document.getElementById('solNL').textContent=(n|0)+'/m';
+  const mu0=4*PI*1e-7;
+  const B=(mu0*muR*n*I*1e6).toFixed(1);
+  document.getElementById('solBVal').textContent=B+' μT';
+  const nPole=solDir>0?'RIGHT END →':'← LEFT END';
+  const sPole=solDir>0?'← LEFT END':'RIGHT END →';
+  document.getElementById('solNPole').textContent=nPole;
+  document.getElementById('solSPole').textContent=sPole;
+  drawSolenoid(N,I,muR);
+}
+function drawSolenoid(N,I,muR){
+  const c=document.getElementById('solenoidCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width=c.offsetWidth*devicePixelRatio,H=c.height=c.offsetHeight*devicePixelRatio;
+  ctx.clearRect(0,0,W,H);
+  const nTurns=Math.min(N,35);
+  const solX=W*0.08,solY=H*0.3,solW=W*0.84,solH=H*0.4;
+  const dx=solW/nTurns;
+  
+  // Core fill if iron
+  if(muR>1){
+    const coreGrd=ctx.createLinearGradient(solX,solY,solX,solY+solH);
+    coreGrd.addColorStop(0,'rgba(100,80,60,0.3)');coreGrd.addColorStop(1,'rgba(80,60,40,0.1)');
+    ctx.fillStyle=coreGrd;roundRect(ctx,solX+dx,solY+2,solW-2*dx,solH-4,4);ctx.fill();
+    ctx.strokeStyle='rgba(150,120,80,0.3)';ctx.lineWidth=1;ctx.stroke();
+  }
+  
+  // External field lines
+  const nExtLines=5;
+  for(let i=0;i<nExtLines;i++){
+    const fy=(i+0.5)/nExtLines;
+    const sign=fy<0.5?-1:1;
+    const ext=H*0.22*(Math.abs(fy-0.5)+0.1);
+    ctx.beginPath();
+    if(solDir>0){
+      ctx.moveTo(solX+dx,solY+solH*fy);
+      ctx.bezierCurveTo(W*0.2,solY+solH*fy+sign*ext,W*0.8,solY+solH*fy+sign*ext,solX+solW-dx,solY+solH*fy);
+    }else{
+      ctx.moveTo(solX+solW-dx,solY+solH*fy);
+      ctx.bezierCurveTo(W*0.8,solY+solH*fy+sign*ext,W*0.2,solY+solH*fy+sign*ext,solX+dx,solY+solH*fy);
+    }
+    ctx.strokeStyle='rgba(169,199,255,0.2)';ctx.lineWidth=1.5;ctx.stroke();
+  }
+  
+  // Interior field lines
+  const nIntLines=6;
+  for(let i=0;i<nIntLines;i++){
+    const fy=0.1+i*0.16;
+    ctx.beginPath();ctx.moveTo(solX+dx,solY+solH*fy);ctx.lineTo(solX+solW-dx,solY+solH*fy);
+    const a=clamp(0.2+fy*0.4,0.2,0.7);
+    ctx.strokeStyle=`rgba(169,199,255,${a})`;ctx.lineWidth=1.5;ctx.stroke();
+    const arrowX=solDir>0?solX+solW*0.55:solX+solW*0.4;
+    drawArrow(ctx,arrowX,solY+solH*fy,solDir>0?0:PI,9,'rgba(169,199,255,0.8)');
+  }
+  
+  // Draw coil turns
+  for(let i=0;i<=nTurns;i++){
+    const x=solX+i*dx;
+    ctx.beginPath();ctx.ellipse(x,solY+solH/2,dx*0.45,solH/2,0,0,PI*2);
+    const bright=i%2===0?0.9:0.4;
+    ctx.strokeStyle=`rgba(255,212,117,${bright})`;ctx.lineWidth=2;ctx.stroke();
+  }
+  
+  // N S poles
+  const nX=solDir>0?solX+solW-dx/2:solX+dx/2;
+  const sX=solDir>0?solX+dx/2:solX+solW-dx/2;
+  ctx.font=`bold ${H*0.12}px "Space Grotesk"`;ctx.textBaseline='middle';
+  ctx.fillStyle='#ff4444';ctx.textAlign='center';ctx.fillText('N',nX,H*0.12);
+  ctx.fillStyle='#4466ff';ctx.textAlign='center';ctx.fillText('S',sX,H*0.12);
+  
+  // Field strength indicator
+  const maxB=0.012,bNorm=clamp((4*PI*1e-7*muR*(N/0.2)*I)/maxB,0,1);
+  const barW=W*0.6,barX=W*0.2,barY=H*0.88;
+  ctx.fillStyle='rgba(255,255,255,0.05)';roundRect(ctx,barX,barY,barW,H*0.04,4);ctx.fill();
+  const barGrd=ctx.createLinearGradient(barX,0,barX+barW*bNorm,0);
+  barGrd.addColorStop(0,'#4466ff');barGrd.addColorStop(1,'#ffd475');
+  ctx.fillStyle=barGrd;roundRect(ctx,barX,barY,barW*bNorm,H*0.04,4);ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font=`${H*0.04}px "Space Grotesk"`;
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Field Strength',W/2,barY-H*0.04);
+}
+
+// ===================== FORCE CALCULATOR =====================
+function updateForce(){
+  const B=parseInt(document.getElementById('calcB').value)*0.1;
+  const I=parseInt(document.getElementById('calcI').value);
+  const L=parseInt(document.getElementById('calcL').value)*0.1;
+  const ang=parseInt(document.getElementById('calcAng').value);
+  document.getElementById('calcBVal').textContent=B.toFixed(1)+' T';
+  document.getElementById('calcIVal').textContent=I+' A';
+  document.getElementById('calcLVal').textContent=L.toFixed(1)+' m';
+  document.getElementById('calcAngVal').textContent=ang+'°';
+  const F=(B*I*L*Math.sin(ang*PI/180)).toFixed(3);
+  document.getElementById('forceResult').textContent=F+' N';
+  drawForceViz(B,I,L,ang,parseFloat(F));
+}
+function drawForceViz(B,I,L,ang,F){
+  const c=document.getElementById('forceCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width=c.offsetWidth*devicePixelRatio,H=c.height=c.offsetHeight*devicePixelRatio;
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2,cy=H/2;
+  const rad=ang*PI/180;
+  // Grid
+  ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;
+  for(let i=0;i<10;i++){ctx.beginPath();ctx.moveTo(i*W/10,0);ctx.lineTo(i*W/10,H);ctx.stroke();}
+  for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(0,i*H/4);ctx.lineTo(W,i*H/4);ctx.stroke();}
+  // B field (vertical, blue)
+  const bScale=60*B;
+  drawArrowLine(ctx,cx,cy+bScale,cx,cy,'rgba(169,199,255,0.9)',2,'B');
+  // Current direction (based on angle)
+  const iScale=50*I*0.3;
+  const ix=Math.cos(rad)*iScale,iy=Math.sin(rad)*iScale;
+  drawArrowLine(ctx,cx,cy,cx+ix,cy+iy,'rgba(255,212,117,0.9)',2,'I');
+  // Force (cross product, perpendicular)
+  const fScale=clamp(F*30,5,120);
+  drawArrowLine(ctx,cx,cy,cx,cy-fScale,'rgba(100,220,100,0.9)',3,'F');
+  // Angle arc
+  ctx.beginPath();ctx.arc(cx,cy,30,0,rad,false);
+  ctx.strokeStyle='rgba(255,255,255,0.3)';ctx.lineWidth=1;ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font=`${H*0.07}px "Space Grotesk"`;ctx.textAlign='center';
+  ctx.fillText(ang+'°',cx+45,cy-10);
+}
+function drawArrowLine(ctx,x1,y1,x2,y2,color,lw,label){
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);
+  ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.stroke();
+  const dx=x2-x1,dy=y2-y1,m=Math.sqrt(dx*dx+dy*dy)||1;
+  const nx=dx/m,ny=dy/m;
+  ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-nx*12+ny*6,y2-ny*12-nx*6);ctx.lineTo(x2-nx*12-ny*6,y2-ny*12+nx*6);ctx.closePath();
+  ctx.fillStyle=color;ctx.fill();
+  if(label){ctx.fillStyle=color;ctx.font='bold 13px "Space Grotesk"';ctx.textAlign='center';ctx.fillText(label,x2+nx*18,y2+ny*18);}
+}
+
+// ===================== ELECTRIC MOTOR =====================
+let motorAngle=0,motorRunning=true,motorSpeed=3,motorDirection=1;
+let motorRAF=null;
+function updateMotor(){
+  motorSpeed=parseInt(document.getElementById('motorSpeed').value);
+  document.getElementById('motorSpeedVal').textContent=motorSpeed+'×';
+}
+function toggleMotor(){
+  motorRunning=!motorRunning;
+  document.getElementById('motorPlayBtn').textContent=motorRunning?'⏸ PAUSE':'▶ PLAY';
+  if(motorRunning)animateMotor();
+}
+function reverseMotor(){motorDirection*=-1;}
+function animateMotor(){
+  if(!motorRunning)return;
+  motorAngle=(motorAngle+motorDirection*motorSpeed*0.02)%(PI*2);
+  drawMotor();
+  requestAnimationFrame(animateMotor);
+}
+function drawMotor(){
+  const c=document.getElementById('motorCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width=c.offsetWidth*devicePixelRatio,H=c.height=c.offsetHeight*devicePixelRatio;
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2,cy=H*0.48;
+  const R=Math.min(W,H)*0.35;
+  
+  // Magnet poles (N top, S bottom)
+  const poleW=W*0.25,poleH=H*0.18;
+  // N pole
+  ctx.fillStyle='rgba(255,68,68,0.2)';roundRect(ctx,cx-poleW/2,cy-R-poleH*0.6,poleW,poleH,8);ctx.fill();
+  ctx.strokeStyle='rgba(255,68,68,0.5)';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='#ff6666';ctx.font=`bold ${poleH*0.45}px "Space Grotesk"`;ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('N',cx,cy-R-poleH*0.6+poleH/2);
+  // S pole
+  ctx.fillStyle='rgba(68,102,255,0.2)';roundRect(ctx,cx-poleW/2,cy+R-poleH*0.4,poleW,poleH,8);ctx.fill();
+  ctx.strokeStyle='rgba(68,102,255,0.5)';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='#6688ff';ctx.fillText('S',cx,cy+R-poleH*0.4+poleH/2);
+  
+  // Field lines between poles
+  for(let i=-3;i<=3;i++){
+    ctx.beginPath();ctx.moveTo(cx+i*poleW*0.13,cy-R+poleH*0.35);ctx.lineTo(cx+i*poleW*0.13,cy+R-poleH*0.5);
+    ctx.strokeStyle='rgba(169,199,255,0.08)';ctx.lineWidth=1;ctx.stroke();
+  }
+  
+  // Rotating coil
+  const cw=R*0.7,ch=R*0.55;
+  const cos=Math.cos(motorAngle),sin=Math.sin(motorAngle);
+  const corners=[[-cw,-ch],[ cw,-ch],[ cw, ch],[-cw, ch]];
+  const rCorners=corners.map(([x,y])=>[x*cos-0,cx+x*cos,cy+y]);
+  // Project onto plane (simple 3D perspective)
+  const pts3d=corners.map(([x,y])=>({
+    sx:cx+x*cos,sy:cy+y,z:x*sin
+  }));
+  ctx.beginPath();
+  ctx.moveTo(pts3d[0].sx,pts3d[0].sy);
+  pts3d.forEach(p=>ctx.lineTo(p.sx,p.sy));
+  ctx.closePath();
+  ctx.strokeStyle='rgba(255,212,117,0.9)';ctx.lineWidth=3;ctx.stroke();
+  ctx.fillStyle='rgba(255,212,117,0.05)';ctx.fill();
+  
+  // Current arrows on coil sides
+  const arrowAng=motorAngle;
+  // Top arm (current direction based on angle)
+  const flip=Math.cos(motorAngle)>=0;
+  // Side AB (left arm)
+  const ax1=cx-cw*cos,ay1=cy-ch,ax2=cx-cw*cos,ay2=cy+ch;
+  const abDir=flip?1:-1;
+  drawArrow(ctx,(ax1+ax2)/2,(ay1+ay2)/2,abDir>0?PI/2:-PI/2,10,'rgba(255,212,117,0.9)');
+  // Side CD (right arm)
+  const bx1=cx+cw*cos,by1=cy+ch;
+  drawArrow(ctx,(cx+cw*cos),(cy),abDir>0?-PI/2:PI/2,10,'rgba(255,212,117,0.9)');
+  
+  // Commutator rings at bottom
+  const commY=cy+R+poleH*0.1;
+  ctx.beginPath();ctx.arc(cx-12,commY,8,0,PI*2);
+  ctx.fillStyle=flip?'rgba(255,212,117,0.8)':'rgba(255,255,255,0.1)';ctx.fill();
+  ctx.beginPath();ctx.arc(cx+12,commY,8,0,PI*2);
+  ctx.fillStyle=!flip?'rgba(255,212,117,0.8)':'rgba(255,255,255,0.1)';ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font=`${H*0.025}px "Space Grotesk"`;ctx.textAlign='center';
+  ctx.fillText('Split-ring commutator',cx,commY+H*0.04);
+  
+  // Force arrows on arms
+  const force=Math.abs(Math.cos(motorAngle));
+  if(force>0.05){
+    drawArrowLine(ctx,cx-cw*cos-20,cy,cx-cw*cos-20-30*flip,cy,'rgba(100,220,100,0.7)',2,'F');
+    drawArrowLine(ctx,cx+cw*cos+20,cy,cx+cw*cos+20+30*(!flip?1:-1),cy,'rgba(100,220,100,0.7)',2,'F');
+  }
+  
+  // Update info
+  const deg=((motorAngle*180/PI)%360+360)%360;
+  document.getElementById('motorAngleVal').textContent=deg.toFixed(0)+'°';
+  document.getElementById('motorCurrentDir').textContent=flip?'→ A to B in arm':'← B to A in arm';
+  const torqueRatio=Math.abs(Math.sin(motorAngle));
+  const torqueColor=torqueRatio>0.7?'#4f8':torqueRatio>0.3?'#ffd475':'#ff6666';
+  document.getElementById('motorTorque').textContent=torqueRatio>0.7?'MAX':torqueRatio>0.3?'MID':'LOW';
+  document.getElementById('motorTorque').style.color=torqueColor;
+}
+
+// ===================== EMI SIMULATION =====================
+let emiTime=0,emiRAF=null,emiRunning=true;
+let emiWaveData=[];
+function updateEMI(){
+  document.getElementById('emiSpeedVal').textContent=document.getElementById('emiSpeed').value;
+  document.getElementById('emiTurnsVal').textContent=document.getElementById('emiTurns').value;
+}
+function animateEMI(){
+  const spd=parseInt(document.getElementById('emiSpeed').value)*0.01;
+  const turns=parseInt(document.getElementById('emiTurns').value);
+  const dir=document.getElementById('emiDir').value;
+  emiTime+=spd;
+  let magnetX,flux,emf;
+  if(dir==='in'){magnetX=0.1+0.7*(1/(1+Math.exp(-(emiTime*0.5-2))));flux=magnetX;emf=spd*turns*Math.exp(-(magnetX-0.8)*4);}
+  else if(dir==='out'){magnetX=0.8-0.7*(1/(1+Math.exp(-(emiTime*0.5-2))));flux=magnetX;emf=-spd*turns*Math.exp(-(0.2-magnetX)*4);}
+  else{magnetX=0.5+0.35*Math.sin(emiTime);flux=magnetX;emf=0.35*spd*turns*Math.cos(emiTime)*50;}
+  emiWaveData.push(emf);
+  if(emiWaveData.length>200)emiWaveData.shift();
+  drawEMI(magnetX,emf,flux);
+  drawWaveform(emiWaveData);
+  document.getElementById('emiEMFVal').textContent=(emf*10).toFixed(2)+' V';
+  document.getElementById('emiCurrentDir').textContent=emf>0.001?'Clockwise':emf<-0.001?'Counter-CW':'None';
+  document.getElementById('emiFluxDir').textContent=emf>0.001?'Increasing':emf<-0.001?'Decreasing':'Constant';
+  document.getElementById('emiFluxDir').style.color=emf>0.001?'#4f8':emf<-0.001?'#ff6666':'#9a8f7e';
+  if(dir!=='osc'&&emiTime>8)emiTime=0;
+  requestAnimationFrame(animateEMI);
+}
+function drawEMI(magnetX,emf,flux){
+  const c=document.getElementById('emiCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width=c.offsetWidth*devicePixelRatio,H=c.height=c.offsetHeight*devicePixelRatio;
+  ctx.clearRect(0,0,W,H);
+  const coilX=W*0.55,coilY=H/2,coilW=W*0.25,coilH=H*0.5;
+  const mX=W*magnetX,mY=H/2,mW=W*0.1,mH=H*0.4;
+  
+  // Coil
+  const nTurns=10,dx=coilW/nTurns;
+  for(let i=0;i<=nTurns;i++){
+    ctx.beginPath();ctx.ellipse(coilX-coilW/2+i*dx,coilY,dx*0.45,coilH/2,0,0,PI*2);
+    ctx.strokeStyle=`rgba(255,212,117,${i%2===0?0.8:0.3})`;ctx.lineWidth=2;ctx.stroke();
+  }
+  // Coil leads
+  ctx.beginPath();ctx.moveTo(coilX+coilW/2,coilY-coilH/2);ctx.lineTo(coilX+coilW/2+W*0.08,coilY-coilH/2);
+  ctx.moveTo(coilX+coilW/2,coilY+coilH/2);ctx.lineTo(coilX+coilW/2+W*0.08,coilY+coilH/2);
+  ctx.strokeStyle='rgba(255,212,117,0.5)';ctx.lineWidth=2;ctx.stroke();
+  // Galvanometer
+  const gx=coilX+coilW/2+W*0.12,gy=coilY;
+  ctx.beginPath();ctx.arc(gx,gy,H*0.12,0,PI*2);
+  ctx.fillStyle='rgba(30,30,30,0.8)';ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.font=`${H*0.06}px "Space Grotesk"`;ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('G',gx,gy+H*0.05);
+  // Galvanometer needle
+  const needleAngle=-PI/2+clamp(emf,-1,1)*PI/3;
+  ctx.beginPath();ctx.moveTo(gx,gy);ctx.lineTo(gx+Math.cos(needleAngle)*H*0.1,gy+Math.sin(needleAngle)*H*0.1);
+  ctx.strokeStyle=emf>0.01?'#4f8':emf<-0.01?'#ff6666':'rgba(255,255,255,0.5)';ctx.lineWidth=2;ctx.stroke();
+  // Magnet
+  const mgrd=ctx.createLinearGradient(mX-mW/2,mY-mH/2,mX+mW/2,mY+mH/2);
+  mgrd.addColorStop(0,'rgba(255,68,68,0.7)');mgrd.addColorStop(1,'rgba(68,102,255,0.7)');
+  ctx.fillStyle=mgrd;roundRect(ctx,mX-mW/2,mY-mH/2,mW,mH,6);ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=1;ctx.stroke();
+  ctx.fillStyle='#fff';ctx.font=`bold ${mH*0.18}px "Space Grotesk"`;ctx.textAlign='center';
+  ctx.fillText('N',mX,mY-mH*0.28);ctx.fillText('S',mX,mY+mH*0.28);
+  // Field lines from magnet to coil
+  const dir=emf>0.01?'increasing':emf<-0.01?'decreasing':'stable';
+  for(let i=-2;i<=2;i++){
+    const startX=mX+mW/2,endX=coilX-coilW/2;
+    if(startX>=endX)continue;
+    ctx.beginPath();ctx.moveTo(startX,mY+i*mH*0.15);ctx.lineTo(endX,mY+i*mH*0.15);
+    const alpha=0.15+(0.3*Math.abs(flux));
+    ctx.strokeStyle=`rgba(169,199,255,${alpha})`;ctx.lineWidth=1.2;ctx.setLineDash([4,4]);ctx.stroke();ctx.setLineDash([]);
+    if(mX<coilX-coilW/2)drawArrow(ctx,(startX+endX)/2,mY+i*mH*0.15,0,7,'rgba(169,199,255,0.5)');
+  }
+  ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font=`${H*0.05}px "Space Grotesk"`;ctx.textAlign='center';
+  ctx.fillText('MAGNET',mX,mY+mH/2+H*0.08);ctx.fillText('COIL',coilX,coilY+coilH/2+H*0.08);
+}
+function drawWaveform(data){
+  const c=document.getElementById('waveCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width=c.offsetWidth*devicePixelRatio,H=c.height=c.offsetHeight*devicePixelRatio;
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle='rgba(255,255,255,0.05)';ctx.lineWidth=1;
+  [0.25,0.5,0.75].forEach(y=>{ctx.beginPath();ctx.moveTo(0,H*y);ctx.lineTo(W,H*y);ctx.stroke();});
+  ctx.beginPath();ctx.moveTo(0,H/2);
+  data.forEach((v,i)=>{
+    const x=i/data.length*W,y=H/2-clamp(v,-1,1)*H*0.35;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  const grad=ctx.createLinearGradient(0,0,W,0);
+  grad.addColorStop(0,'rgba(169,199,255,0.1)');grad.addColorStop(1,'rgba(169,199,255,0.8)');
+  ctx.strokeStyle=grad;ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font=`${H*0.12}px "Space Grotesk"`;ctx.textAlign='left';
+  ctx.fillText('EMF →',10,H*0.15);ctx.textAlign='right';ctx.fillText('Time →',W-10,H*0.88);
+  ctx.beginPath();ctx.moveTo(0,H/2);ctx.lineTo(W,H/2);ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.lineWidth=1;ctx.stroke();
+}
+
+// ===================== DOMESTIC CIRCUIT =====================
+let devices={1:true,2:true,3:false};
+const deviceData={1:{name:'Bulb',A:0.5,label:'💡'},2:{name:'AC',A:5,label:'❄️'},3:{name:'Heater',A:10,label:'🔧'}};
+function toggleDevice(id){
+  devices[id]=!devices[id];
+  const btn=document.getElementById('devBtn'+id);
+  const d=deviceData[id];
+  btn.textContent=d.label+' '+d.name+' '+(devices[id]?'ON':'OFF');
+  btn.classList.toggle('active',devices[id]);
+  updateDomestic();
+}
+function updateDomestic(){
+  let total=0;
+  for(let id in devices)if(devices[id])total+=deviceData[id].A;
+  document.getElementById('totalCurrent').textContent=total.toFixed(1)+' A';
+  const safe=total<=15;
+  const statusEl=document.getElementById('circuitStatus');
+  statusEl.textContent=total>20?'SHORT CIRCUIT':total>15?'OVERLOADED':'SAFE';
+  statusEl.style.background=total>20?'rgba(220,50,50,0.2)':total>15?'rgba(255,160,40,0.2)':'rgba(100,220,100,0.15)';
+  statusEl.style.color=total>20?'#ff6666':total>15?'#ffa040':'#4f8';
+  drawDomestic(total);
+}
+function drawDomestic(totalA){
+  const c=document.getElementById('domesticCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width=c.offsetWidth*devicePixelRatio,H=c.height=c.offsetHeight*devicePixelRatio;
+  ctx.clearRect(0,0,W,H);
+  const safe=totalA<=15,overload=totalA>15&&totalA<=20,short_c=totalA>20;
+  
+  // Main wires
+  const wireY_live=H*0.2,wireY_neutral=H*0.45,wireY_earth=H*0.7;
+  const wireX1=W*0.05,wireX2=W*0.95;
+  const liveColor=safe?'rgba(255,68,68,0.8)':overload?'rgba(255,160,40,0.9)':'rgba(255,68,68,1)';
+  // Flowing current effect
+  const t=Date.now()*0.002;
+  [wireY_live,wireY_neutral,wireY_earth].forEach((wy,wi)=>{
+    const colors=['rgba(255,68,68,0.7)','rgba(68,102,255,0.5)','rgba(68,180,68,0.5)'];
+    ctx.beginPath();ctx.moveTo(wireX1,wy);ctx.lineTo(wireX2,wy);
+    ctx.strokeStyle=colors[wi];ctx.lineWidth=wi===0?3:2;
+    if(wi===0)ctx.setLineDash([8,4]);else ctx.setLineDash([]);
+    ctx.stroke();ctx.setLineDash([]);
+    if(wi===0&&totalA>0){
+      for(let p=0;p<5;p++){
+        const px=((t*80+p*W/5)%(W*0.9))+wireX1;
+        ctx.beginPath();ctx.arc(px,wy,3,0,PI*2);
+        ctx.fillStyle='rgba(255,212,117,0.8)';ctx.fill();
+      }
+    }
+  });
+  
+  // Wire labels
+  ctx.font=`bold ${H*0.04}px "Space Grotesk"`;ctx.textBaseline='middle';
+  ctx.fillStyle='rgba(255,100,100,0.8)';ctx.textAlign='left';ctx.fillText('LIVE (220V)',wireX1+5,wireY_live-H*0.05);
+  ctx.fillStyle='rgba(100,130,255,0.8)';ctx.fillText('NEUTRAL (0V)',wireX1+5,wireY_neutral-H*0.05);
+  ctx.fillStyle='rgba(100,200,100,0.8)';ctx.fillText('EARTH',wireX1+5,wireY_earth-H*0.05);
+  
+  // Fuse box
+  const fX=W*0.15,fW=W*0.08,fH=H*0.12;
+  ctx.fillStyle='rgba(40,40,40,0.8)';roundRect(ctx,fX-fW/2,wireY_live-fH/2,fW,fH,4);ctx.fill();
+  ctx.strokeStyle=safe?'rgba(100,220,100,0.5)':overload?'rgba(255,160,40,0.7)':'rgba(255,60,60,0.9)';
+  ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle=safe?'#4f8':overload?'#ffa040':'#ff6666';ctx.textAlign='center';ctx.font=`${H*0.036}px "Space Grotesk"`;
+  ctx.fillText(safe?'FUSE OK':overload?'OVERLOAD!':'BLOWN!',fX,wireY_live);
+  
+  // Devices
+  const devPositions=[0.4,0.6,0.8];
+  [1,2,3].forEach((id,i)=>{
+    const dx=W*devPositions[i],dy=(wireY_live+wireY_neutral)/2;
+    const on=devices[id];
+    const d=deviceData[id];
+    // Vertical connections
+    ctx.beginPath();ctx.moveTo(dx,wireY_live);ctx.lineTo(dx,wireY_live+H*0.05);ctx.strokeStyle=on?'rgba(255,212,117,0.7)':'rgba(255,255,255,0.1)';ctx.lineWidth=2;ctx.setLineDash([]);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(dx,wireY_neutral-H*0.05);ctx.lineTo(dx,wireY_neutral);ctx.stroke();
+    // Switch
+    const swY=wireY_live+H*0.05;
+    if(on){ctx.beginPath();ctx.moveTo(dx,swY);ctx.lineTo(dx,wireY_neutral-H*0.05);ctx.strokeStyle='rgba(255,212,117,0.8)';ctx.stroke();}
+    else{ctx.beginPath();ctx.moveTo(dx,swY);ctx.lineTo(dx+12,swY-15);ctx.strokeStyle='rgba(255,255,255,0.3)';ctx.stroke();}
+    // Device box
+    ctx.fillStyle=on?'rgba(255,212,117,0.1)':'rgba(40,40,40,0.5)';
+    roundRect(ctx,dx-W*0.04,dy-H*0.07,W*0.08,H*0.14,6);ctx.fill();
+    ctx.strokeStyle=on?'rgba(255,212,117,0.4)':'rgba(255,255,255,0.08)';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.font=`${H*0.055}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(d.label,dx,dy-H*0.01);
+    ctx.font=`${H*0.035}px "Space Grotesk"`;ctx.fillStyle=on?'rgba(255,212,117,0.8)':'rgba(255,255,255,0.2)';
+    ctx.fillText(d.A+'A',dx,dy+H*0.05);
+  });
+  
+  // Earth connection
+  ctx.beginPath();ctx.moveTo(W*0.88,wireY_earth);ctx.lineTo(W*0.88,wireY_earth+H*0.07);
+  ctx.strokeStyle='rgba(68,180,68,0.5)';ctx.lineWidth=2;ctx.stroke();
+  for(let i=0;i<3;i++){
+    const lw=14-i*4,y=wireY_earth+H*0.07+i*H*0.025;
+    ctx.beginPath();ctx.moveTo(W*0.88-lw,y);ctx.lineTo(W*0.88+lw,y);
+    ctx.strokeStyle=`rgba(68,180,68,${0.6-i*0.15})`;ctx.lineWidth=2;ctx.stroke();
+  }
+  ctx.fillStyle='rgba(100,200,100,0.5)';ctx.font=`${H*0.035}px "Space Grotesk"`;ctx.textAlign='center';
+  ctx.fillText('Earth',W*0.88,wireY_earth+H*0.17);
+  // Animate if overloaded
+  if(overload||short_c){
+    ctx.fillStyle=`rgba(255,${short_c?60:160},0,${0.3+0.2*Math.sin(Date.now()*0.01)})`;
+    roundRect(ctx,0,0,W,H,0);ctx.fill();
+  }
+  requestAnimationFrame(()=>updateDomestic());
+}
+
+// ===================== SCROLL NAV DOTS =====================
+const sections=['hero','s1','s2','s3','s4','s5','s6','s7'];
+const dots=document.querySelectorAll('.nav-dot');
+function updateNavDots(){
+  const scroll=window.scrollY+window.innerHeight*0.4;
+  sections.forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    const top=el.offsetTop,bot=top+el.offsetHeight;
+    dots[i].classList.toggle('active',scroll>=top&&scroll<bot);
+  });
+}
+window.addEventListener('scroll',updateNavDots);
+dots.forEach((dot,i)=>dot.addEventListener('click',()=>document.getElementById(sections[i]).scrollIntoView({behavior:'smooth'})));
+
+// ===================== NAVBAR SCROLL =====================
+window.addEventListener('scroll',()=>{
+  const nav=document.getElementById('topNav');
+  nav.style.background=window.scrollY>50?'rgba(10,10,10,0.97)':'rgba(10,10,10,0.85)';
+});
+
+// ===================== INIT ALL =====================
+window.addEventListener('load',()=>{
+  drawMagnet();drawWire();drawLoop();drawSolenoidMini();
+  updateSolenoid();updateForce();updateDomestic();
+  animateMotor();animateEMI();
+});
+window.addEventListener('resize',()=>{
+  drawMagnet();drawWire();drawLoop();drawSolenoidMini();
+  updateSolenoid();updateForce();updateDomestic();
+});
+</script>
+<script src="site-nav.js" defer></script>
+</body>
+</html>

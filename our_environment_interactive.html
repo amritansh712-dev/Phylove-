@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Codexsec | Our Environment – Chapter 15</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary":"#4ade80","primary-dim":"#22c55e","primary-dark":"#166534","on-primary":"#052e16","surface":"#030712","surface-container":"#0d1117","surface-container-high":"#161b22","surface-container-highest":"#21262d","on-surface":"#e6edf3","on-surface-variant":"#8b949e","outline":"#30363d","outline-variant":"#21262d"},fontFamily:{"display":["Playfair Display","serif"],"body":["Hanken Grotesk","sans-serif"],"label":["Space Grotesk","sans-serif"]}}}}
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#4ade80;--green-dim:#22c55e;--green-glow:rgba(74,222,128,0.15);--surface:#030712;--s1:#0d1117;--s2:#161b22;--s3:#21262d;--text:#e6edf3;--text-muted:#8b949e;--border:rgba(48,54,61,0.8)}
+html{scroll-behavior:smooth}
+body{background:var(--surface);color:var(--text);font-family:'Hanken Grotesk',sans-serif;overflow-x:hidden}
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24}
+
+/* Noise texture overlay */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.4}
+
+/* Glass card */
+.glass{background:rgba(13,17,23,0.7);backdrop-filter:blur(16px);border:1px solid var(--border)}
+.glow-border{border:1px solid rgba(74,222,128,0.3);box-shadow:0 0 20px rgba(74,222,128,0.05),inset 0 0 20px rgba(74,222,128,0.02)}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--surface)}
+::-webkit-scrollbar-thumb{background:var(--green-dim);border-radius:2px}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,0.3)}50%{box-shadow:0 0 20px 4px rgba(74,222,128,0.15)}}
+@keyframes orbit{from{transform:rotate(0deg) translateX(120px) rotate(0deg)}to{transform:rotate(360deg) translateX(120px) rotate(-360deg)}}
+@keyframes float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-12px)}}
+@keyframes spin-slow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes data-fill{from{width:0}to{width:var(--target-width)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.fade-up{animation:fadeUp 0.7s ease both}
+.float-anim{animation:float 4s ease-in-out infinite}
+.pulse{animation:pulse-glow 2s ease-in-out infinite}
+
+/* Scroll reveal */
+.reveal{opacity:0;transform:translateY(24px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* Section headers */
+.section-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.2);border-radius:2px;font-family:'Space Grotesk';font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--green);margin-bottom:24px}
+
+/* Interactive sliders */
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--s3);border-radius:2px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--green);cursor:pointer;box-shadow:0 0 8px rgba(74,222,128,0.4)}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px}
+
+/* Tabs */
+.tab-btn{padding:10px 20px;font-family:'Space Grotesk';font-size:11px;letter-spacing:0.1em;text-transform:uppercase;border:1px solid transparent;border-radius:2px;cursor:pointer;transition:all 0.2s;background:transparent;color:var(--text-muted)}
+.tab-btn.active{background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.3);color:var(--green)}
+.tab-btn:hover:not(.active){color:var(--text);border-color:var(--border)}
+.tab-panel{display:none}.tab-panel.active{display:block}
+
+/* Food chain nodes */
+.chain-node{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all 0.3s}
+.chain-node:hover .node-circle{box-shadow:0 0 24px rgba(74,222,128,0.4);border-color:var(--green)}
+.node-circle{width:72px;height:72px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:28px;transition:all 0.3s;position:relative}
+
+/* Quiz styling */
+.quiz-option{padding:14px 20px;border:1px solid var(--border);border-radius:2px;cursor:pointer;transition:all 0.2s;font-size:14px;line-height:1.5}
+.quiz-option:hover{border-color:rgba(74,222,128,0.4);background:rgba(74,222,128,0.05)}
+.quiz-option.correct{border-color:#4ade80;background:rgba(74,222,128,0.15);color:#4ade80}
+.quiz-option.wrong{border-color:#f87171;background:rgba(248,113,113,0.1);color:#f87171}
+
+/* Nav */
+.nav-link{font-family:'Space Grotesk';font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);transition:color 0.2s;cursor:pointer;padding:8px 4px;border-bottom:2px solid transparent}
+.nav-link:hover,.nav-link.active{color:var(--green);border-bottom-color:var(--green)}
+
+/* Ozone layer viz */
+.ozone-ring{position:absolute;border-radius:50%;border:2px solid;opacity:0.6;transition:all 1s ease}
+
+/* Magnification bars */
+.mag-bar{height:8px;border-radius:1px;transition:width 1s ease;background:linear-gradient(to right,#4ade80,#22c55e)}
+
+/* Pyramid levels */
+.pyramid-level{clip-path:none;transition:all 0.4s;cursor:pointer;position:relative}
+.pyramid-level:hover{filter:brightness(1.2)}
+
+/* Tooltip */
+.tooltip{position:absolute;background:var(--s2);border:1px solid var(--border);padding:10px 14px;border-radius:2px;font-size:12px;pointer-events:none;white-space:nowrap;z-index:100;opacity:0;transform:translateY(-4px);transition:all 0.2s}
+.tooltip.show{opacity:1;transform:translateY(0)}
+
+/* Accordion */
+.accordion-header{display:flex;justify-content:space-between;align-items:center;padding:20px;cursor:pointer;border:1px solid var(--border);background:var(--s1);transition:all 0.2s}
+.accordion-header:hover{border-color:rgba(74,222,128,0.3);background:rgba(74,222,128,0.03)}
+.accordion-body{max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.3s}
+.accordion-body.open{max-height:800px}
+.accordion-inner{padding:20px;border:1px solid var(--border);border-top:none;background:var(--s2)}
+.accordion-icon{transition:transform 0.3s;color:var(--green)}
+.accordion-header.open .accordion-icon{transform:rotate(180deg)}
+</style>
+<link rel="stylesheet" href="site-nav.css">
+</head>
+<body>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header style="position:fixed;top:0;width:100%;z-index:50;background:rgba(3,7,18,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)">
+  <nav style="max-width:1200px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between">
+    <div style="font-family:'Space Grotesk';font-size:18px;font-weight:600;letter-spacing:-0.02em">Codex<span style="color:var(--green)">sec</span></div>
+    <div style="display:flex;gap:32px">
+      <a class="nav-link active" href="#ecosystem">Ecosystem</a>
+      <a class="nav-link" href="#energy">Energy Flow</a>
+      <a class="nav-link" href="#biomag">Bio-Magnification</a>
+      <a class="nav-link" href="#ozone">Ozone</a>
+      <a class="nav-link" href="#waste">Waste</a>
+      <a class="nav-link" href="#quiz">Quiz</a>
+    </div>
+    <div style="font-family:'Space Grotesk';font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--green);padding:8px 16px;border:1px solid rgba(74,222,128,0.3);border-radius:2px">Chapter 15</div>
+  </nav>
+</header>
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<section style="position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;padding-top:64px" id="ecosystem">
+  <!-- Animated background -->
+  <div style="position:absolute;inset:0;z-index:0">
+    <div style="position:absolute;top:20%;left:15%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(34,197,94,0.08) 0%,transparent 70%);animation:float 6s ease-in-out infinite"></div>
+    <div style="position:absolute;bottom:20%;right:15%;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(74,222,128,0.06) 0%,transparent 70%);animation:float 8s ease-in-out infinite reverse"></div>
+    <!-- Grid lines -->
+    <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.04" xmlns="http://www.w3.org/2000/svg">
+      <defs><pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M 60 0 L 0 0 0 60" fill="none" stroke="#4ade80" stroke-width="0.5"/></pattern></defs>
+      <rect width="100%" height="100%" fill="url(#grid)"/>
+    </svg>
+  </div>
+  
+  <div style="position:relative;z-index:1;text-align:center;max-width:900px;padding:0 40px">
+    <div class="section-tag fade-up"><span class="material-symbols-outlined" style="font-size:14px">eco</span> NCERT Class 10 · Chapter 15</div>
+    <h1 style="font-family:'Playfair Display';font-size:clamp(52px,8vw,96px);line-height:1.0;font-weight:700;margin-bottom:24px;animation:fadeUp 0.8s 0.1s both">Our<br><em style="color:var(--green)">Environment</em></h1>
+    <p style="font-size:18px;line-height:1.8;color:var(--text-muted);max-width:640px;margin:0 auto 48px;animation:fadeUp 0.8s 0.2s both">A deep-dive into ecosystems, trophic energy flow, biological magnification, ozone depletion, and waste management — with interactive simulations.</p>
+    
+    <!-- Key stats row -->
+    <div style="display:flex;justify-content:center;gap:48px;animation:fadeUp 0.8s 0.3s both">
+      <div style="text-align:center">
+        <div style="font-family:'Playfair Display';font-size:48px;color:var(--green);line-height:1">10%</div>
+        <div style="font-family:'Space Grotesk';font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted);margin-top:4px">Energy Transfer</div>
+      </div>
+      <div style="width:1px;background:var(--border)"></div>
+      <div style="text-align:center">
+        <div style="font-family:'Playfair Display';font-size:48px;color:var(--green);line-height:1">3–4</div>
+        <div style="font-family:'Space Grotesk';font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted);margin-top:4px">Trophic Levels</div>
+      </div>
+      <div style="width:1px;background:var(--border)"></div>
+      <div style="text-align:center">
+        <div style="font-family:'Playfair Display';font-size:48px;color:var(--green);line-height:1">1987</div>
+        <div style="font-family:'Space Grotesk';font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted);margin-top:4px">Montreal Protocol</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div style="position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0.5;animation:blink 2s ease-in-out infinite">
+    <span style="font-family:'Space Grotesk';font-size:10px;letter-spacing:0.2em;text-transform:uppercase">Scroll</span>
+    <span class="material-symbols-outlined" style="font-size:20px">keyboard_arrow_down</span>
+  </div>
+</section>
+
+<!-- ═══════════════════════ WHAT IS AN ECOSYSTEM ═══════════════════════ -->
+<section style="padding:120px 40px;max-width:1200px;margin:0 auto" class="reveal">
+  <div class="section-tag"><span class="material-symbols-outlined" style="font-size:14px">account_tree</span> Section 01</div>
+  <h2 style="font-family:'Playfair Display';font-size:52px;margin-bottom:16px">What is an <em style="color:var(--green)">Ecosystem?</em></h2>
+  <p style="color:var(--text-muted);font-size:17px;line-height:1.8;max-width:700px;margin-bottom:64px">An ecosystem is a self-sustaining functional unit of the biosphere comprising all interacting living organisms alongside the non-living physical environment.</p>
+  
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-bottom:64px">
+    <!-- Biotic -->
+    <div class="glass" style="padding:36px;border-radius:4px">
+      <div style="width:48px;height:48px;border-radius:50%;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);display:flex;align-items:center;justify-content:center;margin-bottom:24px">
+        <span class="material-symbols-outlined" style="color:var(--green)">psychiatry</span>
+      </div>
+      <h3 style="font-size:22px;font-weight:600;margin-bottom:12px">Biotic Components</h3>
+      <p style="color:var(--text-muted);font-size:15px;line-height:1.7;margin-bottom:20px">All living organisms within the ecosystem — producers, consumers, and decomposers — forming complex interaction networks.</p>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.1);border-radius:2px">
+          <span style="font-size:20px">🌿</span>
+          <div><div style="font-size:13px;font-weight:600;color:var(--green)">Producers (Autotrophs)</div><div style="font-size:12px;color:var(--text-muted)">Green plants, photosynthetic bacteria</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.1);border-radius:2px">
+          <span style="font-size:20px">🦁</span>
+          <div><div style="font-size:13px;font-weight:600;color:var(--green)">Consumers (Heterotrophs)</div><div style="font-size:12px;color:var(--text-muted)">Herbivores, carnivores, omnivores</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.1);border-radius:2px">
+          <span style="font-size:20px">🍄</span>
+          <div><div style="font-size:13px;font-weight:600;color:var(--green)">Decomposers</div><div style="font-size:12px;color:var(--text-muted)">Bacteria, fungi — break down organic matter</div></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Abiotic -->
+    <div class="glass" style="padding:36px;border-radius:4px">
+      <div style="width:48px;height:48px;border-radius:50%;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);display:flex;align-items:center;justify-content:center;margin-bottom:24px">
+        <span class="material-symbols-outlined" style="color:var(--green)">thermostat</span>
+      </div>
+      <h3 style="font-size:22px;font-weight:600;margin-bottom:12px">Abiotic Components</h3>
+      <p style="color:var(--text-muted);font-size:15px;line-height:1.7;margin-bottom:20px">The non-living physical and chemical environment providing resources and conditions for life to exist.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="padding:12px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.1);border-radius:2px;text-align:center">
+          <div style="font-size:22px;margin-bottom:4px">🌡️</div>
+          <div style="font-size:12px;color:var(--text-muted)">Temperature</div>
+        </div>
+        <div style="padding:12px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.1);border-radius:2px;text-align:center">
+          <div style="font-size:22px;margin-bottom:4px">💧</div>
+          <div style="font-size:12px;color:var(--text-muted)">Rainfall</div>
+        </div>
+        <div style="padding:12px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.1);border-radius:2px;text-align:center">
+          <div style="font-size:22px;margin-bottom:4px">🪨</div>
+          <div style="font-size:12px;color:var(--text-muted)">Soil</div>
+        </div>
+        <div style="padding:12px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.1);border-radius:2px;text-align:center">
+          <div style="font-size:22px;margin-bottom:4px">💨</div>
+          <div style="font-size:12px;color:var(--text-muted)">Wind</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Food Chain Interactive -->
+  <div class="glow-border" style="padding:48px;border-radius:4px;background:var(--s1)">
+    <h3 style="font-size:24px;font-weight:600;margin-bottom:8px">🔗 Interactive Food Chain</h3>
+    <p style="color:var(--text-muted);font-size:14px;margin-bottom:40px">Click on any organism to learn about its role in the ecosystem</p>
+    
+    <div style="display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:nowrap;overflow-x:auto;padding:20px 0" id="food-chain">
+      <!-- Nodes -->
+      <div class="chain-node" onclick="showNodeInfo('sun')" style="flex-shrink:0">
+        <div class="node-circle" style="background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.4)">☀️</div>
+        <div style="font-family:'Space Grotesk';font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted)">Solar Energy</div>
+        <div style="font-size:11px;color:rgba(251,191,36,0.8);margin-top:2px">100%</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;width:60px">
+        <div style="width:40px;height:2px;background:linear-gradient(to right,rgba(251,191,36,0.5),var(--green))"></div>
+        <div style="font-size:10px;color:var(--text-muted)">~1%</div>
+      </div>
+      
+      <div class="chain-node" onclick="showNodeInfo('plant')" style="flex-shrink:0">
+        <div class="node-circle" style="background:rgba(74,222,128,0.1);border-color:rgba(74,222,128,0.4)">🌿</div>
+        <div style="font-family:'Space Grotesk';font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted)">Producers</div>
+        <div style="font-size:11px;color:var(--green);margin-top:2px">1,000 J</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;width:60px">
+        <div style="width:40px;height:2px;background:linear-gradient(to right,var(--green),#86efac)"></div>
+        <div style="font-size:10px;color:var(--text-muted)">10%</div>
+      </div>
+      
+      <div class="chain-node" onclick="showNodeInfo('herbivore')" style="flex-shrink:0">
+        <div class="node-circle" style="background:rgba(96,165,250,0.1);border-color:rgba(96,165,250,0.4)">🐛</div>
+        <div style="font-family:'Space Grotesk';font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted)">Herbivores</div>
+        <div style="font-size:11px;color:#60a5fa;margin-top:2px">100 J</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;width:60px">
+        <div style="width:40px;height:2px;background:linear-gradient(to right,#60a5fa,#f97316)"></div>
+        <div style="font-size:10px;color:var(--text-muted)">10%</div>
+      </div>
+      
+      <div class="chain-node" onclick="showNodeInfo('carnivore1')" style="flex-shrink:0">
+        <div class="node-circle" style="background:rgba(249,115,22,0.1);border-color:rgba(249,115,22,0.4)">🐸</div>
+        <div style="font-family:'Space Grotesk';font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted)">Small Carnivore</div>
+        <div style="font-size:11px;color:#f97316;margin-top:2px">10 J</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;width:60px">
+        <div style="width:40px;height:2px;background:linear-gradient(to right,#f97316,#ef4444)"></div>
+        <div style="font-size:10px;color:var(--text-muted)">10%</div>
+      </div>
+      
+      <div class="chain-node" onclick="showNodeInfo('carnivore2')" style="flex-shrink:0">
+        <div class="node-circle" style="background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.4)">🦅</div>
+        <div style="font-family:'Space Grotesk';font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted)">Top Carnivore</div>
+        <div style="font-size:11px;color:#ef4444;margin-top:2px">1 J</div>
+      </div>
+    </div>
+    
+    <!-- Info Panel -->
+    <div id="node-info" style="margin-top:24px;padding:20px;background:var(--s2);border:1px solid rgba(74,222,128,0.2);border-radius:2px;display:none">
+      <div id="node-info-content"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ ENERGY FLOW ═══════════════════════ -->
+<section style="padding:120px 40px;background:var(--s1);border-top:1px solid var(--border);border-bottom:1px solid var(--border)" id="energy">
+  <div style="max-width:1200px;margin:0 auto" class="reveal">
+    <div class="section-tag"><span class="material-symbols-outlined" style="font-size:14px">bolt</span> Section 02</div>
+    <h2 style="font-family:'Playfair Display';font-size:52px;margin-bottom:16px">Lindeman's <em style="color:var(--green)">10% Rule</em></h2>
+    <p style="color:var(--text-muted);font-size:17px;line-height:1.8;max-width:700px;margin-bottom:16px">Only ~10% of energy is transferred from one trophic level to the next. The remaining 90% is lost as heat, respiration, and metabolic processes.</p>
+    <div style="display:inline-block;padding:10px 20px;background:rgba(74,222,128,0.08);border-left:3px solid var(--green);margin-bottom:64px">
+      <p style="font-size:14px;color:var(--text-muted)"><strong style="color:var(--green)">Key Fact:</strong> Green plants capture only ~1% of total solar energy falling on their leaves.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start">
+      <!-- Energy Pyramid Interactive -->
+      <div>
+        <h3 style="font-size:20px;font-weight:600;margin-bottom:24px">⚡ Interactive Energy Pyramid</h3>
+        
+        <!-- SVG Pyramid -->
+        <div style="position:relative;padding:20px">
+          <svg viewBox="0 0 420 340" style="width:100%;max-width:420px" id="pyramid-svg">
+            <!-- Level 4 - Top -->
+            <polygon points="210,20 270,80 150,80" fill="rgba(239,68,68,0.25)" stroke="#ef4444" stroke-width="1.5" class="pyramid-level" onclick="highlightLevel(4)" id="lvl4"/>
+            <text x="210" y="58" text-anchor="middle" fill="#ef4444" font-size="12" font-family="Space Grotesk">Top Carnivore</text>
+            
+            <!-- Level 3 -->
+            <polygon points="150,88 270,88 300,148 120,148" fill="rgba(249,115,22,0.2)" stroke="#f97316" stroke-width="1.5" class="pyramid-level" onclick="highlightLevel(3)" id="lvl3"/>
+            <text x="210" y="125" text-anchor="middle" fill="#f97316" font-size="13" font-family="Space Grotesk">Secondary Consumer</text>
+            
+            <!-- Level 2 -->
+            <polygon points="120,156 300,156 340,216 80,216" fill="rgba(96,165,250,0.2)" stroke="#60a5fa" stroke-width="1.5" class="pyramid-level" onclick="highlightLevel(2)" id="lvl2"/>
+            <text x="210" y="193" text-anchor="middle" fill="#60a5fa" font-size="13" font-family="Space Grotesk">Primary Consumer (Herbivore)</text>
+            
+            <!-- Level 1 - Base -->
+            <polygon points="80,224 340,224 380,284 40,284" fill="rgba(74,222,128,0.2)" stroke="#4ade80" stroke-width="1.5" class="pyramid-level" onclick="highlightLevel(1)" id="lvl1"/>
+            <text x="210" y="261" text-anchor="middle" fill="#4ade80" font-size="14" font-family="Space Grotesk" font-weight="500">Producers (Plants)</text>
+            
+            <!-- Energy labels -->
+            <text x="385" y="268" fill="#4ade80" font-size="11" font-family="Space Grotesk">1000 J</text>
+            <text x="345" y="200" fill="#60a5fa" font-size="11" font-family="Space Grotesk">100 J</text>
+            <text x="305" y="132" fill="#f97316" font-size="11" font-family="Space Grotesk">10 J</text>
+            <text x="270" y="64" fill="#ef4444" font-size="11" font-family="Space Grotesk">1 J</text>
+          </svg>
+        </div>
+        
+        <!-- Level detail card -->
+        <div id="level-detail" style="padding:16px 20px;background:var(--s2);border:1px solid rgba(74,222,128,0.2);border-radius:2px;min-height:80px">
+          <p style="color:var(--text-muted);font-size:13px">👆 Click any pyramid level to see details</p>
+        </div>
+      </div>
+      
+      <!-- Energy Slider Simulator -->
+      <div>
+        <h3 style="font-size:20px;font-weight:600;margin-bottom:24px">🎛️ Energy Transfer Simulator</h3>
+        <p style="color:var(--text-muted);font-size:13px;margin-bottom:28px">Adjust the base energy and see how much reaches each level</p>
+        
+        <div style="margin-bottom:28px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <label style="font-family:'Space Grotesk';font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted)">Base Energy (Producers)</label>
+            <span id="base-val" style="color:var(--green);font-weight:600;font-size:14px">10,000 J</span>
+          </div>
+          <input type="range" min="1000" max="50000" step="1000" value="10000" id="base-energy" oninput="updateEnergyFlow()"/>
+        </div>
+        
+        <div style="display:flex;flex-direction:column;gap:16px" id="energy-bars">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-size:13px;color:#4ade80">🌿 Producers</span>
+              <span id="e1" style="font-size:13px;font-weight:600;color:#4ade80">10,000 J</span>
+            </div>
+            <div style="height:10px;background:var(--s3);border-radius:1px;overflow:hidden">
+              <div id="bar1" style="height:100%;width:100%;background:linear-gradient(to right,#4ade80,#22c55e);transition:width 0.6s ease;border-radius:1px"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-size:13px;color:#60a5fa">🐛 Herbivores (10%)</span>
+              <span id="e2" style="font-size:13px;font-weight:600;color:#60a5fa">1,000 J</span>
+            </div>
+            <div style="height:10px;background:var(--s3);border-radius:1px;overflow:hidden">
+              <div id="bar2" style="height:100%;width:10%;background:linear-gradient(to right,#60a5fa,#3b82f6);transition:width 0.6s ease;border-radius:1px"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-size:13px;color:#f97316">🐸 Small Carnivore (1%)</span>
+              <span id="e3" style="font-size:13px;font-weight:600;color:#f97316">100 J</span>
+            </div>
+            <div style="height:10px;background:var(--s3);border-radius:1px;overflow:hidden">
+              <div id="bar3" style="height:100%;width:1%;background:linear-gradient(to right,#f97316,#ea580c);transition:width 0.6s ease;border-radius:1px"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-size:13px;color:#ef4444">🦅 Top Carnivore (0.1%)</span>
+              <span id="e4" style="font-size:13px;font-weight:600;color:#ef4444">10 J</span>
+            </div>
+            <div style="height:10px;background:var(--s3);border-radius:1px;overflow:hidden">
+              <div id="bar4" style="height:100%;width:0.1%;background:linear-gradient(to right,#ef4444,#dc2626);transition:width 0.6s ease;border-radius:1px"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div style="margin-top:28px;padding:16px;background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:2px">
+          <p style="font-size:13px;color:var(--text-muted);line-height:1.7">⚠️ <strong style="color:#f87171">Why only 3–4 trophic levels?</strong> With each step, 90% of energy is lost. By the 4th level, so little energy remains that supporting another level becomes ecologically impossible.</p>
+        </div>
+        
+        <!-- Heat loss visualization -->
+        <div style="margin-top:24px">
+          <h4 style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--text-muted)">Energy Fate at Each Trophic Level</h4>
+          <div style="display:flex;gap:8px">
+            <div style="flex:9;padding:10px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:2px;text-align:center">
+              <div style="font-size:20px">🔥</div>
+              <div style="font-size:11px;color:#f87171;margin-top:4px">90% Heat Loss</div>
+              <div style="font-size:10px;color:var(--text-muted)">Respiration, excretion, metabolic work</div>
+            </div>
+            <div style="flex:1;padding:10px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.2);border-radius:2px;text-align:center">
+              <div style="font-size:20px">⬆️</div>
+              <div style="font-size:11px;color:var(--green);margin-top:4px">10% Up</div>
+              <div style="font-size:10px;color:var(--text-muted)">Next level</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ BIOLOGICAL MAGNIFICATION ═══════════════════════ -->
+<section style="padding:120px 40px;max-width:1200px;margin:0 auto" id="biomag" class="reveal">
+  <div class="section-tag"><span class="material-symbols-outlined" style="font-size:14px">warning</span> Section 03</div>
+  <h2 style="font-family:'Playfair Display';font-size:52px;margin-bottom:16px">Biological <em style="color:var(--green)">Magnification</em></h2>
+  <p style="color:var(--text-muted);font-size:17px;line-height:1.8;max-width:700px;margin-bottom:16px">The progressive increase in concentration of toxic, non-biodegradable chemicals (like DDT) at each successive trophic level. Humans, as top consumers, are most severely affected.</p>
+  <div style="display:inline-block;padding:10px 20px;background:rgba(239,68,68,0.07);border-left:3px solid #ef4444;margin-bottom:64px">
+    <p style="font-size:14px;color:var(--text-muted)"><strong style="color:#f87171">Why does it happen?</strong> These chemicals cannot be metabolized or excreted — they accumulate in fatty tissues and intensify up the chain.</p>
+  </div>
+  
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start">
+    <!-- Interactive Magnification Visualizer -->
+    <div>
+      <h3 style="font-size:20px;font-weight:600;margin-bottom:8px">🔬 DDT Accumulation Simulator</h3>
+      <p style="color:var(--text-muted);font-size:13px;margin-bottom:28px">Drag the pesticide slider to see how DDT concentrations multiply</p>
+      
+      <div style="margin-bottom:28px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <label style="font-family:'Space Grotesk';font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted)">DDT in Environment</label>
+          <span id="ddt-base-val" style="color:#f87171;font-weight:600;font-size:14px">0.02 ppm</span>
+        </div>
+        <input type="range" min="1" max="20" step="1" value="2" id="ddt-slider" oninput="updateDDT()"/>
+        <div style="display:flex;justify-content:space-between;margin-top:4px">
+          <span style="font-size:10px;color:var(--text-muted)">Low (0.01 ppm)</span>
+          <span style="font-size:10px;color:var(--text-muted)">High (0.20 ppm)</span>
+        </div>
+      </div>
+      
+      <!-- Organism rows -->
+      <div style="display:flex;flex-direction:column;gap:14px" id="biomag-bars">
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+            <span style="font-size:18px;width:30px">💧</span>
+            <span style="font-size:13px;flex:1">Water / Soil</span>
+            <span id="ddt1" style="font-size:13px;font-weight:700;color:var(--text-muted)">0.02 ppm</span>
+          </div>
+          <div style="height:8px;background:var(--s3);border-radius:1px;overflow:hidden"><div id="dbar1" style="height:100%;width:1%;background:#4ade80;transition:width 0.6s ease;border-radius:1px"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+            <span style="font-size:18px;width:30px">🌿</span>
+            <span style="font-size:13px;flex:1">Phytoplankton / Plants</span>
+            <span id="ddt2" style="font-size:13px;font-weight:700;color:#86efac">0.04 ppm</span>
+          </div>
+          <div style="height:8px;background:var(--s3);border-radius:1px;overflow:hidden"><div id="dbar2" style="height:100%;width:2%;background:#86efac;transition:width 0.6s ease;border-radius:1px"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+            <span style="font-size:18px;width:30px">🐟</span>
+            <span style="font-size:13px;flex:1">Small Fish / Herbivores</span>
+            <span id="ddt3" style="font-size:13px;font-weight:700;color:#60a5fa">0.5 ppm</span>
+          </div>
+          <div style="height:8px;background:var(--s3);border-radius:1px;overflow:hidden"><div id="dbar3" style="height:100%;width:25%;background:#60a5fa;transition:width 0.6s ease;border-radius:1px"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+            <span style="font-size:18px;width:30px">🐟</span>
+            <span style="font-size:13px;flex:1">Large Fish / Carnivores</span>
+            <span id="ddt4" style="font-size:13px;font-weight:700;color:#f97316">2.0 ppm</span>
+          </div>
+          <div style="height:8px;background:var(--s3);border-radius:1px;overflow:hidden"><div id="dbar4" style="height:100%;width:40%;background:#f97316;transition:width 0.6s ease;border-radius:1px"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+            <span style="font-size:18px;width:30px">🦅</span>
+            <span style="font-size:13px;flex:1">Birds / Top Predators</span>
+            <span id="ddt5" style="font-size:13px;font-weight:700;color:#ef4444">25 ppm</span>
+          </div>
+          <div style="height:8px;background:var(--s3);border-radius:1px;overflow:hidden"><div id="dbar5" style="height:100%;width:70%;background:#ef4444;transition:width 0.6s ease;border-radius:1px"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+            <span style="font-size:18px;width:30px">🧑</span>
+            <span style="font-size:13px;flex:1">Humans (Top Consumer)</span>
+            <span id="ddt6" style="font-size:13px;font-weight:700;color:#dc2626">100+ ppm</span>
+          </div>
+          <div style="height:8px;background:var(--s3);border-radius:1px;overflow:hidden"><div id="dbar6" style="height:100%;width:100%;background:linear-gradient(to right,#ef4444,#dc2626);transition:width 0.6s ease;border-radius:1px;animation:pulse-glow 2s infinite"></div></div>
+        </div>
+      </div>
+      
+      <div id="ddt-warning" style="margin-top:20px;padding:14px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:2px;display:none">
+        <p style="font-size:12px;color:#f87171">⚠️ <strong>Critical levels reached!</strong> At these concentrations, DDT causes reproductive failure, immune suppression, and neurological damage in top predators and humans.</p>
+      </div>
+    </div>
+    
+    <!-- Key facts -->
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div class="glass" style="padding:28px;border-radius:4px">
+        <h4 style="font-size:16px;font-weight:600;margin-bottom:12px;color:var(--green)">What is DDT?</h4>
+        <p style="font-size:14px;color:var(--text-muted);line-height:1.7">Dichlorodiphenyltrichloroethane — a synthetic insecticide widely used in agriculture. It is highly stable, fat-soluble, and non-biodegradable, making it the classic example of biological magnification.</p>
+      </div>
+      
+      <div class="glass" style="padding:28px;border-radius:4px">
+        <h4 style="font-size:16px;font-weight:600;margin-bottom:12px;color:var(--green)">The Magnification Process</h4>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(74,222,128,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--green)">1</div>
+            <p style="font-size:13px;color:var(--text-muted);line-height:1.6">Chemical enters environment via agricultural runoff</p>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(74,222,128,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--green)">2</div>
+            <p style="font-size:13px;color:var(--text-muted);line-height:1.6">Absorbed by producers and stored in fatty tissues</p>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(74,222,128,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:var(--green)">3</div>
+            <p style="font-size:13px;color:var(--text-muted);line-height:1.6">Each predator eats many prey — concentrations multiply</p>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start">
+            <div style="width:24px;height:24px;border-radius:50%;background:rgba(239,68,68,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:700;color:#ef4444">4</div>
+            <p style="font-size:13px;color:var(--text-muted);line-height:1.6">Top consumers accumulate dangerous levels — thousands of times the environmental concentration</p>
+          </div>
+        </div>
+      </div>
+      
+      <div style="padding:20px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15);border-radius:2px">
+        <p style="font-size:13px;color:var(--text-muted);line-height:1.7">🌊 <strong style="color:var(--green)">Real Example:</strong> In aquatic ecosystems, DDT concentration can increase from 0.000003 ppm in water to over 25 ppm in fish-eating birds — a magnification of over 8 million times!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ OZONE LAYER ═══════════════════════ -->
+<section style="padding:120px 40px;background:var(--s1);border-top:1px solid var(--border);border-bottom:1px solid var(--border)" id="ozone">
+  <div style="max-width:1200px;margin:0 auto" class="reveal">
+    <div class="section-tag"><span class="material-symbols-outlined" style="font-size:14px">public</span> Section 04</div>
+    <h2 style="font-family:'Playfair Display';font-size:52px;margin-bottom:16px">Ozone Layer <em style="color:var(--green)">Depletion</em></h2>
+    <p style="color:var(--text-muted);font-size:17px;line-height:1.8;max-width:700px;margin-bottom:64px">The stratospheric ozone layer absorbs lethal UV-C and UV-B radiation. CFCs, released by refrigerants and aerosols, catalytically destroy ozone molecules, creating dangerous holes.</p>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start">
+      <!-- Ozone Visual Simulator -->
+      <div>
+        <h3 style="font-size:20px;font-weight:600;margin-bottom:8px">🌍 Ozone Layer Thickness Simulator</h3>
+        <p style="color:var(--text-muted);font-size:13px;margin-bottom:28px">Adjust CFC levels and observe the protective layer thinning</p>
+        
+        <div style="margin-bottom:24px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+            <label style="font-family:'Space Grotesk';font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted)">CFC Emission Level</label>
+            <span id="cfc-val" style="color:#f87171;font-weight:600;font-size:14px">50%</span>
+          </div>
+          <input type="range" min="0" max="100" step="5" value="50" id="cfc-slider" oninput="updateOzone()"/>
+          <div style="display:flex;justify-content:space-between;margin-top:4px">
+            <span style="font-size:10px;color:var(--green)">Pre-1980 (Safe)</span>
+            <span style="font-size:10px;color:#f87171">Critical</span>
+          </div>
+        </div>
+        
+        <!-- Earth cross-section visualization -->
+        <div style="position:relative;width:100%;aspect-ratio:1;max-width:360px;margin:0 auto">
+          <svg id="ozone-svg" viewBox="0 0 360 360" style="width:100%">
+            <!-- Space background -->
+            <rect width="360" height="360" fill="#030712"/>
+            <!-- Stars -->
+            <circle cx="30" cy="40" r="1" fill="white" opacity="0.6"/>
+            <circle cx="80" cy="20" r="1.5" fill="white" opacity="0.4"/>
+            <circle cx="150" cy="10" r="1" fill="white" opacity="0.7"/>
+            <circle cx="220" cy="30" r="1" fill="white" opacity="0.5"/>
+            <circle cx="300" cy="15" r="1.5" fill="white" opacity="0.6"/>
+            <circle cx="340" cy="50" r="1" fill="white" opacity="0.4"/>
+            <circle cx="20" cy="100" r="1" fill="white" opacity="0.5"/>
+            <circle cx="320" cy="90" r="1.5" fill="white" opacity="0.7"/>
+            
+            <!-- UV rays coming from top -->
+            <g id="uv-rays">
+              <line x1="60" y1="0" x2="110" y2="90" stroke="#c084fc" stroke-width="1.5" opacity="0.6" stroke-dasharray="4,4"/>
+              <line x1="120" y1="0" x2="155" y2="90" stroke="#c084fc" stroke-width="1.5" opacity="0.6" stroke-dasharray="4,4"/>
+              <line x1="180" y1="0" x2="180" y2="90" stroke="#c084fc" stroke-width="2" opacity="0.8" stroke-dasharray="4,4"/>
+              <line x1="240" y1="0" x2="205" y2="90" stroke="#c084fc" stroke-width="1.5" opacity="0.6" stroke-dasharray="4,4"/>
+              <line x1="300" y1="0" x2="250" y2="90" stroke="#c084fc" stroke-width="1.5" opacity="0.6" stroke-dasharray="4,4"/>
+            </g>
+            
+            <!-- Ozone layer (ring around Earth) -->
+            <circle id="ozone-ring" cx="180" cy="220" r="115" fill="none" stroke="#4ade80" stroke-width="16" opacity="0.7"/>
+            
+            <!-- CFC arrows -->
+            <g id="cfc-arrows" opacity="0.8">
+              <line x1="130" y1="220" x2="130" y2="165" stroke="#f97316" stroke-width="2"/>
+              <polygon points="130,160 126,172 134,172" fill="#f97316"/>
+              <line x1="230" y1="220" x2="230" y2="165" stroke="#f97316" stroke-width="2"/>
+              <polygon points="230,160 226,172 234,172" fill="#f97316"/>
+              <text x="100" y="250" fill="#f97316" font-size="9" font-family="Space Grotesk">CFCs ↑</text>
+            </g>
+            
+            <!-- Earth -->
+            <circle cx="180" cy="220" r="90" fill="#1e3a5f"/>
+            <!-- Land masses simplified -->
+            <ellipse cx="160" cy="195" rx="30" ry="20" fill="#22c55e" opacity="0.7"/>
+            <ellipse cx="200" cy="235" rx="25" ry="15" fill="#22c55e" opacity="0.6"/>
+            <ellipse cx="145" cy="240" rx="12" ry="10" fill="#22c55e" opacity="0.5"/>
+            
+            <!-- Atmosphere (thin) -->
+            <circle cx="180" cy="220" r="95" fill="none" stroke="#60a5fa" stroke-width="4" opacity="0.2"/>
+            
+            <!-- UV label -->
+            <text x="55" y="15" fill="#c084fc" font-size="11" font-family="Space Grotesk">UV Radiation</text>
+            
+            <!-- Ozone label -->
+            <text id="ozone-label" x="305" y="135" fill="#4ade80" font-size="10" font-family="Space Grotesk">Ozone Layer</text>
+            
+            <!-- Ozone thickness meter -->
+            <text x="10" y="330" fill="#8b949e" font-size="10" font-family="Space Grotesk">Thickness:</text>
+            <rect x="75" y="319" width="200" height="8" rx="1" fill="#21262d"/>
+            <rect id="ozone-meter" x="75" y="319" width="100" height="8" rx="1" fill="#4ade80"/>
+            <text id="ozone-pct" x="280" y="328" fill="#4ade80" font-size="10" font-family="Space Grotesk">50%</text>
+          </svg>
+        </div>
+        
+        <!-- Status indicator -->
+        <div id="ozone-status" style="margin-top:16px;padding:14px;border:1px solid;border-radius:2px;transition:all 0.5s">
+          <p id="ozone-status-text" style="font-size:13px;line-height:1.6"></p>
+        </div>
+      </div>
+      
+      <!-- Theory Cards -->
+      <div style="display:flex;flex-direction:column;gap:20px">
+        
+        <!-- Ozone Formation -->
+        <div class="glass" style="padding:28px;border-radius:4px">
+          <h4 style="font-size:16px;font-weight:600;margin-bottom:16px;color:var(--green)">⚗️ Ozone Formation Reaction</h4>
+          <div style="background:var(--s2);padding:16px;border-radius:2px;font-family:'Space Grotesk';font-size:13px;margin-bottom:12px;border-left:3px solid var(--green)">
+            <p style="color:#86efac;margin-bottom:8px">O₂ → <span style="color:#c084fc">UV</span> → O + O</p>
+            <p style="color:#86efac">O₂ + O → <strong style="color:var(--green)">O₃ (Ozone)</strong></p>
+          </div>
+          <p style="font-size:13px;color:var(--text-muted);line-height:1.7">High-energy UV radiation splits O₂ into free oxygen atoms, which combine with O₂ molecules to form protective O₃ ozone in the stratosphere (~15–35 km altitude).</p>
+        </div>
+        
+        <!-- CFC Damage -->
+        <div class="glass" style="padding:28px;border-radius:4px">
+          <h4 style="font-size:16px;font-weight:600;margin-bottom:12px;color:#f97316">⚡ How CFCs Destroy Ozone</h4>
+          <p style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:12px">CFCs (Chlorofluorocarbons) released from refrigerators, air conditioners, and aerosol sprays rise into the stratosphere. UV radiation breaks them down, releasing chlorine atoms that <strong style="color:#f87171">catalytically destroy ozone</strong> — one Cl atom can destroy 100,000 ozone molecules!</p>
+          <div style="padding:10px 14px;background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2);border-radius:2px">
+            <p style="font-size:12px;color:#fb923c">Sources: Refrigerants, fire extinguishers, aerosol propellants, foam blowing agents</p>
+          </div>
+        </div>
+        
+        <!-- Effects -->
+        <div class="glass" style="padding:28px;border-radius:4px">
+          <h4 style="font-size:16px;font-weight:600;margin-bottom:12px;color:#f87171">☠️ Effects of UV Exposure</h4>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(239,68,68,0.07);border-radius:2px">
+              <span>🩺</span><span style="font-size:13px">Skin cancers and melanoma</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(239,68,68,0.07);border-radius:2px">
+              <span>👁️</span><span style="font-size:13px">Cataracts and eye damage</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(239,68,68,0.07);border-radius:2px">
+              <span>🌾</span><span style="font-size:13px">Crop damage and reduced yield</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(239,68,68,0.07);border-radius:2px">
+              <span>🐟</span><span style="font-size:13px">Damage to marine phytoplankton</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Montreal Protocol -->
+        <div style="padding:24px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.2);border-radius:2px">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+            <span style="font-size:24px">🌐</span>
+            <div>
+              <div style="font-weight:600;font-size:15px;color:var(--green)">Montreal Protocol (1987)</div>
+              <div style="font-size:12px;color:var(--text-muted)">UNEP — United Nations Environment Programme</div>
+            </div>
+          </div>
+          <p style="font-size:13px;color:var(--text-muted);line-height:1.7">The landmark international agreement successfully froze global CFC production at 1986 levels, leading to gradual ozone layer recovery — considered the most successful environmental treaty in history.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ WASTE MANAGEMENT ═══════════════════════ -->
+<section style="padding:120px 40px;max-width:1200px;margin:0 auto" id="waste" class="reveal">
+  <div class="section-tag"><span class="material-symbols-outlined" style="font-size:14px">recycling</span> Section 05</div>
+  <h2 style="font-family:'Playfair Display';font-size:52px;margin-bottom:16px">Solid Waste <em style="color:var(--green)">Management</em></h2>
+  <p style="color:var(--text-muted);font-size:17px;line-height:1.8;max-width:700px;margin-bottom:64px">Modern industrial lifestyles generate vast quantities of waste that must be carefully classified and managed to prevent environmental collapse.</p>
+  
+  <!-- Tabs for waste types -->
+  <div style="display:flex;gap:8px;margin-bottom:32px;flex-wrap:wrap">
+    <button class="tab-btn active" onclick="switchTab('waste', 'biodegradable', this)">Biodegradable</button>
+    <button class="tab-btn" onclick="switchTab('waste', 'nonbiodegradable', this)">Non-Biodegradable</button>
+    <button class="tab-btn" onclick="switchTab('waste', 'comparison', this)">Comparison</button>
+  </div>
+  
+  <div id="waste-biodegradable" class="tab-panel active">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+      <div class="glass" style="padding:36px;border-radius:4px">
+        <h3 style="font-size:22px;font-weight:600;margin-bottom:16px;color:var(--green)">♻️ Biodegradable Waste</h3>
+        <p style="color:var(--text-muted);font-size:15px;line-height:1.7;margin-bottom:24px">Substances that can be broken down into simpler, non-toxic elements by the action of microorganisms (bacteria, fungi) through natural decomposition.</p>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px">
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15);border-radius:2px">
+            <span style="font-size:20px">🍎</span><div><div style="font-size:13px;font-weight:600">Kitchen / Food Waste</div><div style="font-size:11px;color:var(--text-muted)">Decomposes in days to weeks</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15);border-radius:2px">
+            <span style="font-size:20px">📰</span><div><div style="font-size:13px;font-weight:600">Paper</div><div style="font-size:11px;color:var(--text-muted)">Decomposes in 2–5 months</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15);border-radius:2px">
+            <span style="font-size:20px">🪵</span><div><div style="font-size:13px;font-weight:600">Wood</div><div style="font-size:11px;color:var(--text-muted)">Decomposes in months to years</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15);border-radius:2px">
+            <span style="font-size:20px">🧥</span><div><div style="font-size:13px;font-weight:600">Natural Fibres (Cotton, Wool)</div><div style="font-size:11px;color:var(--text-muted)">Decomposes in 1–5 years</div></div>
+          </div>
+        </div>
+        <div style="padding:14px;background:rgba(74,222,128,0.08);border-left:3px solid var(--green);border-radius:2px">
+          <p style="font-size:12px;color:var(--text-muted)">✅ Decomposers in the ecosystem naturally recycle these materials, returning nutrients to the soil and closing the biogeochemical cycle.</p>
+        </div>
+      </div>
+      <!-- Decomposition time visualization -->
+      <div class="glass" style="padding:36px;border-radius:4px">
+        <h3 style="font-size:18px;font-weight:600;margin-bottom:24px">⏱️ Decomposition Timeline</h3>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text-muted)">Food scraps</span><span style="font-size:12px;color:var(--green)">1–4 weeks</span></div>
+            <div style="height:6px;background:var(--s3);border-radius:1px"><div style="width:5%;height:100%;background:var(--green);border-radius:1px"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text-muted)">Paper</span><span style="font-size:12px;color:#86efac">2–5 months</span></div>
+            <div style="height:6px;background:var(--s3);border-radius:1px"><div style="width:10%;height:100%;background:#86efac;border-radius:1px"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text-muted)">Cotton cloth</span><span style="font-size:12px;color:#60a5fa">1–5 years</span></div>
+            <div style="height:6px;background:var(--s3);border-radius:1px"><div style="width:25%;height:100%;background:#60a5fa;border-radius:1px"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text-muted)">Wool</span><span style="font-size:12px;color:#a78bfa">1–5 years</span></div>
+            <div style="height:6px;background:var(--s3);border-radius:1px"><div style="width:25%;height:100%;background:#a78bfa;border-radius:1px"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text-muted)">Wood</span><span style="font-size:12px;color:#f97316">10–15 years</span></div>
+            <div style="height:6px;background:var(--s3);border-radius:1px"><div style="width:40%;height:100%;background:#f97316;border-radius:1px"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="waste-nonbiodegradable" class="tab-panel">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px">
+      <div class="glass" style="padding:36px;border-radius:4px">
+        <h3 style="font-size:22px;font-weight:600;margin-bottom:16px;color:#f87171">⚠️ Non-Biodegradable Waste</h3>
+        <p style="color:var(--text-muted);font-size:15px;line-height:1.7;margin-bottom:24px">Materials that cannot be broken down by biological processes. They persist in the environment for centuries, causing severe soil toxicity and clogging drainage networks.</p>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px">
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15);border-radius:2px">
+            <span style="font-size:20px">🧴</span><div><div style="font-size:13px;font-weight:600">Plastics / Polythene bags</div><div style="font-size:11px;color:var(--text-muted)">400–1000+ years to degrade</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15);border-radius:2px">
+            <span style="font-size:20px">🪟</span><div><div style="font-size:13px;font-weight:600">Glass</div><div style="font-size:11px;color:var(--text-muted)">1 million+ years</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15);border-radius:2px">
+            <span style="font-size:20px">📱</span><div><div style="font-size:13px;font-weight:600">Electronic Waste (e-waste)</div><div style="font-size:11px;color:var(--text-muted)">Toxic heavy metals — centuries</div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15);border-radius:2px">
+            <span style="font-size:20px">🔋</span><div><div style="font-size:13px;font-weight:600">Batteries (Heavy metals)</div><div style="font-size:11px;color:var(--text-muted)">Leach toxic chemicals into soil</div></div>
+          </div>
+        </div>
+        <div style="padding:14px;background:rgba(239,68,68,0.08);border-left:3px solid #ef4444;border-radius:2px">
+          <p style="font-size:12px;color:var(--text-muted)">❌ Decomposers cannot break these down. They accumulate in landfills, block drains, fragment into microplastics, and enter food chains — <strong style="color:#f87171">triggering their own form of biological magnification.</strong></p>
+        </div>
+      </div>
+      <!-- Persistence visualization -->
+      <div class="glass" style="padding:36px;border-radius:4px">
+        <h3 style="font-size:18px;font-weight:600;margin-bottom:24px">⏳ Time to Degrade</h3>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text-muted)">Aluminium can</span><span style="font-size:12px;color:#fbbf24">80–200 years</span></div>
+            <div style="height:6px;background:var(--s3);border-radius:1px"><div style="width:20%;height:100%;background:#fbbf24;border-radius:1px"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text-muted)">Plastic bag</span><span style="font-size:12px;color:#f97316">20–1000 years</span></div>
+            <div style="height:6px;background:var(--s3);border-radius:1px"><div style="width:60%;height:100%;background:#f97316;border-radius:1px"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text-muted)">Plastic bottle</span><span style="font-size:12px;color:#ef4444">450+ years</span></div>
+            <div style="height:6px;background:var(--s3);border-radius:1px"><div style="width:80%;height:100%;background:#ef4444;border-radius:1px"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text-muted)">Styrofoam</span><span style="font-size:12px;color:#dc2626">500+ years</span></div>
+            <div style="height:6px;background:var(--s3);border-radius:1px"><div style="width:90%;height:100%;background:#dc2626;border-radius:1px"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text-muted)">Glass</span><span style="font-size:12px;color:#9f1239">1,000,000+ years</span></div>
+            <div style="height:6px;background:var(--s3);border-radius:1px"><div style="width:100%;height:100%;background:#9f1239;border-radius:1px;animation:pulse-glow 2s infinite"></div></div>
+          </div>
+        </div>
+        <div style="margin-top:20px;padding:12px;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15);border-radius:2px">
+          <p style="font-size:11px;color:var(--text-muted)">⚠️ Glass may technically "never" fully biodegrade — it only breaks into smaller fragments (microplastics equivalent: micro-glass particles)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="waste-comparison" class="tab-panel">
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        <thead>
+          <tr style="border-bottom:2px solid var(--border)">
+            <th style="text-align:left;padding:16px 20px;font-family:'Space Grotesk';font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted)">Property</th>
+            <th style="text-align:left;padding:16px 20px;font-family:'Space Grotesk';font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--green)">Biodegradable ♻️</th>
+            <th style="text-align:left;padding:16px 20px;font-family:'Space Grotesk';font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#f87171">Non-Biodegradable ⚠️</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border);transition:background 0.2s" onmouseover="this.style.background='rgba(74,222,128,0.03)'" onmouseout="this.style.background='transparent'">
+            <td style="padding:16px 20px;color:var(--text-muted)">Broken down by</td>
+            <td style="padding:16px 20px;color:var(--green)">Microorganisms (bacteria, fungi)</td>
+            <td style="padding:16px 20px;color:#f87171">Cannot be broken down biologically</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border)" onmouseover="this.style.background='rgba(74,222,128,0.03)'" onmouseout="this.style.background='transparent'">
+            <td style="padding:16px 20px;color:var(--text-muted)">Time to decompose</td>
+            <td style="padding:16px 20px;color:var(--green)">Days to a few years</td>
+            <td style="padding:16px 20px;color:#f87171">Hundreds to millions of years</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border)" onmouseover="this.style.background='rgba(74,222,128,0.03)'" onmouseout="this.style.background='transparent'">
+            <td style="padding:16px 20px;color:var(--text-muted)">Environmental impact</td>
+            <td style="padding:16px 20px;color:var(--green)">Low — returns nutrients to soil</td>
+            <td style="padding:16px 20px;color:#f87171">High — soil toxicity, water pollution</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border)" onmouseover="this.style.background='rgba(74,222,128,0.03)'" onmouseout="this.style.background='transparent'">
+            <td style="padding:16px 20px;color:var(--text-muted)">Food chain risk</td>
+            <td style="padding:16px 20px;color:var(--green)">Negligible</td>
+            <td style="padding:16px 20px;color:#f87171">High — biological magnification</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border)" onmouseover="this.style.background='rgba(74,222,128,0.03)'" onmouseout="this.style.background='transparent'">
+            <td style="padding:16px 20px;color:var(--text-muted)">Examples</td>
+            <td style="padding:16px 20px;color:var(--green)">Food scraps, paper, cotton, wood</td>
+            <td style="padding:16px 20px;color:#f87171">Plastics, glass, metals, e-waste</td>
+          </tr>
+          <tr onmouseover="this.style.background='rgba(74,222,128,0.03)'" onmouseout="this.style.background='transparent'">
+            <td style="padding:16px 20px;color:var(--text-muted)">Management</td>
+            <td style="padding:16px 20px;color:var(--green)">Composting, biogas, landfill</td>
+            <td style="padding:16px 20px;color:#f87171">Reduce, Reuse, Recycle, special disposal</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ QUICK REFERENCE ACCORDION ═══════════════════════ -->
+<section style="padding:120px 40px;background:var(--s1);border-top:1px solid var(--border);border-bottom:1px solid var(--border)" class="reveal">
+  <div style="max-width:900px;margin:0 auto">
+    <div class="section-tag"><span class="material-symbols-outlined" style="font-size:14px">menu_book</span> Quick Reference</div>
+    <h2 style="font-family:'Playfair Display';font-size:48px;margin-bottom:48px">Key <em style="color:var(--green)">Concepts</em></h2>
+    
+    <div style="display:flex;flex-direction:column;gap:12px">
+      
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div style="display:flex;align-items:center;gap:14px">
+            <span style="font-size:20px">🌿</span>
+            <span style="font-size:16px;font-weight:500">Producers, Consumers & Decomposers — Roles Explained</span>
+          </div>
+          <span class="material-symbols-outlined accordion-icon">expand_more</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-inner">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+              <div style="padding:16px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15);border-radius:2px">
+                <h4 style="color:var(--green);font-size:14px;margin-bottom:8px">Producers (Autotrophs)</h4>
+                <p style="font-size:12px;color:var(--text-muted);line-height:1.6">Green plants and photosynthetic bacteria. Trap solar energy to synthesize organic food from inorganic elements via photosynthesis. Form the base of every food chain.</p>
+              </div>
+              <div style="padding:16px;background:rgba(96,165,250,0.05);border:1px solid rgba(96,165,250,0.15);border-radius:2px">
+                <h4 style="color:#60a5fa;font-size:14px;margin-bottom:8px">Consumers (Heterotrophs)</h4>
+                <p style="font-size:12px;color:var(--text-muted);line-height:1.6">Depend on producers. Herbivores (primary) → Carnivores (secondary/tertiary) → Omnivores. Cannot make their own food.</p>
+              </div>
+              <div style="padding:16px;background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.15);border-radius:2px">
+                <h4 style="color:#a855f7;font-size:14px;margin-bottom:8px">Decomposers</h4>
+                <p style="font-size:12px;color:var(--text-muted);line-height:1.6">Bacteria and fungi. Break down dead organisms into simple inorganic nutrients, returning them to soil. Essential for nutrient cycling.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div style="display:flex;align-items:center;gap:14px">
+            <span style="font-size:20px">⚡</span>
+            <span style="font-size:16px;font-weight:500">The 10% Law — Lindeman's Principle (1942)</span>
+          </div>
+          <span class="material-symbols-outlined accordion-icon">expand_more</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-inner">
+            <p style="font-size:14px;color:var(--text-muted);line-height:1.7;margin-bottom:16px">Proposed by Raymond Lindeman in 1942. States that only about <strong style="color:var(--green)">10% of the energy</strong> stored at one trophic level is transferred to the next higher trophic level. The remaining ~90% is used for:</p>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+              <div style="padding:12px;background:var(--s3);border-radius:2px;text-align:center"><div style="font-size:18px;margin-bottom:4px">🫀</div><div style="font-size:11px;color:var(--text-muted)">Metabolic activities (respiration)</div></div>
+              <div style="padding:12px;background:var(--s3);border-radius:2px;text-align:center"><div style="font-size:18px;margin-bottom:4px">🌡️</div><div style="font-size:11px;color:var(--text-muted)">Heat loss to environment</div></div>
+              <div style="padding:12px;background:var(--s3);border-radius:2px;text-align:center"><div style="font-size:18px;margin-bottom:4px">💩</div><div style="font-size:11px;color:var(--text-muted)">Excretion & decomposition</div></div>
+            </div>
+            <div style="padding:14px;background:rgba(74,222,128,0.08);border-left:3px solid var(--green);border-radius:2px">
+              <p style="font-size:13px;color:var(--text-muted)"><strong style="color:var(--green)">Ecological implication:</strong> This massive energy loss at each step explains why food chains can support only 3–4 trophic levels in nature, and also why vegetarian diets are more energy-efficient.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div style="display:flex;align-items:center;gap:14px">
+            <span style="font-size:20px">🧪</span>
+            <span style="font-size:16px;font-weight:500">Biological Magnification — DDT & Persistent Pollutants</span>
+          </div>
+          <span class="material-symbols-outlined accordion-icon">expand_more</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-inner">
+            <p style="font-size:14px;color:var(--text-muted);line-height:1.7;margin-bottom:16px"><strong style="color:#f87171">Definition:</strong> The progressive increase in the concentration of toxic, non-biodegradable chemicals at each successive trophic level of a food chain.</p>
+            <p style="font-size:14px;color:var(--text-muted);line-height:1.7;margin-bottom:16px"><strong style="color:var(--green)">Why it happens:</strong> Unlike energy (which dissipates as heat), toxic chemicals like DDT are fat-soluble and cannot be metabolized or excreted. Instead, they accumulate in fatty tissues. As a predator eats many prey individuals, it concentrates their combined chemical load.</p>
+            <p style="font-size:14px;color:var(--text-muted);line-height:1.7"><strong style="color:#fbbf24">Example:</strong> DDT concentration in water: 0.003 ppb → Phytoplankton: 0.04 ppm → Small fish: 0.5 ppm → Large fish: 2 ppm → Fish-eating birds: 25+ ppm. The concentration increases by over <strong style="color:#f87171">10 million times</strong> from water to top predator.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div style="display:flex;align-items:center;gap:14px">
+            <span style="font-size:20px">🌍</span>
+            <span style="font-size:16px;font-weight:500">Ozone Depletion — Chemistry & Global Response</span>
+          </div>
+          <span class="material-symbols-outlined accordion-icon">expand_more</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-inner">
+            <p style="font-size:14px;color:var(--text-muted);line-height:1.7;margin-bottom:16px">The ozone layer (O₃) exists in the stratosphere at ~15–35 km altitude. Its structural thickness began dropping sharply in the 1980s due to synthetic CFCs.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+              <div style="padding:16px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15);border-radius:2px">
+                <h4 style="color:var(--green);font-size:13px;margin-bottom:8px">Formation</h4>
+                <p style="font-size:12px;color:var(--text-muted);line-height:1.6;font-family:'Space Grotesk'">O₂ + UV → O + O<br>O₂ + O → O₃</p>
+              </div>
+              <div style="padding:16px;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15);border-radius:2px">
+                <h4 style="color:#f87171;font-size:13px;margin-bottom:8px">Destruction by CFCs</h4>
+                <p style="font-size:12px;color:var(--text-muted);line-height:1.6">Cl (from CFCs) + O₃ → ClO + O₂<br>Each Cl atom destroys ~100,000 O₃ molecules</p>
+              </div>
+            </div>
+            <p style="font-size:14px;color:var(--text-muted);line-height:1.7"><strong style="color:#60a5fa">Montreal Protocol (1987):</strong> UNEP-brokered international treaty that froze CFC production at 1986 levels. Widely considered the most successful environmental treaty ever, with visible ozone layer recovery observed since the 1990s.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          <div style="display:flex;align-items:center;gap:14px">
+            <span style="font-size:20px">♻️</span>
+            <span style="font-size:16px;font-weight:500">Solid Waste — Classification & Environmental Impact</span>
+          </div>
+          <span class="material-symbols-outlined accordion-icon">expand_more</span>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-inner">
+            <p style="font-size:14px;color:var(--text-muted);line-height:1.7;margin-bottom:16px">Modern industrial lifestyles generate enormous quantities of two fundamental waste categories with vastly different environmental destinies:</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+              <div style="padding:16px;background:rgba(74,222,128,0.05);border:1px solid rgba(74,222,128,0.15);border-radius:2px">
+                <h4 style="color:var(--green);font-size:13px;margin-bottom:8px">Biodegradable</h4>
+                <p style="font-size:12px;color:var(--text-muted);line-height:1.6">Food waste, paper, natural fibres. Broken down by bacteria/fungi. Returns nutrients to ecosystem via decomposition cycle.</p>
+              </div>
+              <div style="padding:16px;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15);border-radius:2px">
+                <h4 style="color:#f87171;font-size:13px;margin-bottom:8px">Non-Biodegradable</h4>
+                <p style="font-size:12px;color:var(--text-muted);line-height:1.6">Plastics, glass, e-waste. Cannot be broken down. Persists for centuries, clogs drains, causes soil toxicity, contributes to biological magnification.</p>
+              </div>
+            </div>
+            <p style="font-size:13px;color:var(--text-muted);line-height:1.7">⚠️ Globally, the world generates ~2.5 billion tons of solid waste annually. Only ~13% is recycled. Mismanaged non-biodegradable waste is a leading cause of ocean pollution, with 8 million metric tons of plastic entering oceans every year.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ QUIZ SECTION ═══════════════════════ -->
+<section style="padding:120px 40px;max-width:900px;margin:0 auto" id="quiz" class="reveal">
+  <div class="section-tag"><span class="material-symbols-outlined" style="font-size:14px">quiz</span> Assessment</div>
+  <h2 style="font-family:'Playfair Display';font-size:48px;margin-bottom:16px">Test Your <em style="color:var(--green)">Knowledge</em></h2>
+  <p style="color:var(--text-muted);font-size:17px;line-height:1.8;margin-bottom:48px">10 questions covering all concepts from Chapter 15 — Our Environment</p>
+  
+  <!-- Score tracker -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:32px;padding:20px 24px;background:var(--s1);border:1px solid var(--border);border-radius:2px">
+    <div style="font-family:'Space Grotesk';font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted)">Progress</div>
+    <div style="flex:1;margin:0 24px;height:4px;background:var(--s3);border-radius:2px;overflow:hidden">
+      <div id="quiz-progress-bar" style="height:100%;width:0%;background:linear-gradient(to right,var(--green),var(--green-dim));transition:width 0.5s ease;border-radius:2px"></div>
+    </div>
+    <div id="quiz-score-display" style="font-family:'Space Grotesk';font-size:14px;color:var(--green);font-weight:600">0 / 10</div>
+  </div>
+  
+  <div id="quiz-container">
+    <!-- Questions rendered by JS -->
+  </div>
+  
+  <div id="quiz-results" style="display:none;padding:40px;background:var(--s1);border:1px solid rgba(74,222,128,0.2);border-radius:4px;text-align:center">
+    <div id="result-emoji" style="font-size:64px;margin-bottom:16px"></div>
+    <h3 id="result-title" style="font-family:'Playfair Display';font-size:36px;margin-bottom:12px"></h3>
+    <p id="result-desc" style="color:var(--text-muted);font-size:16px;margin-bottom:32px"></p>
+    <div style="display:flex;justify-content:center;gap:16px;margin-bottom:32px">
+      <div style="padding:20px 32px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);border-radius:2px">
+        <div id="final-score" style="font-family:'Playfair Display';font-size:48px;color:var(--green)"></div>
+        <div style="font-family:'Space Grotesk';font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-top:4px">Correct</div>
+      </div>
+      <div style="padding:20px 32px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:2px">
+        <div id="final-wrong" style="font-family:'Playfair Display';font-size:48px;color:#f87171"></div>
+        <div style="font-family:'Space Grotesk';font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin-top:4px">Incorrect</div>
+      </div>
+    </div>
+    <button onclick="resetQuiz()" style="padding:14px 36px;background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.4);border-radius:2px;color:var(--green);font-family:'Space Grotesk';font-size:12px;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s" onmouseover="this.style.background='rgba(74,222,128,0.25)'" onmouseout="this.style.background='rgba(74,222,128,0.15)'">Retake Quiz</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer style="background:var(--s1);border-top:1px solid var(--border);padding:64px 40px">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:48px">
+    <div>
+      <div style="font-family:'Space Grotesk';font-size:22px;font-weight:600;margin-bottom:16px">Codex<span style="color:var(--green)">sec</span></div>
+      <p style="color:var(--text-muted);font-size:14px;line-height:1.7;max-width:300px">Advanced, beautifully interactive curriculum for NCERT Class 10 Science — built for genuine understanding, not rote memorization.</p>
+    </div>
+    <div>
+      <div style="font-family:'Space Grotesk';font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted);margin-bottom:20px">Chapter 15 Coverage</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <a href="#ecosystem" style="color:var(--text-muted);font-size:13px;text-decoration:none;hover:color:var(--green)">Ecosystems & Food Chains</a>
+        <a href="#energy" style="color:var(--text-muted);font-size:13px;text-decoration:none">Energy Flow & 10% Rule</a>
+        <a href="#biomag" style="color:var(--text-muted);font-size:13px;text-decoration:none">Biological Magnification</a>
+        <a href="#ozone" style="color:var(--text-muted);font-size:13px;text-decoration:none">Ozone Layer & CFCs</a>
+        <a href="#waste" style="color:var(--text-muted);font-size:13px;text-decoration:none">Solid Waste Management</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Space Grotesk';font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-muted);margin-bottom:20px">Source Material</div>
+      <p style="color:var(--text-muted);font-size:13px;line-height:1.7">NCERT Class 10 Science<br>Pages 256–265<br>Chapter 15: Our Environment</p>
+    </div>
+  </div>
+  <div style="border-top:1px solid var(--border);padding-top:24px;display:flex;justify-content:space-between;align-items:center">
+    <p style="color:var(--text-muted);font-size:12px">© 2025 Codexsec. Educational use only.</p>
+    <p style="color:var(--text-muted);font-size:12px;font-family:'Space Grotesk'">NCERT Class 10 · Chapter 15 · Our Environment</p>
+  </div>
+</footer>
+
+<script>
+// ═══════ NODE INFO DATA ═══════
+const nodeData = {
+  sun: {emoji:'☀️', title:'Solar Energy', color:'#fbbf24', energy:'~1,000,000 J (incoming)', desc:'The ultimate source of all energy in an ecosystem. Plants capture only ~1% of solar energy reaching their leaves. The vast majority is reflected or absorbed by the atmosphere.'},
+  plant: {emoji:'🌿', title:'Producers (Plants)', color:'#4ade80', energy:'~1,000 J stored', desc:'Green plants convert solar energy into chemical energy via photosynthesis. They are the foundation of all food chains. Absorb CO₂ and H₂O to produce glucose and O₂. Only ~1% of solar energy is captured.'},
+  herbivore: {emoji:'🐛', title:'Primary Consumers (Herbivores)', color:'#60a5fa', energy:'~100 J available', desc:'Animals that eat plants directly. Examples: grasshoppers, rabbits, deer, caterpillars. They receive only 10% of the energy stored in plants, as 90% is lost to heat and metabolic processes.'},
+  carnivore1: {emoji:'🐸', title:'Secondary Consumers (Small Carnivores)', color:'#f97316', energy:'~10 J available', desc:'Animals that eat herbivores. Examples: frogs, small fish, spiders. Each step reduces available energy by 90%. At this level, only 1% of original plant energy remains.'},
+  carnivore2: {emoji:'🦅', title:'Tertiary Consumers (Top Carnivores)', color:'#ef4444', energy:'~1 J available', desc:'Top predators in the food chain. Examples: eagles, tigers, large sharks. Only 0.1% of original plant energy reaches this level — explaining why top predators are always rare in nature and why food chains rarely exceed 3–4 levels.'}
+};
+
+function showNodeInfo(id) {
+  const d = nodeData[id];
+  const panel = document.getElementById('node-info');
+  const content = document.getElementById('node-info-content');
+  panel.style.display = 'block';
+  content.innerHTML = `
+    <div style="display:flex;align-items:flex-start;gap:16px">
+      <span style="font-size:32px">${d.emoji}</span>
+      <div>
+        <h4 style="font-size:16px;font-weight:600;color:${d.color};margin-bottom:4px">${d.title}</h4>
+        <div style="font-size:12px;font-family:'Space Grotesk';color:${d.color};opacity:0.8;margin-bottom:10px">Energy: ${d.energy}</div>
+        <p style="font-size:13px;color:#8b949e;line-height:1.6">${d.desc}</p>
+      </div>
+    </div>`;
+}
+
+// ═══════ ENERGY FLOW SIMULATOR ═══════
+function updateEnergyFlow() {
+  const base = parseInt(document.getElementById('base-energy').value);
+  const e1 = base, e2 = base*0.1, e3 = base*0.01, e4 = base*0.001;
+  document.getElementById('base-val').textContent = base.toLocaleString() + ' J';
+  document.getElementById('e1').textContent = e1.toLocaleString() + ' J';
+  document.getElementById('e2').textContent = e2.toLocaleString() + ' J';
+  document.getElementById('e3').textContent = e3.toLocaleString() + ' J';
+  document.getElementById('e4').textContent = Math.round(e4) + ' J';
+  document.getElementById('bar1').style.width = '100%';
+  document.getElementById('bar2').style.width = '10%';
+  document.getElementById('bar3').style.width = '1%';
+  document.getElementById('bar4').style.width = '0.1%';
+}
+
+// ═══════ PYRAMID CLICK ═══════
+const levelData = {
+  1: {label:'Producers (Plants)', color:'#4ade80', energy:'1000 J', biomass:'Largest', fact:'Green plants capture ~1% of solar energy falling on leaves. They form the base of all food chains and ecosystems. Without producers, no other trophic level could exist.'},
+  2: {label:'Primary Consumers (Herbivores)', color:'#60a5fa', energy:'100 J', biomass:'Large', fact:'Herbivores such as grasshoppers, rabbits, and deer. They receive only 10% of energy stored in plants. The 90% loss is due to respiration, excretion, and heat dissipation.'},
+  3: {label:'Secondary Consumers (Carnivores)', color:'#f97316', energy:'10 J', biomass:'Small', fact:'Small carnivores like frogs, snakes, and foxes. Only 1% of original plant energy reaches this level. This level has significantly fewer organisms than the previous level.'},
+  4: {label:'Tertiary Consumers (Top Carnivores)', color:'#ef4444', energy:'1 J', biomass:'Smallest', fact:'Top predators like eagles, tigers, and large sharks. Only 0.1% of original energy remains. This extreme scarcity explains why apex predators are rare and why food chains stop here.'}
+};
+function highlightLevel(n) {
+  const d = levelData[n];
+  document.getElementById('level-detail').innerHTML = `
+    <div style="display:flex;align-items:flex-start;gap:12px">
+      <div style="width:4px;min-height:60px;background:${d.color};border-radius:2px;flex-shrink:0"></div>
+      <div>
+        <h4 style="font-size:15px;font-weight:600;color:${d.color};margin-bottom:6px">Level ${n}: ${d.label}</h4>
+        <div style="display:flex;gap:16px;margin-bottom:8px">
+          <span style="font-size:12px;font-family:'Space Grotesk';background:rgba(255,255,255,0.05);padding:3px 10px;border-radius:2px">Energy: ${d.energy}</span>
+          <span style="font-size:12px;font-family:'Space Grotesk';background:rgba(255,255,255,0.05);padding:3px 10px;border-radius:2px">Biomass: ${d.biomass}</span>
+        </div>
+        <p style="font-size:12px;color:#8b949e;line-height:1.6">${d.fact}</p>
+      </div>
+    </div>`;
+}
+
+// ═══════ DDT SIMULATOR ═══════
+function updateDDT() {
+  const val = parseInt(document.getElementById('ddt-slider').value);
+  const factor = val / 2;
+  const levels = [
+    {id:'ddt1', bar:'dbar1', base:0.02*factor, unit:'ppm', maxW:2},
+    {id:'ddt2', bar:'dbar2', base:0.04*factor, unit:'ppm', maxW:4},
+    {id:'ddt3', bar:'dbar3', base:0.5*factor, unit:'ppm', maxW:25},
+    {id:'ddt4', bar:'dbar4', base:2.0*factor, unit:'ppm', maxW:50},
+    {id:'ddt5', bar:'dbar5', base:25*factor, unit:'ppm', maxW:80},
+    {id:'ddt6', bar:'dbar6', base:100*factor, unit:'ppm', maxW:100}
+  ];
+  document.getElementById('ddt-base-val').textContent = (0.02*factor).toFixed(3) + ' ppm';
+  levels.forEach((l, i) => {
+    document.getElementById(l.id).textContent = l.base.toFixed(l.base < 1 ? 3 : l.base < 10 ? 1 : 0) + ' ppm';
+    const pct = Math.min((l.base / (l.base * (1 + (5-i)*0.3))) * l.maxW + i*15, 100);
+    document.getElementById(l.bar).style.width = Math.min(pct, 100) + '%';
+  });
+  const warning = document.getElementById('ddt-warning');
+  warning.style.display = val > 14 ? 'block' : 'none';
+}
+
+// ═══════ OZONE SIMULATOR ═══════
+function updateOzone() {
+  const cfc = parseInt(document.getElementById('cfc-slider').value);
+  document.getElementById('cfc-val').textContent = cfc + '%';
+  const thickness = Math.max(5, 100 - cfc);
+  const opacity = thickness / 100;
+  const strokeWidth = Math.max(2, 16 * (thickness / 100));
+  const strokeColor = thickness > 60 ? '#4ade80' : thickness > 30 ? '#fbbf24' : '#ef4444';
+  
+  document.getElementById('ozone-ring').setAttribute('stroke-width', strokeWidth);
+  document.getElementById('ozone-ring').setAttribute('stroke', strokeColor);
+  document.getElementById('ozone-ring').setAttribute('opacity', Math.max(0.2, opacity));
+  document.getElementById('ozone-meter').style.width = thickness*2 + 'px';
+  document.getElementById('ozone-meter').setAttribute('fill', strokeColor);
+  document.getElementById('ozone-pct').textContent = Math.round(thickness) + '%';
+  document.getElementById('ozone-pct').setAttribute('fill', strokeColor);
+  
+  // UV rays intensify as ozone depletes
+  const uvOpacity = 0.3 + (cfc/100)*0.7;
+  document.getElementById('uv-rays').setAttribute('opacity', uvOpacity);
+  
+  const statusEl = document.getElementById('ozone-status');
+  const textEl = document.getElementById('ozone-status-text');
+  if (thickness > 70) {
+    statusEl.style.borderColor = 'rgba(74,222,128,0.3)';
+    statusEl.style.background = 'rgba(74,222,128,0.07)';
+    textEl.innerHTML = '✅ <strong style="color:#4ade80">Safe:</strong> Ozone layer is healthy. UV radiation is largely blocked. CFCs at low levels (similar to pre-1980 conditions).';
+    textEl.style.color = '#8b949e';
+  } else if (thickness > 40) {
+    statusEl.style.borderColor = 'rgba(251,191,36,0.3)';
+    statusEl.style.background = 'rgba(251,191,36,0.07)';
+    textEl.innerHTML = '⚠️ <strong style="color:#fbbf24">Warning:</strong> Ozone layer thinning. Similar to 1990s conditions. Increased UV reaching Earth surface. CFC reduction measures needed urgently.';
+    textEl.style.color = '#8b949e';
+  } else {
+    statusEl.style.borderColor = 'rgba(239,68,68,0.4)';
+    statusEl.style.background = 'rgba(239,68,68,0.1)';
+    textEl.innerHTML = '🚨 <strong style="color:#f87171">Critical:</strong> Severe ozone depletion! Dangerous UV levels reaching Earth. Catastrophic increases in skin cancer, crop failure, and marine ecosystem collapse imminent.';
+    textEl.style.color = '#8b949e';
+  }
+}
+updateOzone();
+
+// ═══════ TABS ═══════
+function switchTab(group, id, btn) {
+  document.querySelectorAll(`#${group}-${id}`).forEach(p => {});
+  const panels = document.querySelectorAll(`[id^="${group}-"]`);
+  panels.forEach(p => {p.classList.remove('active');});
+  document.getElementById(`${group}-${id}`).classList.add('active');
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ═══════ ACCORDION ═══════
+function toggleAccordion(header) {
+  const body = header.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  document.querySelectorAll('.accordion-body.open').forEach(b => {b.classList.remove('open'); b.previousElementSibling.classList.remove('open');});
+  if (!isOpen) {body.classList.add('open'); header.classList.add('open');}
+}
+
+// ═══════ QUIZ ═══════
+const questions = [
+  {q:'What percentage of solar energy do green plants typically capture and convert into food energy?', opts:['10%','5%','~1%','50%'], ans:2, exp:'Green plants capture only about 1% of the total solar energy falling on their leaves and convert it into chemical food energy through photosynthesis.'},
+  {q:'According to the 10% law, if producers have 10,000 J of energy, how much energy is available at the secondary consumer (carnivore) level?', opts:['1,000 J','100 J','10 J','500 J'], ans:1, exp:'10,000 J → 1,000 J (primary consumer) → 100 J (secondary consumer). Each level transfers only 10%, so after two steps: 10,000 × 0.1 × 0.1 = 100 J.'},
+  {q:'Why do food chains rarely extend beyond 3–4 trophic levels?', opts:['Lack of space','Energy loss (90%) at each level makes it unsustainable','Shortage of oxygen','Temperature constraints'], ans:1, exp:'With 90% energy loss at each trophic level, so little energy remains by the 4th or 5th level that it cannot sustain another population of organisms.'},
+  {q:'Biological magnification refers to the increase in concentration of:', opts:['Nutrients in soil','Biodegradable waste in water','Non-biodegradable toxic chemicals at higher trophic levels','CO₂ in the atmosphere'], ans:2, exp:'Biological magnification is the progressive increase in concentration of toxic, non-biodegradable chemicals (like DDT) at each successive trophic level, because these chemicals cannot be metabolized or excreted.'},
+  {q:'Which organisms are MOST severely affected by biological magnification?', opts:['Producers (plants)','Herbivores','Decomposers','Top consumers (humans, apex predators)'], ans:3, exp:'Top consumers (including humans) accumulate the highest concentrations of toxins because they are at the top of the food chain and their bodies concentrate all the toxins from every level below them.'},
+  {q:'What is the chemical formula of ozone?', opts:['O₂','O₃','CO₂','NO₂'], ans:1, exp:'Ozone has the chemical formula O₃ — three oxygen atoms bonded together. It is formed in the stratosphere when UV radiation splits O₂ into free oxygen atoms that combine with other O₂ molecules.'},
+  {q:'Which chemicals are primarily responsible for ozone layer depletion?', opts:['Carbon dioxide (CO₂)','Methane (CH₄)','Chlorofluorocarbons (CFCs)','Sulfur dioxide (SO₂)'], ans:2, exp:'CFCs (Chlorofluorocarbons), used in refrigerators, air conditioners, and aerosol sprays, are the primary culprits. UV radiation breaks them down, releasing chlorine atoms that catalytically destroy ozone.'},
+  {q:'The Montreal Protocol (1987) was an international agreement to:', opts:['Reduce carbon emissions globally','Freeze CFC production at 1986 levels','Ban all fossil fuels','Protect biodiversity'], ans:1, exp:'The Montreal Protocol, forged by UNEP in 1987, successfully froze global CFC production at 1986 levels. It is widely considered the most successful environmental treaty and has led to measurable ozone layer recovery.'},
+  {q:'Which of the following is a NON-biodegradable waste?', opts:['Food scraps','Paper','Cotton cloth','Polythene (plastic) bags'], ans:3, exp:'Polythene bags are non-biodegradable — they cannot be broken down by microorganisms and persist in the environment for hundreds to thousands of years, causing severe soil toxicity and entering food chains.'},
+  {q:'What is the role of decomposers in an ecosystem?', opts:['Produce food by photosynthesis','Convert solar energy to chemical energy','Break down dead matter and return nutrients to soil','Hunt and eat other animals'], ans:2, exp:'Decomposers (bacteria and fungi) break down complex organic compounds from dead organisms and waste products into simple inorganic nutrients, returning them to the soil and completing the nutrient cycle.'}
+];
+
+let currentQ = 0, score = 0, answered = [];
+function renderQuiz() {
+  const container = document.getElementById('quiz-container');
+  if (currentQ >= questions.length) {showResults(); return;}
+  const q = questions[currentQ];
+  container.innerHTML = `
+    <div style="animation:fadeUp 0.4s ease both">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+        <span style="font-family:'Space Grotesk';font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted)">Question ${currentQ+1} of ${questions.length}</span>
+        <span style="font-family:'Space Grotesk';font-size:12px;color:var(--green)">Score: ${score}/${currentQ}</span>
+      </div>
+      <div style="padding:28px 32px;background:var(--s1);border:1px solid var(--border);border-radius:2px;margin-bottom:20px">
+        <p style="font-size:18px;font-weight:500;line-height:1.6">${q.q}</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px" id="options">
+        ${q.opts.map((o,i)=>`<div class="quiz-option" onclick="answer(${i})" style="cursor:pointer" id="opt${i}">
+          <span style="font-family:'Space Grotesk';font-size:11px;color:var(--text-muted);margin-right:12px">${['A','B','C','D'][i]}</span>${o}
+        </div>`).join('')}
+      </div>
+      <div id="explanation" style="display:none;margin-top:20px;padding:16px 20px;border:1px solid;border-radius:2px">
+        <p style="font-size:13px;line-height:1.7"></p>
+      </div>
+    </div>`;
+}
+
+function answer(i) {
+  const q = questions[currentQ];
+  if (answered.includes(currentQ)) return;
+  answered.push(currentQ);
+  const opts = document.querySelectorAll('.quiz-option');
+  opts.forEach((o,idx)=>{o.style.cursor='default'; o.onclick=null;});
+  const correct = i === q.ans;
+  if (correct) score++;
+  opts[i].classList.add(correct ? 'correct' : 'wrong');
+  opts[q.ans].classList.add('correct');
+  const expEl = document.getElementById('explanation');
+  expEl.style.display = 'block';
+  expEl.style.borderColor = correct ? 'rgba(74,222,128,0.3)' : 'rgba(239,68,68,0.3)';
+  expEl.style.background = correct ? 'rgba(74,222,128,0.07)' : 'rgba(239,68,68,0.07)';
+  expEl.querySelector('p').innerHTML = `${correct ? '✅ <strong style="color:#4ade80">Correct!</strong>' : '❌ <strong style="color:#f87171">Incorrect.</strong>'} ${q.exp}`;
+  expEl.querySelector('p').style.color = '#8b949e';
+  const prog = ((currentQ+1)/questions.length*100);
+  document.getElementById('quiz-progress-bar').style.width = prog + '%';
+  document.getElementById('quiz-score-display').textContent = score + ' / ' + (currentQ+1);
+  setTimeout(()=>{currentQ++; renderQuiz();}, 2200);
+}
+
+function showResults() {
+  document.getElementById('quiz-container').style.display='none';
+  document.getElementById('quiz-results').style.display='block';
+  document.getElementById('quiz-progress-bar').style.width='100%';
+  document.getElementById('final-score').textContent=score;
+  document.getElementById('final-wrong').textContent=questions.length-score;
+  const pct=score/questions.length;
+  document.getElementById('result-emoji').textContent=pct>=0.9?'🏆':pct>=0.7?'🌿':pct>=0.5?'📚':'🔬';
+  document.getElementById('result-title').textContent=pct>=0.9?'Excellent!':pct>=0.7?'Well Done!':pct>=0.5?'Good Effort!':'Keep Studying!';
+  document.getElementById('result-desc').textContent=pct>=0.9?'Outstanding! You have mastered Chapter 15 — Our Environment.':pct>=0.7?'Great work! You have a solid understanding of the chapter.':pct>=0.5?'Decent attempt. Review the interactive sections above and try again.':'No worries — go through the interactive diagrams above and retry!';
+  document.getElementById('quiz-score-display').textContent = score + ' / ' + questions.length;
+}
+
+function resetQuiz() {
+  currentQ=0; score=0; answered=[];
+  document.getElementById('quiz-results').style.display='none';
+  document.getElementById('quiz-container').style.display='block';
+  document.getElementById('quiz-progress-bar').style.width='0%';
+  document.getElementById('quiz-score-display').textContent='0 / 10';
+  renderQuiz();
+}
+renderQuiz();
+
+// ═══════ SCROLL REVEAL ═══════
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');}});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// ═══════ NAV ACTIVE STATE ═══════
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+const navObserver = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id=e.target.id;
+      navLinks.forEach(l=>{l.classList.remove('active');if(l.getAttribute('href')==='#'+id)l.classList.add('active');});
+    }
+  });
+},{threshold:0.3});
+sections.forEach(s=>navObserver.observe(s));
+</script>
+<script src="site-nav.js" defer></script>
+</body>
+</html>

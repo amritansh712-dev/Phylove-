@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ch.16 — Sustainable Management of Natural Resources | Codexsec</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0a0a08;
+  --surface: #111110;
+  --surface-2: #1a1a18;
+  --surface-3: #222220;
+  --gold: #d4a843;
+  --gold-dim: #a07830;
+  --gold-bright: #f0c060;
+  --green: #4a9060;
+  --green-bright: #6ab87a;
+  --red: #c05040;
+  --blue: #4070b0;
+  --blue-bright: #60a0e0;
+  --text: #e8e4d8;
+  --text-dim: #8a8070;
+  --border: rgba(212,168,67,0.12);
+  --border-bright: rgba(212,168,67,0.3);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Syne', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 2px; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; width: 100%; z-index: 100;
+  background: rgba(10,10,8,0.85); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 60px; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-brand { font-size: 18px; font-weight: 800; color: var(--gold); letter-spacing: 0.05em; }
+.nav-links { display: flex; gap: 40px; }
+.nav-links a { font-size: 11px; letter-spacing: 0.15em; font-weight: 600; color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--gold); }
+.nav-badge {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  padding: 4px 10px; border: 1px solid var(--gold-dim);
+  color: var(--gold); background: rgba(212,168,67,0.08);
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+  padding: 120px 60px 80px;
+  position: relative; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(74,144,96,0.06) 0%, transparent 60%),
+              radial-gradient(ellipse 60% 80% at 20% 80%, rgba(212,168,67,0.04) 0%, transparent 60%);
+}
+.hero-grid {
+  position: absolute; inset: 0; z-index: 0; opacity: 0.04;
+  background-image: linear-gradient(var(--gold) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--gold) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.hero-content { position: relative; z-index: 1; max-width: 900px; }
+.chapter-tag {
+  font-size: 10px; letter-spacing: 0.2em; font-weight: 700; color: var(--green-bright);
+  border: 1px solid rgba(106,184,122,0.3); padding: 6px 14px; display: inline-block;
+  margin-bottom: 28px;
+}
+.hero h1 {
+  font-family: 'DM Serif Display', serif; font-size: clamp(56px, 8vw, 96px);
+  line-height: 1; color: var(--text); margin-bottom: 32px;
+}
+.hero h1 em { font-style: italic; color: var(--gold); }
+.hero p { font-size: 18px; line-height: 1.7; color: var(--text-dim); max-width: 600px; margin-bottom: 48px; }
+.hero-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; max-width: 700px;
+}
+.stat-card {
+  padding: 20px; border: 1px solid var(--border);
+  background: rgba(255,255,255,0.02);
+}
+.stat-card .num {
+  font-family: 'DM Mono', monospace; font-size: 28px; color: var(--gold); margin-bottom: 4px;
+}
+.stat-card .label { font-size: 10px; letter-spacing: 0.15em; color: var(--text-dim); font-weight: 600; }
+
+/* ── SECTION COMMON ── */
+section { padding: 100px 60px; max-width: 1300px; margin: 0 auto; }
+.section-tag { font-size: 10px; letter-spacing: 0.2em; font-weight: 700; color: var(--text-dim); margin-bottom: 16px; display: block; }
+.section-title { font-family: 'DM Serif Display', serif; font-size: clamp(36px, 4vw, 52px); color: var(--text); margin-bottom: 48px; }
+.section-title span { color: var(--gold); }
+
+/* ── DIVIDER ── */
+.divider { border: none; border-top: 1px solid var(--border); margin: 0 60px; }
+
+/* ── THEORY CARD ── */
+.theory-card {
+  padding: 32px; border: 1px solid var(--border);
+  background: var(--surface); margin-bottom: 20px;
+  transition: border-color 0.3s;
+}
+.theory-card:hover { border-color: var(--border-bright); }
+.theory-card h3 { font-size: 14px; letter-spacing: 0.12em; font-weight: 700; color: var(--gold); margin-bottom: 12px; }
+.theory-card p { font-size: 15px; line-height: 1.75; color: var(--text-dim); }
+.theory-card ul { list-style: none; margin-top: 12px; }
+.theory-card ul li { font-size: 15px; line-height: 1.75; color: var(--text-dim); padding-left: 20px; position: relative; margin-bottom: 6px; }
+.theory-card ul li::before { content: '→'; position: absolute; left: 0; color: var(--gold-dim); font-size: 13px; }
+
+/* ── 5Rs INTERACTIVE ── */
+.five-r-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.r-card {
+  padding: 28px 20px; border: 1px solid var(--border);
+  background: var(--surface); cursor: pointer; text-align: center;
+  transition: all 0.3s; position: relative; overflow: hidden;
+}
+.r-card::before {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: var(--gold); transform: scaleX(0); transition: transform 0.3s;
+}
+.r-card:hover { background: var(--surface-2); border-color: var(--gold-dim); }
+.r-card:hover::before { transform: scaleX(1); }
+.r-card.active { background: rgba(212,168,67,0.08); border-color: var(--gold); }
+.r-card.active::before { transform: scaleX(1); }
+.r-letter { font-family: 'DM Serif Display', serif; font-size: 52px; color: var(--gold); line-height: 1; margin-bottom: 8px; }
+.r-word { font-size: 11px; letter-spacing: 0.15em; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.r-detail { font-size: 13px; line-height: 1.6; color: var(--text-dim); display: none; }
+.r-card.active .r-detail { display: block; }
+
+/* ── ENERGY PYRAMID INTERACTIVE ── */
+.pyramid-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.pyramid-svg-wrap { position: relative; }
+.pyramid-level {
+  cursor: pointer; transition: all 0.2s;
+}
+.pyramid-level:hover rect, .pyramid-level.active rect { opacity: 0.9; }
+.pyramid-info {
+  padding: 32px; border: 1px solid var(--border); background: var(--surface);
+  min-height: 280px;
+}
+.pyramid-info h3 { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--gold); margin-bottom: 12px; }
+.pyramid-info .level-tag { font-size: 10px; letter-spacing: 0.15em; color: var(--text-dim); margin-bottom: 16px; display: block; }
+.pyramid-info p { font-size: 15px; line-height: 1.75; color: var(--text-dim); }
+.energy-bar {
+  height: 6px; background: var(--surface-3); margin-top: 16px; margin-bottom: 4px; border-radius: 1px;
+}
+.energy-bar-fill {
+  height: 100%; background: var(--gold); border-radius: 1px; transition: width 0.6s ease;
+}
+.energy-label { font-size: 11px; color: var(--text-dim); font-family: 'DM Mono', monospace; }
+
+/* ── WATER HARVESTING MAP ── */
+.map-container { position: relative; width: 100%; }
+.map-table {
+  width: 100%; border-collapse: collapse; font-size: 14px;
+}
+.map-table th {
+  padding: 14px 20px; text-align: left; background: var(--surface-2);
+  font-size: 10px; letter-spacing: 0.15em; font-weight: 700; color: var(--gold);
+  border-bottom: 1px solid var(--border-bright);
+}
+.map-table td {
+  padding: 14px 20px; border-bottom: 1px solid var(--border);
+  color: var(--text-dim); font-size: 14px;
+}
+.map-table tr:hover td { background: rgba(212,168,67,0.04); color: var(--text); }
+.region-dot {
+  display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green-bright); margin-right: 10px;
+}
+
+/* ── DAM DILEMMA INTERACTIVE ── */
+.dilemma-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 32px; }
+.dilemma-tab {
+  padding: 16px 28px; font-size: 11px; letter-spacing: 0.12em; font-weight: 700;
+  cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  color: var(--text-dim); transition: all 0.2s; background: none; border: none; border-bottom: 2px solid transparent;
+}
+.dilemma-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.dilemma-panel { display: none; }
+.dilemma-panel.active { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.dilemma-item {
+  padding: 24px; border: 1px solid var(--border); background: var(--surface);
+}
+.dilemma-item.bad { border-left: 3px solid var(--red); }
+.dilemma-item.good { border-left: 3px solid var(--green-bright); }
+.dilemma-item h4 { font-size: 11px; letter-spacing: 0.12em; font-weight: 700; margin-bottom: 8px; }
+.dilemma-item.bad h4 { color: var(--red); }
+.dilemma-item.good h4 { color: var(--green-bright); }
+.dilemma-item p { font-size: 14px; line-height: 1.7; color: var(--text-dim); }
+
+/* ── FOSSIL FUEL COUNTDOWN ── */
+.fuel-simulator {
+  padding: 40px; border: 1px solid var(--border); background: var(--surface);
+}
+.slider-wrap { margin: 24px 0; }
+.slider-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 10px; color: var(--text-dim); }
+.slider-label strong { color: var(--gold); font-family: 'DM Mono', monospace; }
+input[type=range] {
+  width: 100%; height: 4px; appearance: none;
+  background: var(--surface-3); border-radius: 2px; outline: none; cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  appearance: none; width: 16px; height: 16px; border-radius: 50%;
+  background: var(--gold); cursor: pointer; border: 2px solid var(--bg);
+}
+.fuel-result {
+  margin-top: 24px; padding: 24px; background: var(--surface-2); border-top: 2px solid var(--gold);
+}
+.fuel-result .depletion { font-family: 'DM Mono', monospace; font-size: 48px; color: var(--gold); }
+.fuel-result .depletion-label { font-size: 12px; letter-spacing: 0.15em; color: var(--text-dim); margin-top: 4px; }
+.emission-bars { margin-top: 20px; }
+.emission-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.emission-label { font-size: 12px; width: 50px; color: var(--text-dim); font-family: 'DM Mono', monospace; }
+.emission-track { flex: 1; height: 8px; background: var(--surface-3); border-radius: 1px; }
+.emission-fill { height: 100%; border-radius: 1px; transition: width 0.4s ease; }
+
+/* ── STAKEHOLDERS WHEEL ── */
+.stakeholders-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.stakeholder-card {
+  padding: 28px; border: 1px solid var(--border); background: var(--surface);
+  cursor: pointer; transition: all 0.3s; position: relative;
+}
+.stakeholder-card:hover { border-color: var(--border-bright); background: var(--surface-2); }
+.stakeholder-icon { font-size: 28px; margin-bottom: 12px; }
+.stakeholder-card h3 { font-size: 13px; letter-spacing: 0.12em; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.stakeholder-card p { font-size: 14px; line-height: 1.7; color: var(--text-dim); }
+.stakeholder-card .conflict-badge {
+  position: absolute; top: 12px; right: 12px;
+  font-size: 9px; letter-spacing: 0.1em; padding: 3px 8px;
+  background: rgba(192,80,64,0.15); border: 1px solid rgba(192,80,64,0.3); color: var(--red);
+}
+.stakeholder-card .harmony-badge {
+  position: absolute; top: 12px; right: 12px;
+  font-size: 9px; letter-spacing: 0.1em; padding: 3px 8px;
+  background: rgba(74,144,96,0.15); border: 1px solid rgba(106,184,122,0.3); color: var(--green-bright);
+}
+
+/* ── CONSERVATION TIMELINE ── */
+.timeline { position: relative; padding-left: 40px; }
+.timeline::before {
+  content: ''; position: absolute; left: 12px; top: 8px; bottom: 8px;
+  width: 1px; background: linear-gradient(to bottom, var(--gold), var(--green-bright), var(--gold));
+}
+.timeline-item { position: relative; margin-bottom: 48px; }
+.timeline-dot {
+  position: absolute; left: -34px; top: 4px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--gold); border: 2px solid var(--bg);
+  box-shadow: 0 0 12px rgba(212,168,67,0.4);
+}
+.timeline-year { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gold-dim); margin-bottom: 4px; }
+.timeline-item h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.timeline-item p { font-size: 14px; line-height: 1.7; color: var(--text-dim); }
+
+/* ── BIODEGRADABLE QUIZ ── */
+.waste-sorter { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.waste-zone {
+  min-height: 200px; padding: 24px; border: 2px dashed var(--border);
+  transition: border-color 0.3s;
+}
+.waste-zone h3 { font-size: 11px; letter-spacing: 0.15em; font-weight: 700; margin-bottom: 16px; }
+.waste-zone.bio h3 { color: var(--green-bright); }
+.waste-zone.non-bio h3 { color: var(--red); }
+.waste-items { display: flex; flex-wrap: wrap; gap: 8px; }
+.waste-item {
+  padding: 8px 14px; background: var(--surface-2); border: 1px solid var(--border);
+  font-size: 12px; cursor: grab; transition: all 0.2s; user-select: none;
+}
+.waste-item:hover { border-color: var(--gold-dim); background: var(--surface-3); }
+.waste-item.correct-bio { background: rgba(74,144,96,0.2); border-color: var(--green-bright); color: var(--green-bright); }
+.waste-item.correct-non { background: rgba(192,80,64,0.2); border-color: var(--red); color: var(--red); }
+.waste-item.wrong { background: rgba(192,80,64,0.3); border-color: var(--red); animation: shake 0.3s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+.waste-score { text-align: center; margin-top: 20px; font-family: 'DM Mono', monospace; font-size: 20px; color: var(--gold); }
+
+/* ── FORMULA CARD ── */
+.formula-box {
+  padding: 20px 28px; border-left: 3px solid var(--gold);
+  background: rgba(212,168,67,0.06); font-family: 'DM Mono', monospace;
+  font-size: 15px; color: var(--gold-bright); letter-spacing: 0.05em; margin: 16px 0;
+}
+
+/* ── TOGGLE ACCORDION ── */
+.accordion-item { border-bottom: 1px solid var(--border); }
+.accordion-btn {
+  width: 100%; padding: 20px 0; display: flex; justify-content: space-between; align-items: center;
+  background: none; border: none; cursor: pointer; color: var(--text); text-align: left;
+}
+.accordion-btn span { font-size: 15px; font-weight: 600; }
+.accordion-btn .icon { color: var(--gold); transition: transform 0.3s; font-size: 20px; font-family: 'DM Mono', monospace; }
+.accordion-btn.open .icon { transform: rotate(45deg); }
+.accordion-body { padding: 0 0 20px; font-size: 14px; line-height: 1.8; color: var(--text-dim); display: none; }
+.accordion-body.open { display: block; }
+
+/* ── QUIZ SECTION ── */
+.quiz-card { padding: 40px; border: 1px solid var(--border); background: var(--surface); }
+.quiz-q { font-size: 18px; line-height: 1.6; margin-bottom: 28px; }
+.quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.quiz-option {
+  padding: 16px 20px; border: 1px solid var(--border); background: var(--surface-2);
+  cursor: pointer; font-size: 14px; line-height: 1.5; transition: all 0.2s; text-align: left;
+}
+.quiz-option:hover { border-color: var(--gold-dim); background: var(--surface-3); }
+.quiz-option.correct { background: rgba(74,144,96,0.2); border-color: var(--green-bright); color: var(--green-bright); }
+.quiz-option.wrong { background: rgba(192,80,64,0.2); border-color: var(--red); color: var(--red); }
+.quiz-feedback { margin-top: 20px; padding: 16px 20px; font-size: 14px; line-height: 1.7; display: none; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct-fb { background: rgba(74,144,96,0.1); border-left: 3px solid var(--green-bright); color: var(--text); }
+.quiz-feedback.wrong-fb { background: rgba(192,80,64,0.1); border-left: 3px solid var(--red); color: var(--text); }
+.quiz-nav { display: flex; gap: 12px; margin-top: 24px; justify-content: flex-end; }
+.btn-primary {
+  padding: 12px 28px; background: var(--gold); color: var(--bg);
+  font-size: 11px; letter-spacing: 0.12em; font-weight: 700; cursor: pointer;
+  border: none; transition: all 0.2s;
+}
+.btn-primary:hover { background: var(--gold-bright); }
+.btn-secondary {
+  padding: 12px 28px; background: none; border: 1px solid var(--border); color: var(--text-dim);
+  font-size: 11px; letter-spacing: 0.12em; font-weight: 700; cursor: pointer; transition: all 0.2s;
+}
+.btn-secondary:hover { border-color: var(--gold-dim); color: var(--text); }
+.quiz-counter { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text-dim); margin-bottom: 20px; }
+
+/* ── OZONE INTERACTIVE ── */
+.ozone-diagram { position: relative; width: 100%; height: 340px; background: var(--surface); border: 1px solid var(--border); overflow: hidden; }
+.ozone-layer {
+  position: absolute; width: 100%; left: 0; height: 40px;
+  display: flex; align-items: center; padding: 0 24px;
+  font-size: 11px; letter-spacing: 0.1em; font-weight: 700; transition: all 0.5s;
+}
+.layer-space { top: 0; background: rgba(10,20,40,0.8); color: var(--blue-bright); }
+.layer-thermo { top: 40px; background: rgba(20,30,60,0.6); color: #8090d0; }
+.layer-strato { top: 80px; background: rgba(30,60,30,0.7); color: var(--green-bright); height: 80px; align-items: center; }
+.layer-tropo { top: 160px; background: rgba(30,30,20,0.5); color: var(--text-dim); height: 60px; }
+.layer-earth { top: 220px; background: rgba(80,60,20,0.4); color: var(--gold-dim); }
+.layer-sun-ray {
+  position: absolute; right: 20px; top: 0; width: 3px; background: linear-gradient(to bottom, #ffff00, transparent);
+  transition: height 0.5s ease; border-radius: 2px;
+}
+.ozone-controls { display: flex; gap: 16px; margin-top: 16px; align-items: center; flex-wrap: wrap; }
+.ozone-status { 
+  font-family: 'DM Mono', monospace; font-size: 20px; margin: 12px 0; 
+}
+.ozone-status .val { color: var(--gold); }
+
+/* ── BIOMAGNIFICATION ── */
+.biom-chain { display: flex; align-items: center; gap: 0; flex-wrap: wrap; }
+.biom-level {
+  text-align: center; padding: 20px; border: 1px solid var(--border);
+  background: var(--surface); flex: 1; min-width: 100px; cursor: pointer;
+  transition: all 0.3s; position: relative;
+}
+.biom-level:hover { border-color: var(--border-bright); }
+.biom-arrow { padding: 0 8px; color: var(--gold-dim); font-size: 20px; flex-shrink: 0; }
+.biom-icon { font-size: 32px; margin-bottom: 8px; }
+.biom-name { font-size: 11px; letter-spacing: 0.1em; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.biom-conc { font-family: 'DM Mono', monospace; font-size: 13px; transition: color 0.3s; }
+.biom-bar { width: 100%; height: 4px; background: var(--surface-3); margin-top: 8px; border-radius: 1px; }
+.biom-fill { height: 100%; border-radius: 1px; background: var(--gold); transition: width 0.5s; }
+
+/* ── SCROLL REVEAL ── */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s, transform 0.8s; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border); padding: 60px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; color: var(--text-dim);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  nav, section, .hero { padding-left: 24px; padding-right: 24px; }
+  .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  .five-r-grid { grid-template-columns: repeat(2, 1fr); }
+  .pyramid-wrap { grid-template-columns: 1fr; }
+  .dilemma-panel.active { grid-template-columns: 1fr; }
+  .stakeholders-grid { grid-template-columns: 1fr; }
+  .quiz-options { grid-template-columns: 1fr; }
+  .waste-sorter { grid-template-columns: 1fr; }
+  .biom-chain { flex-direction: column; }
+  .biom-arrow { transform: rotate(90deg); }
+  footer { flex-direction: column; gap: 16px; }
+}
+
+/* ── PROGRESS ── */
+.progress-line {
+  position: fixed; top: 64px; left: 0; width: 0%; height: 2px;
+  background: linear-gradient(90deg, var(--green), var(--gold)); z-index: 99;
+  transition: width 0.1s;
+}
+
+.highlight { background: rgba(212,168,67,0.12); padding: 2px 6px; color: var(--gold-bright); }
+</style>
+<link rel="stylesheet" href="site-nav.css">
+</head>
+<body>
+
+<div class="progress-line" id="progress"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Codexsec</div>
+  <div class="nav-links">
+    <a href="#theory" class="active">THEORY</a>
+    <a href="#five-r">5 Rs</a>
+    <a href="#forests">FORESTS</a>
+    <a href="#water">WATER</a>
+    <a href="#fossil">FOSSIL</a>
+    <a href="#quiz">QUIZ</a>
+  </div>
+  <div class="nav-badge">CH.16 · SCIENCE</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="chapter-tag">CHAPTER 16 · NCERT CLASS 10 SCIENCE · PAGES 266–280</div>
+    <h1>Sustainable<br/><em>Management</em><br/>of Natural<br/>Resources</h1>
+    <p>An interactive deep-dive into the socioeconomic paradigms governing resource conservation, ecological activism, and long-term sustainability models.</p>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="num">5R</div>
+        <div class="label">Framework</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">363</div>
+        <div class="label">Bishnoi Martyrs</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">1987</div>
+        <div class="label">Montreal Protocol</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">12.5Cr</div>
+        <div class="label">Arabari Forests</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider"/>
+
+<!-- THEORY OVERVIEW -->
+<section id="theory" class="reveal">
+  <span class="section-tag">01 — CHAPTER OVERVIEW</span>
+  <h2 class="section-title">Core <span>Concepts</span></h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+    <div class="theory-card">
+      <h3>WHY MANAGE RESOURCES?</h3>
+      <p>The Earth's natural resources — forests, water, coal, petroleum — are finite. Exponential population growth and industrialization have placed unprecedented pressure on these systems. Without careful management, resources will be exhausted within decades, causing irreversible ecological collapse.</p>
+    </div>
+    <div class="theory-card">
+      <h3>THE SUSTAINABILITY PRINCIPLE</h3>
+      <p>Sustainable development meets the needs of the present without compromising the ability of future generations to meet their own needs. This requires balancing economic progress, social equity, and environmental protection simultaneously — the "triple bottom line."</p>
+    </div>
+    <div class="theory-card">
+      <h3>STAKEHOLDER CONFLICTS</h3>
+      <p>Resource management is inherently political. Local communities, government departments, industries, and environmentalists each have competing interests. Effective policy must reconcile these tensions rather than favour one group exclusively.</p>
+    </div>
+    <div class="theory-card">
+      <h3>TRADITIONAL VS MODERN KNOWLEDGE</h3>
+      <p>Indigenous communities have sustainably managed ecosystems for millennia using traditional ecological knowledge. Modern conservation must incorporate and respect this wisdom rather than dismissing it in favour of technological solutions alone.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- 5 Rs SECTION -->
+<section id="five-r" class="reveal">
+  <span class="section-tag">02 — RESOURCE FRAMEWORK</span>
+  <h2 class="section-title">The 5 <span>R's</span> Framework</h2>
+  <p style="color:var(--text-dim);margin-bottom:36px;font-size:15px;line-height:1.7;">To mitigate environmental degradation and prevent rapid depletion of resources, NCERT defines a modern 5R framework. <strong style="color:var(--text)">Click each card</strong> to expand the theory and examples.</p>
+  <div class="five-r-grid">
+    <div class="r-card" onclick="toggleR(this)">
+      <div class="r-letter">R</div>
+      <div class="r-word">REFUSE</div>
+      <div class="r-detail">Say no to items you do not need — especially single-use plastics. Every time you refuse a plastic bag or disposable cutlery, you prevent that material from entering the waste stream. This is the most powerful R because it stops the problem at the source.</div>
+    </div>
+    <div class="r-card" onclick="toggleR(this)">
+      <div class="r-letter">R</div>
+      <div class="r-word">REDUCE</div>
+      <div class="r-detail">Minimize your consumption rate. Switching off unnecessary lights, fixing leaking taps, using public transport — all reduce the demand on natural resources. Reduced consumption directly lowers extraction pressure on fossil fuels and freshwater reserves.</div>
+    </div>
+    <div class="r-card" onclick="toggleR(this)">
+      <div class="r-letter">R</div>
+      <div class="r-word">REUSE</div>
+      <div class="r-detail">Use items repeatedly instead of discarding after single use. Glass bottles for storage, cloth bags for shopping, using both sides of paper. Reuse extends the lifecycle of products and delays their entry into the waste stream without the energy cost of recycling.</div>
+    </div>
+    <div class="r-card" onclick="toggleR(this)">
+      <div class="r-letter">R</div>
+      <div class="r-word">REPURPOSE</div>
+      <div class="r-detail">Modify an item for a new function when it can no longer serve its original purpose. Example: cracked pottery used to grow plants, old tyres as playground swings, worn jeans converted to a bag. Repurposing is creative upcycling that extracts further value from materials.</div>
+    </div>
+    <div class="r-card" onclick="toggleR(this)">
+      <div class="r-letter">R</div>
+      <div class="r-word">RECYCLE</div>
+      <div class="r-detail">Collect plastic, paper, glass, and metal and process them to manufacture new products. Recycling requires energy but significantly less than extracting raw materials. Aluminium recycling uses 95% less energy than primary production. Organic waste can be composted to create natural fertilizer.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- FORESTS & BIODIVERSITY -->
+<section id="forests" class="reveal">
+  <span class="section-tag">03 — BIODIVERSITY & FORESTS</span>
+  <h2 class="section-title">Forest <span>Conservation</span></h2>
+
+  <div class="theory-card" style="margin-bottom:32px;">
+    <h3>WHY FORESTS MATTER</h3>
+    <p>Forests are the Earth's richest biodiversity hotspots. Beyond timber, they provide ecosystem services worth trillions annually: oxygen production, carbon sequestration, water cycle regulation, soil stabilisation, and habitat for millions of species. The NCERT text states: "A loss of biodiversity leads to a loss of ecological stability." The primary objective of forest conservation is to preserve the biodiversity we have inherited from millions of years of evolution.</p>
+  </div>
+
+  <!-- STAKEHOLDERS -->
+  <h3 style="font-size:13px;letter-spacing:0.15em;color:var(--text-dim);margin-bottom:20px;font-weight:700;">THE FOUR KEY STAKEHOLDERS</h3>
+  <div class="stakeholders-grid" style="margin-bottom:48px;">
+    <div class="stakeholder-card">
+      <div class="stakeholder-icon">🌿</div>
+      <div class="harmony-badge">ALLY</div>
+      <h3>LOCAL COMMUNITIES</h3>
+      <p>Live in or around forests and have sustainably managed them for generations. Depend on forest products for firewood, fodder, thatch, and fruits. Possess deep traditional ecological knowledge that modern conservation ignores at its peril.</p>
+    </div>
+    <div class="stakeholder-card">
+      <div class="stakeholder-icon">🏛️</div>
+      <div class="conflict-badge">TENSION</div>
+      <h3>FOREST DEPARTMENT (GOV.)</h3>
+      <p>Government body owning the land and regulating resources. Historically ignored local knowledge and promoted monocultures of pine, teak, or eucalyptus — fast-growing commercial species that severely destroy local biodiversity and displace indigenous flora.</p>
+    </div>
+    <div class="stakeholder-card">
+      <div class="stakeholder-icon">🏭</div>
+      <div class="conflict-badge">THREAT</div>
+      <h3>INDUSTRIALISTS</h3>
+      <p>View forests purely as raw material storehouses for timber, paper mills, and match factories. Have no long-term interest in the sustainable survival of any specific forest patch. Extractive logic prioritises short-term profit over long-term ecological health.</p>
+    </div>
+    <div class="stakeholder-card">
+      <div class="stakeholder-icon">🦋</div>
+      <div class="harmony-badge">ALLY</div>
+      <h3>WILDLIFE & NATURE ENTHUSIASTS</h3>
+      <p>Aim to conserve nature and wildlife in their pristine, uninterrupted states. Advocate for protected areas, wildlife corridors, and anti-poaching measures. Often clash with both industrialists and development-oriented government policies.</p>
+    </div>
+  </div>
+
+  <!-- CONSERVATION TIMELINE -->
+  <h3 style="font-size:13px;letter-spacing:0.15em;color:var(--text-dim);margin-bottom:32px;font-weight:700;">HISTORIC CONSERVATION MOVEMENTS</h3>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-year">1731 CE · RAJASTHAN</div>
+      <h3>The Bishnoi Sacrifice — Khejarli Movement</h3>
+      <p>Amrita Devi Bishnoi led a historic movement in Khejarli village, Rajasthan, sacrificing her life along with <strong style="color:var(--gold)">363 others</strong> to protect the sacred Khejri trees from being felled for a royal palace. Their act of embracing the trees to shield them became the philosophical foundation of all future tree-hugging protests. The Government of India later instituted the <em>Amrita Devi Bishnoi National Award for Wildlife Conservation</em> in her honour.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--green-bright);box-shadow:0 0 12px rgba(106,184,122,0.4);"></div>
+      <div class="timeline-year">EARLY 1970s · UTTARAKHAND</div>
+      <h3>The Chipko Movement — "Hug the Trees"</h3>
+      <p>Originating in <strong style="color:var(--gold)">Reni village, Garhwal</strong>, local village women stood clasping tree trunks to prevent commercial logging contractors from felling them. The Sanskrit word <em>Chipko</em> means "to hug" or "to cling." This grassroots environmental movement forced the government to fundamentally re-evaluate forest usage policies and imposed a 15-year ban on commercial logging in the Himalayan region.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot" style="background:var(--blue-bright);box-shadow:0 0 12px rgba(96,160,224,0.4);"></div>
+      <div class="timeline-year">1972 CE · WEST BENGAL</div>
+      <h3>The Arabari Forest Rejuvenation — A.K. Banerjee</h3>
+      <p>Forest officer <strong style="color:var(--gold)">A.K. Banerjee</strong> revitalised <strong style="color:var(--gold)">1,272 hectares</strong> of severely degraded Sal forests in Midnapore, West Bengal. By actively involving local villagers in protection efforts and granting them <strong style="color:var(--gold)">25% of the eventual harvest yields</strong> plus fuel and fodder rights, a completely worthless forest was restored to a value of <strong style="color:var(--gold)">₹12.5 crores</strong> by 1983. This remains the gold standard for community-based conservation.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- WATER MANAGEMENT -->
+<section id="water" class="reveal">
+  <span class="section-tag">04 — WATER MANAGEMENT</span>
+  <h2 class="section-title">Water: Dams vs <span>Harvesting</span></h2>
+
+  <!-- DAM DILEMMA -->
+  <div class="theory-card" style="margin-bottom:24px;">
+    <h3>THE DAM EQUATION</h3>
+    <p>Large dams across river systems trap water to provide irrigation, domestic supply, and hydroelectric power. However, NCERT explicitly identifies three interlinked categories of problems caused by large dams. Use the tabs below to explore each dimension.</p>
+  </div>
+
+  <div class="dilemma-tabs">
+    <button class="dilemma-tab active" onclick="switchTab(this,'problems')">PROBLEMS OF LARGE DAMS</button>
+    <button class="dilemma-tab" onclick="switchTab(this,'harvesting')">WATER HARVESTING ALTERNATIVES</button>
+  </div>
+
+  <div class="dilemma-panel active" id="panel-problems">
+    <div class="dilemma-item bad">
+      <h4>⚖️ SOCIAL PROBLEMS</h4>
+      <p>Large dams displace vast numbers of local peasants and tribal communities without fair compensation or adequate rehabilitation. The Sardar Sarovar Dam on the Narmada displaced over 320,000 people. Loss of ancestral lands, livelihoods, and cultural identity are devastating consequences that are rarely accounted for in cost-benefit analyses.</p>
+    </div>
+    <div class="dilemma-item bad">
+      <h4>💰 ECONOMIC PROBLEMS</h4>
+      <p>Dams consume enormous amounts of public funds — often billions of dollars — without proportionate commercial or social benefits. Cost overruns are endemic. The benefits of irrigation and electricity are frequently captured by wealthy farmers and industrialists rather than the communities displaced to build the dams.</p>
+    </div>
+    <div class="dilemma-item bad">
+      <h4>🌿 ENVIRONMENTAL PROBLEMS</h4>
+      <p>Large dams cause massive deforestation in reservoir zones, loss of terrestrial and aquatic biodiversity, permanent alteration of river hydrological regimes, disruption of natural sediment flows, methane production from submerged vegetation, and destruction of downstream floodplain agriculture and fisheries ecosystems.</p>
+    </div>
+  </div>
+
+  <div class="dilemma-panel" id="panel-harvesting">
+    <div class="dilemma-item good">
+      <h4>🌧️ WHAT IS WATER HARVESTING?</h4>
+      <p>Traditional, highly sustainable rainwater harvesting structures capture rain where it falls and recharge local groundwater tables. Unlike centralised concrete dams, these decentralised systems are maintained by local communities, are low-cost, site-specific, and have been proven effective for thousands of years across the Indian subcontinent.</p>
+    </div>
+    <div class="dilemma-item good">
+      <h4>🔁 HOW IT WORKS</h4>
+      <p>Rainwater is collected in surface storage structures. It percolates slowly through soil layers, recharging the water table below. This groundwater remains available through dry seasons via wells. The slow percolation also filters the water naturally. Unlike dams, harvested water does not evaporate significantly and does not displace communities.</p>
+    </div>
+    <div class="dilemma-item good">
+      <h4>✅ ADVANTAGES</h4>
+      <p>Harvested water is available to local people. It does not trigger displacement. The infrastructure is community-owned, low maintenance, and culturally embedded. It restores the hydrological cycle locally. Studies show areas with active rainwater harvesting have significantly higher groundwater tables and less drought vulnerability.</p>
+    </div>
+  </div>
+
+  <!-- REGIONAL TABLE -->
+  <h3 style="font-size:13px;letter-spacing:0.15em;color:var(--text-dim);margin:48px 0 20px;font-weight:700;">INDIA'S TRADITIONAL WATER HARVESTING STRUCTURES</h3>
+  <table class="map-table">
+    <thead>
+      <tr><th>REGION / STATE</th><th>TRADITIONAL STRUCTURES</th><th>DESCRIPTION</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><span class="region-dot"></span>Rajasthan</td><td>Khadins, Tanks, Nadis</td><td>Sand storage dams and underground cisterns designed for desert water retention</td></tr>
+      <tr><td><span class="region-dot" style="background:var(--blue-bright);"></span>Maharashtra</td><td>Bandharas, Tals</td><td>Check dams across seasonal streams to slow runoff and recharge aquifers</td></tr>
+      <tr><td><span class="region-dot" style="background:var(--gold);"></span>Madhya Pradesh & Uttar Pradesh</td><td>Bundhis</td><td>Earthen embankments across drainage lines to store runoff water</td></tr>
+      <tr><td><span class="region-dot" style="background:#a0d0a0;"></span>Bihar</td><td>Ahars, Pynes</td><td>Rectangular catchment basins with embankments on three sides; channels called pynes divert river water</td></tr>
+      <tr><td><span class="region-dot" style="background:#d0a0d0;"></span>Himachal Pradesh</td><td>Kuls</td><td>Diversion channels from glacial streams to terraced fields; some over 400 years old</td></tr>
+      <tr><td><span class="region-dot" style="background:var(--red);"></span>Tamil Nadu</td><td>Eris (Tanks)</td><td>Village tanks integrated with temple management; historically every village maintained its own tank</td></tr>
+      <tr><td><span class="region-dot" style="background:#b0d0e0;"></span>Kerala</td><td>Surangams</td><td>Horizontal tunnels into laterite hillsides that tap groundwater — unique to coastal Kerala</td></tr>
+      <tr><td><span class="region-dot" style="background:#d0c0a0;"></span>Karnataka</td><td>Kattas</td><td>Temporary check dams built across streams using stones and wooden poles</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<hr class="divider"/>
+
+<!-- FOSSIL FUELS INTERACTIVE -->
+<section id="fossil" class="reveal">
+  <span class="section-tag">05 — COAL & PETROLEUM</span>
+  <h2 class="section-title">Fossil Fuel <span>Simulator</span></h2>
+
+  <div class="theory-card" style="margin-bottom:32px;">
+    <h3>WHAT ARE FOSSIL FUELS?</h3>
+    <p>Coal and petroleum are vital fossil fuels formed from the degradation of biomass — plants, algae, and marine organisms — buried deep within the Earth <strong style="color:var(--gold)">millions of years ago</strong> under extreme heat and pressure. They are <strong style="color:var(--gold)">finite, non-renewable</strong> energy resources. They contain carbon, hydrogen, nitrogen, and sulfur. Their combustion releases harmful gases: CO, CO₂, SO₂, and NOₓ. Increasing CO₂ levels are directly responsible for intensifying global warming through the greenhouse effect.</p>
+    <div class="formula-box">Combustion → CO₂ + SO₂ + NOₓ + Particulates → Greenhouse Effect + Acid Rain</div>
+  </div>
+
+  <div class="fuel-simulator">
+    <h3 style="font-size:13px;letter-spacing:0.15em;font-weight:700;color:var(--gold);margin-bottom:24px;">INTERACTIVE DEPLETION CALCULATOR</h3>
+    <p style="font-size:14px;color:var(--text-dim);margin-bottom:24px;">Adjust global energy consumption rates to see how quickly proven fossil fuel reserves will be exhausted and the proportional emission increases.</p>
+
+    <div class="slider-wrap">
+      <div class="slider-label">
+        <span>Annual consumption rate multiplier</span>
+        <strong id="rate-val">1.0×</strong>
+      </div>
+      <input type="range" min="0.5" max="3" step="0.1" value="1" id="rate-slider" oninput="updateFuelCalc()"/>
+    </div>
+    <div class="slider-wrap">
+      <div class="slider-label">
+        <span>Renewable energy transition (%)</span>
+        <strong id="renew-val">20%</strong>
+      </div>
+      <input type="range" min="0" max="80" step="5" value="20" id="renew-slider" oninput="updateFuelCalc()"/>
+    </div>
+
+    <div class="fuel-result">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;">
+        <div>
+          <div class="depletion" id="coal-year">2090</div>
+          <div class="depletion-label">COAL RUNS OUT</div>
+        </div>
+        <div>
+          <div class="depletion" id="oil-year">2060</div>
+          <div class="depletion-label">PETROLEUM RUNS OUT</div>
+        </div>
+        <div>
+          <div class="depletion" id="co2-level" style="color:var(--red);">450</div>
+          <div class="depletion-label">CO₂ ppm (PROJECTED)</div>
+        </div>
+      </div>
+      <div class="emission-bars" style="margin-top:24px;">
+        <h4 style="font-size:11px;letter-spacing:0.12em;color:var(--text-dim);margin-bottom:12px;">EMISSION PROFILE</h4>
+        <div class="emission-row"><span class="emission-label">CO₂</span><div class="emission-track"><div class="emission-fill" id="co2-bar" style="width:60%;background:var(--red);"></div></div></div>
+        <div class="emission-row"><span class="emission-label">SO₂</span><div class="emission-track"><div class="emission-fill" id="so2-bar" style="width:40%;background:var(--gold);"></div></div></div>
+        <div class="emission-row"><span class="emission-label">NOₓ</span><div class="emission-track"><div class="emission-fill" id="nox-bar" style="width:35%;background:var(--blue-bright);"></div></div></div>
+        <div class="emission-row"><span class="emission-label">PM2.5</span><div class="emission-track"><div class="emission-fill" id="pm-bar" style="width:25%;background:#d0a060;"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONSERVATION MEASURES ACCORDION -->
+  <div style="margin-top:40px;">
+    <h3 style="font-size:13px;letter-spacing:0.15em;color:var(--text-dim);margin-bottom:24px;font-weight:700;">CONSERVATION STRATEGIES</h3>
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAccordion(this)">
+        <span>Energy Efficiency Improvements</span><span class="icon">+</span>
+      </button>
+      <div class="accordion-body">Technologies like LED lighting, fuel-efficient vehicles, and smart grids can dramatically reduce consumption without lifestyle sacrifice. Energy-efficient buildings can cut energy use by up to 70%. Improving industrial efficiency remains the single largest lever for reducing fossil fuel demand globally.</div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAccordion(this)">
+        <span>Transition to Renewable Energy Sources</span><span class="icon">+</span>
+      </button>
+      <div class="accordion-body">Solar, wind, hydroelectric, biomass, geothermal, and tidal energy provide clean alternatives. India has massive solar potential — the Thar Desert alone receives solar radiation equivalent to several times India's annual energy consumption. Rapid deployment of renewable energy infrastructure is essential to bridging the fossil fuel gap.</div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAccordion(this)">
+        <span>Biogas as a Clean Alternative</span><span class="icon">+</span>
+      </button>
+      <div class="accordion-body">Modern biogas plants use anaerobic digestion of cow dung, plant waste, and sewage to yield biogas composed of up to 75% methane. It burns cleanly without smoke, provides cooking fuel for rural households, and leaves behind a nitrogen- and phosphorus-rich slurry that functions as excellent organic fertiliser — replacing chemical fertilisers.</div>
+    </div>
+    <div class="accordion-item">
+      <button class="accordion-btn" onclick="toggleAccordion(this)">
+        <span>Carbon Pricing and Policy Mechanisms</span><span class="icon">+</span>
+      </button>
+      <div class="accordion-body">Economic instruments like carbon taxes, cap-and-trade systems, and fossil fuel subsidy reform align market incentives with environmental goals. When the true social cost of carbon emissions is reflected in energy prices, renewables become economically competitive. International agreements like the Paris Accord set binding emission reduction targets.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ENVIRONMENT SECTION (Ch15) -->
+<section id="environment" class="reveal">
+  <span class="section-tag">06 — CHAPTER 15 · OUR ENVIRONMENT</span>
+  <h2 class="section-title">Ecosystem <span>Dynamics</span></h2>
+
+  <!-- ENERGY PYRAMID -->
+  <h3 style="font-size:13px;letter-spacing:0.15em;color:var(--text-dim);margin-bottom:24px;font-weight:700;">THE 10% LAW — LINDEMAN'S ENERGY PYRAMID (CLICK EACH LEVEL)</h3>
+  <div class="pyramid-wrap">
+    <div class="pyramid-svg-wrap">
+      <svg viewBox="0 0 400 320" style="width:100%;max-width:440px;" id="pyramid-svg">
+        <!-- Level 4: Tertiary Consumers -->
+        <g class="pyramid-level" onclick="selectPyramid(this,3)" id="pl3">
+          <polygon points="160,20 240,20 270,70 130,70" fill="#c05040" opacity="0.7"/>
+          <text x="200" y="50" text-anchor="middle" fill="white" font-size="11" font-family="Syne" font-weight="700">TERTIARY</text>
+          <text x="200" y="63" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9" font-family="DM Mono">0.1% energy</text>
+        </g>
+        <!-- Level 3: Secondary Consumers -->
+        <g class="pyramid-level" onclick="selectPyramid(this,2)" id="pl2">
+          <polygon points="130,75 270,75 305,130 95,130" fill="#d4a843" opacity="0.7"/>
+          <text x="200" y="108" text-anchor="middle" fill="white" font-size="11" font-family="Syne" font-weight="700">SECONDARY CONSUMERS</text>
+          <text x="200" y="122" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9" font-family="DM Mono">1% energy</text>
+        </g>
+        <!-- Level 2: Primary Consumers -->
+        <g class="pyramid-level" onclick="selectPyramid(this,1)" id="pl1">
+          <polygon points="95,135 305,135 345,200 55,200" fill="#4a9060" opacity="0.7"/>
+          <text x="200" y="170" text-anchor="middle" fill="white" font-size="12" font-family="Syne" font-weight="700">PRIMARY CONSUMERS</text>
+          <text x="200" y="184" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9" font-family="DM Mono">(Herbivores) · 10% energy</text>
+        </g>
+        <!-- Level 1: Producers -->
+        <g class="pyramid-level" onclick="selectPyramid(this,0)" id="pl0">
+          <polygon points="55,205 345,205 390,280 10,280" fill="#4070b0" opacity="0.7"/>
+          <text x="200" y="245" text-anchor="middle" fill="white" font-size="13" font-family="Syne" font-weight="700">PRODUCERS (PLANTS)</text>
+          <text x="200" y="262" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9" font-family="DM Mono">100% energy captured</text>
+        </g>
+        <!-- Arrows -->
+        <text x="370" y="175" fill="#d4a843" font-size="10" font-family="DM Mono" opacity="0.6">↑ 10%</text>
+        <text x="370" y="115" fill="#d4a843" font-size="10" font-family="DM Mono" opacity="0.6">↑ 10%</text>
+        <text x="370" y="55" fill="#d4a843" font-size="10" font-family="DM Mono" opacity="0.6">↑ 10%</text>
+      </svg>
+    </div>
+    <div class="pyramid-info" id="pyramid-info">
+      <span class="level-tag">SELECT A TROPHIC LEVEL</span>
+      <h3>Energy Flow in Ecosystems</h3>
+      <p>The flow of energy through an ecosystem is strictly <strong>unidirectional</strong> and follows specific thermodynamic constraints. Click any level of the pyramid to learn about its role, energy content, and examples.</p>
+      <div class="energy-bar"><div class="energy-bar-fill" id="energy-fill" style="width:100%;"></div></div>
+      <div class="energy-label">Energy available relative to producers</div>
+    </div>
+  </div>
+
+  <!-- BIOLOGICAL MAGNIFICATION -->
+  <h3 style="font-size:13px;letter-spacing:0.15em;color:var(--text-dim);margin:48px 0 12px;font-weight:700;">BIOLOGICAL MAGNIFICATION — INTERACTIVE DDT ACCUMULATION</h3>
+  <p style="font-size:14px;color:var(--text-dim);margin-bottom:24px;">Hover each organism to see how non-biodegradable toxins like DDT accumulate through the food chain. Organisms cannot metabolise or excrete these chemicals, so concentration multiplies at each trophic level.</p>
+  <div class="biom-chain">
+    <div class="biom-level" onmouseover="highlightBiom(0)" onmouseout="resetBiom()">
+      <div class="biom-icon">🌾</div>
+      <div class="biom-name">PLANKTON</div>
+      <div class="biom-conc" id="biom0">0.003 ppm</div>
+      <div class="biom-bar"><div class="biom-fill" id="bfill0" style="width:3%;"></div></div>
+    </div>
+    <div class="biom-arrow">→</div>
+    <div class="biom-level" onmouseover="highlightBiom(1)" onmouseout="resetBiom()">
+      <div class="biom-icon">🐟</div>
+      <div class="biom-name">SMALL FISH</div>
+      <div class="biom-conc" id="biom1">0.5 ppm</div>
+      <div class="biom-bar"><div class="biom-fill" id="bfill1" style="width:15%;"></div></div>
+    </div>
+    <div class="biom-arrow">→</div>
+    <div class="biom-level" onmouseover="highlightBiom(2)" onmouseout="resetBiom()">
+      <div class="biom-icon">🐠</div>
+      <div class="biom-name">LARGE FISH</div>
+      <div class="biom-conc" id="biom2">2.0 ppm</div>
+      <div class="biom-bar"><div class="biom-fill" id="bfill2" style="width:40%;"></div></div>
+    </div>
+    <div class="biom-arrow">→</div>
+    <div class="biom-level" onmouseover="highlightBiom(3)" onmouseout="resetBiom()">
+      <div class="biom-icon">🐦</div>
+      <div class="biom-name">FISH-EATING BIRD</div>
+      <div class="biom-conc" id="biom3">25 ppm</div>
+      <div class="biom-bar"><div class="biom-fill" id="bfill3" style="width:70%;"></div></div>
+    </div>
+    <div class="biom-arrow">→</div>
+    <div class="biom-level" onmouseover="highlightBiom(4)" onmouseout="resetBiom()">
+      <div class="biom-icon">🦅</div>
+      <div class="biom-name">APEX PREDATOR</div>
+      <div class="biom-conc" id="biom4" style="color:var(--red);">75+ ppm</div>
+      <div class="biom-bar"><div class="biom-fill" id="bfill4" style="width:100%;background:var(--red);"></div></div>
+    </div>
+  </div>
+
+  <!-- OZONE LAYER -->
+  <h3 style="font-size:13px;letter-spacing:0.15em;color:var(--text-dim);margin:48px 0 12px;font-weight:700;">OZONE LAYER DEPLETION — INTERACTIVE ATMOSPHERE MODEL</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;">
+    <div>
+      <div class="ozone-diagram" id="ozone-diag">
+        <div class="ozone-layer layer-space">☀️ OUTER SPACE — UV SOURCE</div>
+        <div class="ozone-layer layer-thermo">THERMOSPHERE</div>
+        <div class="ozone-layer layer-strato" id="ozone-layer-vis">
+          <div>
+            <div style="font-weight:700;font-size:13px;">STRATOSPHERE</div>
+            <div style="font-size:11px;opacity:0.8;">OZONE LAYER (O₃) — UV SHIELD</div>
+            <div style="font-size:10px;margin-top:4px;font-family:'DM Mono',monospace;" id="ozone-thickness">Thickness: 100% ●●●●●●●●●●</div>
+          </div>
+        </div>
+        <div class="ozone-layer layer-tropo">TROPOSPHERE — Weather layer</div>
+        <div class="ozone-layer layer-earth">🌍 EARTH SURFACE</div>
+        <div class="layer-sun-ray" id="sun-ray" style="height:80px;"></div>
+      </div>
+      <div class="ozone-controls">
+        <div style="width:100%;">
+          <div class="slider-label">
+            <span>CFC concentration (relative to 1986 levels)</span>
+            <strong id="cfc-val">100%</strong>
+          </div>
+          <input type="range" min="0" max="200" value="100" id="cfc-slider" oninput="updateOzone()"/>
+        </div>
+      </div>
+      <div class="ozone-status">Ozone remaining: <span class="val" id="ozone-pct">100%</span></div>
+      <div style="font-size:13px;color:var(--text-dim);" id="ozone-status-text">Normal stratospheric ozone. UV radiation is largely absorbed before reaching Earth's surface.</div>
+    </div>
+    <div>
+      <div class="theory-card">
+        <h3>THE CHEMISTRY OF OZONE</h3>
+        <p>Ozone (O₃) forms a protective shield in the upper stratosphere, absorbing lethal ultraviolet (UV) radiation. The formation reaction:</p>
+        <div class="formula-box">O₂ → [UV] → O• + O•<br/>O₂ + O• → O₃</div>
+        <p>CFCs (Chlorofluorocarbons) — used in refrigerators and fire extinguishers — release chlorine atoms in the stratosphere that catalytically destroy ozone:</p>
+        <div class="formula-box">Cl• + O₃ → ClO + O₂<br/>ClO + O• → Cl• + O₂</div>
+        <p>One Cl• atom can destroy <strong style="color:var(--gold)">100,000 ozone molecules</strong>. UV rays cause skin cancers, cataracts, and crop damage. The <strong style="color:var(--gold)">Montreal Protocol (1987)</strong> froze CFC production at 1986 levels — considered one of the most successful environmental agreements ever.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- WASTE SORTER MINI-GAME -->
+<section id="waste" class="reveal">
+  <span class="section-tag">07 — SOLID WASTE MANAGEMENT</span>
+  <h2 class="section-title">Waste <span>Classification</span> Game</h2>
+  <p style="font-size:15px;color:var(--text-dim);margin-bottom:32px;">Drag or click items to classify them as Biodegradable or Non-Biodegradable. Modern industrial lifestyles generate enormous quantities of waste — correct classification is the first step to sustainable disposal.</p>
+
+  <div style="margin-bottom:24px;padding:20px 28px;border:1px solid var(--border);background:var(--surface);">
+    <h3 style="font-size:12px;letter-spacing:0.12em;color:var(--text-dim);margin-bottom:10px;font-weight:700;">KEY DEFINITIONS</h3>
+    <p style="font-size:14px;color:var(--text-dim);line-height:1.7;"><strong style="color:var(--green-bright)">Biodegradable:</strong> Substances broken down into simpler non-toxic elements by microorganism action (bacteria, fungi). Examples: kitchen waste, paper, natural fibres, organic matter. <strong style="color:var(--red)">Non-Biodegradable:</strong> Materials that cannot be broken down by biological processes. Examples: plastics, glass, electronic waste. These persist for centuries, causing soil toxicity and clogging drainage.</p>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px;" id="waste-pool">
+    <div class="waste-item" onclick="classifyWaste(this,'bio')" data-type="bio">🍎 Apple core</div>
+    <div class="waste-item" onclick="classifyWaste(this,'non')" data-type="non">🧴 Plastic bottle</div>
+    <div class="waste-item" onclick="classifyWaste(this,'bio')" data-type="bio">📄 Newspaper</div>
+    <div class="waste-item" onclick="classifyWaste(this,'non')" data-type="non">💻 Old laptop</div>
+    <div class="waste-item" onclick="classifyWaste(this,'bio')" data-type="bio">🌿 Dry leaves</div>
+    <div class="waste-item" onclick="classifyWaste(this,'non')" data-type="non">🪟 Broken glass</div>
+    <div class="waste-item" onclick="classifyWaste(this,'bio')" data-type="bio">🐄 Cow dung</div>
+    <div class="waste-item" onclick="classifyWaste(this,'non')" data-type="non">🛍️ Polythene bag</div>
+    <div class="waste-item" onclick="classifyWaste(this,'bio')" data-type="bio">🍚 Food scraps</div>
+    <div class="waste-item" onclick="classifyWaste(this,'non')" data-type="non">🔋 Battery</div>
+    <div class="waste-item" onclick="classifyWaste(this,'bio')" data-type="bio">🪵 Wood shavings</div>
+    <div class="waste-item" onclick="classifyWaste(this,'non')" data-type="non">🧱 Synthetic rubber</div>
+  </div>
+
+  <div style="text-align:center;padding:16px;border:1px solid var(--border-bright);background:rgba(212,168,67,0.06);font-family:'DM Mono',monospace;font-size:18px;color:var(--gold);" id="waste-score">
+    Score: 0 / 12 — Click items to classify them!
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- QUIZ -->
+<section id="quiz" class="reveal">
+  <span class="section-tag">08 — KNOWLEDGE CHECK</span>
+  <h2 class="section-title">NCERT <span>Quiz</span></h2>
+  <p style="font-size:15px;color:var(--text-dim);margin-bottom:36px;">Test your understanding of Chapter 16. All questions are based strictly on NCERT Class 10 Science textbook content.</p>
+
+  <div class="quiz-card">
+    <div class="quiz-counter" id="quiz-counter">Question 1 of 10</div>
+    <div class="quiz-q" id="quiz-q">Loading question...</div>
+    <div class="quiz-options" id="quiz-opts"></div>
+    <div class="quiz-feedback" id="quiz-fb"></div>
+    <div class="quiz-nav">
+      <div style="font-family:'DM Mono',monospace;font-size:14px;color:var(--gold);align-self:center;" id="quiz-score-display">Score: 0</div>
+      <button class="btn-secondary" onclick="resetQuiz()">RESTART</button>
+      <button class="btn-primary" onclick="nextQuestion()" id="next-btn" style="display:none">NEXT →</button>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- FORMULA LEDGER -->
+<section class="reveal">
+  <span class="section-tag">09 — QUICK REFERENCE</span>
+  <h2 class="section-title">Formula & <span>Fact Ledger</span></h2>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+    <div class="theory-card">
+      <h3>10% ENERGY LAW</h3>
+      <p>Of the energy entering a trophic level, only 10% is transferred to the next. 90% is lost as heat, respiration, and decomposition.</p>
+      <div class="formula-box">Eₙ₊₁ = 10% × Eₙ</div>
+    </div>
+    <div class="theory-card">
+      <h3>OZONE FORMATION</h3>
+      <p>UV radiation splits O₂ into atomic oxygen, which then reacts with O₂ to form protective O₃ in the stratosphere.</p>
+      <div class="formula-box">O₂ →[UV]→ 2O•<br/>O₂ + O• → O₃</div>
+    </div>
+    <div class="theory-card">
+      <h3>MONTREAL PROTOCOL</h3>
+      <p>Signed 1987 under UNEP. Successfully froze global CFC production at 1986 levels. Ozone layer recovery projected by 2065.</p>
+      <div class="formula-box">Year: 1987 | Parties: 197</div>
+    </div>
+    <div class="theory-card">
+      <h3>ARABARI RESTORATION</h3>
+      <p>1,272 ha restored. Community given 25% of harvest. Value: ₹12.5 crore by 1983 from near-zero.</p>
+      <div class="formula-box">1272 ha · 25% share · ₹12.5Cr</div>
+    </div>
+    <div class="theory-card">
+      <h3>BISHNOI SACRIFICE</h3>
+      <p>363 people (led by Amrita Devi Bishnoi) gave their lives in 1731 to protect Khejri trees in Khejarli, Rajasthan.</p>
+      <div class="formula-box">1731 · 363 lives · Khejri tree</div>
+    </div>
+    <div class="theory-card">
+      <h3>BIOGAS COMPOSITION</h3>
+      <p>Anaerobic digestion of organic matter produces biogas. Burns without smoke; leaves nutrient-rich slurry.</p>
+      <div class="formula-box">~75% CH₄ (methane)<br/>~25% CO₂</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div>© 2024 Codexsec · NCERT Class 10 Science · Chapter 16</div>
+  <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--gold-dim);">SUSTAINABLE MANAGEMENT OF NATURAL RESOURCES</div>
+</footer>
+
+<script>
+// ── PROGRESS BAR ──
+window.addEventListener('scroll', () => {
+  const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+// ── SCROLL REVEAL ──
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+// ── 5R TOGGLE ──
+function toggleR(el) {
+  const wasActive = el.classList.contains('active');
+  document.querySelectorAll('.r-card').forEach(c => c.classList.remove('active'));
+  if (!wasActive) el.classList.add('active');
+}
+
+// ── DAM TABS ──
+function switchTab(btn, id) {
+  document.querySelectorAll('.dilemma-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.dilemma-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-' + id).classList.add('active');
+}
+
+// ── ACCORDION ──
+function toggleAccordion(btn) {
+  const body = btn.nextElementSibling;
+  const isOpen = btn.classList.contains('open');
+  document.querySelectorAll('.accordion-btn').forEach(b => { b.classList.remove('open'); b.nextElementSibling.classList.remove('open'); });
+  if (!isOpen) { btn.classList.add('open'); body.classList.add('open'); }
+}
+
+// ── FUEL SIMULATOR ──
+function updateFuelCalc() {
+  const rate = parseFloat(document.getElementById('rate-slider').value);
+  const renew = parseFloat(document.getElementById('renew-slider').value) / 100;
+  document.getElementById('rate-val').textContent = rate.toFixed(1) + '×';
+  document.getElementById('renew-val').textContent = Math.round(renew * 100) + '%';
+
+  const effectiveRate = rate * (1 - renew * 0.8);
+  const coalYear = Math.round(2024 + 115 / effectiveRate);
+  const oilYear = Math.round(2024 + 40 / effectiveRate);
+  const co2 = Math.round(420 + 150 * rate * (1 - renew));
+
+  document.getElementById('coal-year').textContent = coalYear;
+  document.getElementById('oil-year').textContent = oilYear;
+  document.getElementById('co2-level').textContent = co2;
+
+  const em = Math.min(100, rate * (1 - renew) * 60);
+  document.getElementById('co2-bar').style.width = Math.min(100, em * 1.4) + '%';
+  document.getElementById('so2-bar').style.width = Math.min(100, em * 0.8) + '%';
+  document.getElementById('nox-bar').style.width = Math.min(100, em * 0.7) + '%';
+  document.getElementById('pm-bar').style.width = Math.min(100, em * 0.5) + '%';
+}
+
+// ── OZONE SIMULATOR ──
+function updateOzone() {
+  const cfc = parseFloat(document.getElementById('cfc-slider').value);
+  document.getElementById('cfc-val').textContent = Math.round(cfc) + '%';
+  const ozonePct = Math.max(0, Math.round(100 - (cfc - 40) * 0.6));
+  const rayH = Math.min(280, Math.round(80 + (100 - ozonePct) * 2));
+  
+  document.getElementById('ozone-pct').textContent = ozonePct + '%';
+  document.getElementById('sun-ray').style.height = rayH + 'px';
+
+  const bars = Math.max(0, Math.round(ozonePct / 10));
+  const bstr = '●'.repeat(bars) + '○'.repeat(10 - bars);
+  document.getElementById('ozone-thickness').textContent = `Thickness: ${ozonePct}% ${bstr}`;
+
+  const layer = document.getElementById('ozone-layer-vis');
+  if (ozonePct > 80) {
+    layer.style.background = 'rgba(30,60,30,0.7)';
+    document.getElementById('ozone-status-text').textContent = 'Normal stratospheric ozone. UV radiation is largely absorbed before reaching Earth.';
+  } else if (ozonePct > 50) {
+    layer.style.background = 'rgba(80,80,20,0.7)';
+    document.getElementById('ozone-status-text').textContent = '⚠️ Ozone layer thinning. Increased UV reaching Earth. Skin cancer risk elevated.';
+  } else {
+    layer.style.background = 'rgba(80,20,20,0.7)';
+    document.getElementById('ozone-status-text').textContent = '🚨 Critical ozone hole! Extreme UV radiation. Crop damage, cataracts, widespread skin cancer risk.';
+  }
+}
+
+// ── PYRAMID ──
+const pyramidData = [
+  {
+    title: 'Producers (Plants)',
+    tag: 'TROPHIC LEVEL 1',
+    text: 'Green plants and photosynthetic bacteria that trap solar energy to synthesise organic food from inorganic raw elements. They capture roughly 1% of total solar energy falling on their leaves and convert it into chemical food energy. This becomes the energy foundation for all other trophic levels. Examples: grasses, phytoplankton, algae, trees.',
+    energy: 100,
+    color: 'var(--blue-bright)'
+  },
+  {
+    title: 'Primary Consumers (Herbivores)',
+    tag: 'TROPHIC LEVEL 2',
+    text: 'Animals that eat plants directly. They receive only 10% of the energy stored by producers. The remaining 90% is lost as heat (during respiration), used in movement, and passed to decomposers. Examples: deer, rabbits, caterpillars, zooplankton, grasshoppers.',
+    energy: 10,
+    color: 'var(--green-bright)'
+  },
+  {
+    title: 'Secondary Consumers',
+    tag: 'TROPHIC LEVEL 3',
+    text: 'Carnivores that eat herbivores. They receive only 10% of the energy that herbivores held — just 1% of original producer energy. The drastic energy reduction at each step is why food chains rarely extend beyond 3–4 trophic levels. Examples: frogs, foxes, small fish, snakes.',
+    energy: 1,
+    color: 'var(--gold)'
+  },
+  {
+    title: 'Tertiary Consumers',
+    tag: 'TROPHIC LEVEL 4',
+    text: 'Top-tier carnivores. Receive just 0.1% of original producer energy — making their populations inherently small and vulnerable. These organisms are also where biological magnification of toxins like DDT reaches its most dangerous concentration. Examples: eagles, sharks, tigers, humans.',
+    energy: 0.1,
+    color: 'var(--red)'
+  }
+];
+
+function selectPyramid(el, idx) {
+  const d = pyramidData[idx];
+  document.getElementById('pyramid-info').innerHTML = `
+    <span class="level-tag">${d.tag}</span>
+    <h3>${d.title}</h3>
+    <p>${d.text}</p>
+    <div class="energy-bar"><div class="energy-bar-fill" style="width:${d.energy}%;background:${d.color};transition:width 0.6s;"></div></div>
+    <div class="energy-label">Energy available: ${d.energy}% of producers</div>
+  `;
+}
+
+// ── BIOMAGNIFICATION ──
+const biomData = [
+  { conc: '0.003 ppm', width: 3, col: 'var(--gold)' },
+  { conc: '0.5 ppm', width: 15, col: 'var(--gold)' },
+  { conc: '2.0 ppm', width: 40, col: '#d0a060' },
+  { conc: '25 ppm', width: 70, col: '#c08040' },
+  { conc: '75+ ppm', width: 100, col: 'var(--red)' }
+];
+function highlightBiom(idx) {
+  for (let i = 0; i <= idx; i++) {
+    document.getElementById('biom' + i).style.color = biomData[i].col;
+    document.getElementById('bfill' + i).style.background = biomData[i].col;
+    document.getElementById('bfill' + i).style.width = biomData[i].width + '%';
+  }
+}
+function resetBiom() {
+  for (let i = 0; i < 5; i++) {
+    document.getElementById('biom' + i).style.color = '';
+    document.getElementById('bfill' + i).style.background = 'var(--gold)';
+  }
+}
+
+// ── WASTE GAME ──
+let wasteScore = 0;
+let wasteTotal = 0;
+function classifyWaste(el, chosen) {
+  if (el.classList.contains('correct-bio') || el.classList.contains('correct-non') || el.classList.contains('wrong')) return;
+  const type = el.dataset.type;
+  wasteTotal++;
+  if (chosen === type) {
+    wasteScore++;
+    el.classList.add(type === 'bio' ? 'correct-bio' : 'correct-non');
+  } else {
+    el.classList.add('wrong');
+    setTimeout(() => {
+      el.classList.remove('wrong');
+      el.classList.add(type === 'bio' ? 'correct-bio' : 'correct-non');
+    }, 600);
+  }
+  document.getElementById('waste-score').textContent = 
+    `Score: ${wasteScore} / 12 — ${wasteScore === 12 ? '🏆 Perfect! All classified correctly!' : wasteTotal < 12 ? 'Keep going!' : `${wasteScore}/12 correct`}`;
+}
+
+// ── QUIZ ENGINE ──
+const questions = [
+  { q: "In 1731, Amrita Devi Bishnoi sacrificed her life along with how many others to protect the Khejri trees?", opts: ["100", "363", "500", "200"], ans: 1, fb: "363 people from the Bishnoi community of Khejarli village, Rajasthan gave their lives to protect sacred Khejri trees. The Government of India instituted the Amrita Devi Bishnoi National Award for Wildlife Conservation in her honour." },
+  { q: "The Chipko Movement originated in which village/region?", opts: ["Khejarli, Rajasthan", "Reni village, Garhwal", "Arabari, West Bengal", "Sundarbans, Bengal"], ans: 1, fb: "The Chipko Movement ('Hug the Trees') originated in Reni village, Garhwal in the early 1970s. Local women stood clasping tree trunks to prevent commercial loggers from felling them." },
+  { q: "Forest officer A.K. Banerjee revitalised how many hectares of degraded Sal forests in Arabari, West Bengal?", opts: ["500 hectares", "1000 hectares", "1272 hectares", "2000 hectares"], ans: 2, fb: "A.K. Banerjee revitalised 1,272 hectares of severely degraded Sal forests in Midnapore, West Bengal starting in 1972. By involving local villagers and giving them 25% of harvest yields, the forest was restored to a value of ₹12.5 crores by 1983." },
+  { q: "Which of the following is NOT one of the 5R's of sustainable resource management as per NCERT?", opts: ["Refuse", "Repurpose", "Recover", "Recycle"], ans: 2, fb: "The NCERT 5R framework consists of: Refuse, Reduce, Reuse, Repurpose, and Recycle. 'Recover' is not part of this framework. The 5Rs guide sustainable consumption and waste management." },
+  { q: "The ozone layer was thinning due to which synthetic chemical released into the atmosphere?", opts: ["Carbon dioxide (CO₂)", "Methane (CH₄)", "Chlorofluorocarbons (CFCs)", "Sulfur dioxide (SO₂)"], ans: 2, fb: "CFCs (Chlorofluorocarbons), used in refrigerators and fire extinguishers, release chlorine atoms in the stratosphere that catalytically destroy ozone. The Montreal Protocol (1987) froze CFC production at 1986 levels." },
+  { q: "According to Lindeman's 10% Law, what percentage of energy is transferred from one trophic level to the next?", opts: ["1%", "10%", "25%", "50%"], ans: 1, fb: "Lindeman's 10% Law states that only 10% of the energy at one trophic level is transferred to the next. The remaining 90% is lost as heat, respiration, and decomposition. This is why food chains rarely exceed 3-4 levels." },
+  { q: "Which traditional water harvesting structure is unique to Kerala, involving horizontal tunnels into laterite hillsides?", opts: ["Kuls", "Eris", "Surangams", "Bundhis"], ans: 2, fb: "Surangams are horizontal tunnels drilled into laterite hillsides unique to coastal Kerala. They tap into natural groundwater sources. Other structures: Kuls (Himachal Pradesh), Eris (Tamil Nadu), Bundhis (MP/UP)." },
+  { q: "What is 'biological magnification'?", opts: ["The increase in population at higher trophic levels", "The progressive increase in toxin concentration at each successive trophic level", "The magnification of biodiversity in forest ecosystems", "The amplification of sound in an ecosystem"], ans: 1, fb: "Biological magnification is the progressive increase in concentration of toxic, non-biodegradable chemicals (like DDT) at each successive trophic level. Because organisms cannot metabolise or excrete these chemicals, they accumulate increasingly, affecting top consumers (including humans) most severely." },
+  { q: "Large dams cause three categories of problems. Which of the following is NOT one of them?", opts: ["Social problems (displacement)", "Economic problems", "Environmental problems", "Cultural problems"], ans: 3, fb: "NCERT identifies exactly three problem categories for large dams: Social (displacement of communities), Economic (high cost, inequitable benefits), and Environmental (deforestation, biodiversity loss, ecological imbalance). 'Cultural problems' is not a separate NCERT category, though it overlaps with social issues." },
+  { q: "Biogas produced in a biogas plant is composed primarily of which gas?", opts: ["Hydrogen (H₂)", "Carbon dioxide (CO₂)", "Methane (CH₄)", "Butane (C₄H₁₀)"], ans: 2, fb: "Biogas produced by anaerobic digestion of cow dung, plant waste, and sewage is composed of up to 75% methane (CH₄). It burns cleanly without smoke, provides cooking fuel for rural households, and the residual slurry is an excellent nitrogen- and phosphorus-rich organic fertiliser." }
+];
+
+let qIdx = 0, qScore = 0, qAnswered = false;
+
+function loadQuestion() {
+  const q = questions[qIdx];
+  document.getElementById('quiz-counter').textContent = `Question ${qIdx + 1} of ${questions.length}`;
+  document.getElementById('quiz-q').textContent = q.q;
+  document.getElementById('quiz-score-display').textContent = `Score: ${qScore}`;
+  const optsEl = document.getElementById('quiz-opts');
+  optsEl.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = opt;
+    btn.onclick = () => answerQ(i);
+    optsEl.appendChild(btn);
+  });
+  document.getElementById('quiz-fb').className = 'quiz-feedback';
+  document.getElementById('quiz-fb').innerHTML = '';
+  document.getElementById('next-btn').style.display = 'none';
+  qAnswered = false;
+}
+
+function answerQ(idx) {
+  if (qAnswered) return;
+  qAnswered = true;
+  const q = questions[qIdx];
+  const opts = document.querySelectorAll('.quiz-option');
+  opts.forEach(o => o.style.pointerEvents = 'none');
+  opts[idx].classList.add(idx === q.ans ? 'correct' : 'wrong');
+  if (idx !== q.ans) opts[q.ans].classList.add('correct');
+  if (idx === q.ans) qScore++;
+  document.getElementById('quiz-score-display').textContent = `Score: ${qScore}`;
+  const fb = document.getElementById('quiz-fb');
+  fb.className = 'quiz-feedback show ' + (idx === q.ans ? 'correct-fb' : 'wrong-fb');
+  fb.innerHTML = (idx === q.ans ? '✓ Correct! ' : '✗ Incorrect. ') + q.fb;
+  document.getElementById('next-btn').style.display = qIdx < questions.length - 1 ? 'block' : 'none';
+  if (qIdx === questions.length - 1) {
+    document.getElementById('next-btn').style.display = 'none';
+    setTimeout(() => {
+      document.getElementById('quiz-fb').innerHTML += `<br/><br/><strong style="color:var(--gold)">Quiz Complete! Final score: ${qScore}/${questions.length}</strong> — ${qScore >= 8 ? '🏆 Excellent mastery!' : qScore >= 5 ? '📚 Good effort, review the chapter.' : '🔄 Study more and try again.'}`;
+    }, 200);
+  }
+}
+
+function nextQuestion() {
+  qIdx++;
+  if (qIdx < questions.length) loadQuestion();
+}
+
+function resetQuiz() {
+  qIdx = 0; qScore = 0;
+  loadQuestion();
+}
+
+loadQuestion();
+</script>
+<script src="site-nav.js" defer></script>
+</body>
+</html>

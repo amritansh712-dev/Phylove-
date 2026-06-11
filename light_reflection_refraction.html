@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch 10 & 11: Light – Reflection & Refraction | Codexsec</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e0e0e;--surface:#1c1b1b;--sc:#201f1f;--sch:#2a2a2a;--scx:#353534;
+  --pri:#ffd475;--pri-dim:#ecc161;--sec:#a9c7ff;--ter:#cdd8ff;
+  --os:#e5e2e1;--osv:#d1c5b1;--out:#9a8f7e;--outv:#4e4637;
+  --err:#ffb4ab;--ok:#86efac;--warn:#fbbf24;
+  --ff:'Hanken Grotesk',sans-serif;--fl:'Space Grotesk',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--os);font-family:var(--ff);overflow-x:hidden;line-height:1.6;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--outv);border-radius:2px;}
+
+/* ── Star field ── */
+.starfield{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse 60% 50% at 30% 20%,#1a1200 0%,#0e0e0e 65%);}
+
+/* ── Header ── */
+.hdr{position:fixed;top:0;width:100%;z-index:100;background:rgba(14,14,14,.88);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.05);}
+.hdr-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:18px 80px;}
+.logo{font-family:var(--ff);font-size:22px;font-weight:700;color:var(--os);letter-spacing:-.02em;}
+.nav{display:flex;gap:32px;}
+.nav a{font-family:var(--fl);font-size:11px;letter-spacing:.2em;font-weight:600;color:var(--osv);text-decoration:none;transition:color .2s;}
+.nav a.active{color:var(--pri);border-bottom:2px solid var(--pri);padding-bottom:2px;}
+.nav a:hover{color:var(--pri);}
+.nav-ic{display:flex;gap:18px;}
+.nav-ic span{color:var(--osv);cursor:pointer;font-size:20px;transition:color .2s;}
+.nav-ic span:hover{color:var(--pri);}
+
+/* ── Layout ── */
+.wrap{max-width:1200px;margin:0 auto;padding:0 80px;}
+
+/* ── Hero ── */
+.hero{padding:140px 80px 70px;max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.hero-lbl{font-family:var(--fl);font-size:10px;letter-spacing:.25em;color:var(--pri);display:block;margin-bottom:14px;}
+.hero-h1{font-size:54px;font-weight:300;line-height:1.08;letter-spacing:-.03em;color:var(--os);margin-bottom:20px;}
+.hero-h1 em{font-style:normal;color:var(--pri);}
+.hero-p{font-size:16px;color:var(--osv);line-height:1.75;margin-bottom:36px;}
+.hero-stats{display:flex;gap:36px;}
+.stat{display:flex;flex-direction:column;gap:2px;}
+.stat-v{font-size:30px;font-weight:700;color:var(--pri);}
+.stat-l{font-family:var(--fl);font-size:9px;letter-spacing:.2em;color:var(--osv);}
+.hero-visual{position:relative;height:320px;background:var(--sc);border:1px solid rgba(255,212,117,.08);border-radius:4px;overflow:hidden;}
+.hero-visual canvas{width:100%;height:100%;display:block;}
+
+/* ── Glass card ── */
+.glass{background:rgba(20,19,19,.75);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.06);border-radius:4px;}
+
+/* ── Section ── */
+section{padding:72px 0;}
+.sec-lbl{font-family:var(--fl);font-size:10px;letter-spacing:.25em;color:var(--pri);display:block;margin-bottom:10px;}
+.sec-h2{font-size:36px;font-weight:400;letter-spacing:-.02em;color:var(--os);margin-bottom:12px;}
+.sec-p{font-size:15px;color:var(--osv);line-height:1.7;max-width:580px;}
+
+/* ── Theory grid ── */
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px;}
+.tcard{padding:26px;background:var(--sc);border:1px solid var(--outv);border-radius:4px;transition:border-color .3s;}
+.tcard:hover{border-color:rgba(255,212,117,.3);}
+.tcard-ic{font-size:26px;color:var(--pri);margin-bottom:14px;display:block;}
+.tcard-t{font-family:var(--fl);font-size:11px;letter-spacing:.15em;color:var(--os);margin-bottom:8px;}
+.tcard-b{font-size:13px;color:var(--osv);line-height:1.6;}
+.frm{display:inline-block;font-family:'Courier New',monospace;font-size:14px;color:var(--pri);background:rgba(255,212,117,.08);padding:5px 10px;border-radius:2px;margin-top:8px;}
+
+/* ── Simulation section ── */
+.sim-sec{padding:72px 0;border-top:1px solid rgba(255,255,255,.04);}
+.sim-hdr{display:flex;align-items:flex-start;gap:28px;margin-bottom:28px;}
+.sim-num{font-family:var(--fl);font-size:80px;font-weight:700;line-height:1;color:rgba(255,212,117,.06);letter-spacing:-.05em;user-select:none;flex-shrink:0;}
+.sim-info{flex:1;}
+.sim-badge{font-family:var(--fl);font-size:10px;letter-spacing:.2em;font-weight:600;color:var(--sec);background:rgba(169,199,255,.08);padding:4px 12px;border-radius:100px;display:inline-block;margin-bottom:10px;}
+.sim-h2{font-size:28px;font-weight:500;color:var(--os);margin-bottom:6px;letter-spacing:-.01em;}
+.sim-p{font-size:14px;color:var(--osv);line-height:1.65;max-width:560px;}
+
+/* ── Canvas card ── */
+.ccard{background:var(--sc);border:1px solid rgba(255,255,255,.07);border-radius:4px;overflow:hidden;}
+.cvs-wrap{position:relative;width:100%;}
+.cvs{display:block;width:100%;height:320px;cursor:default;}
+
+/* ── Tabs ── */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;padding:16px 22px;border-bottom:1px solid rgba(255,255,255,.05);}
+.tb{font-family:var(--fl);font-size:11px;letter-spacing:.1em;font-weight:600;padding:7px 16px;border-radius:100px;border:1px solid var(--outv);background:transparent;color:var(--osv);cursor:pointer;transition:all .2s;}
+.tb:hover{border-color:var(--pri);color:var(--pri);}
+.tb.active{background:var(--pri);color:#3f2e00;border-color:var(--pri);}
+
+/* ── Controls ── */
+.ctrls{padding:18px 22px;border-top:1px solid rgba(255,255,255,.05);display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;}
+.cg{display:flex;flex-direction:column;gap:7px;min-width:160px;}
+.cg-lbl{font-family:var(--fl);font-size:10px;letter-spacing:.15em;color:var(--osv);font-weight:600;}
+.sldr{-webkit-appearance:none;appearance:none;width:100%;height:3px;background:var(--scx);border-radius:2px;outline:none;cursor:pointer;}
+.sldr::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--pri);cursor:pointer;box-shadow:0 0 0 3px rgba(255,212,117,.18);}
+.sldr::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--pri);cursor:pointer;border:none;}
+.sel{background:var(--sch);color:var(--os);border:1px solid var(--outv);padding:8px 12px;font-family:var(--ff);font-size:13px;border-radius:3px;outline:none;cursor:pointer;}
+.sel:focus{border-color:var(--pri);}
+
+/* ── Readout ── */
+.rdout{padding:14px 22px;border-top:1px solid rgba(255,255,255,.04);display:flex;flex-wrap:wrap;gap:22px;background:rgba(0,0,0,.28);}
+.ri{display:flex;flex-direction:column;gap:2px;}
+.rk{font-family:var(--fl);font-size:9px;letter-spacing:.18em;color:var(--osv);}
+.rv{font-family:'Courier New',monospace;font-size:17px;color:var(--pri);font-weight:700;}
+.rv.pos{color:var(--ok);}
+.rv.neg{color:var(--err);}
+.rv.neu{color:var(--pri);}
+.case-badge{font-family:var(--fl);font-size:10px;letter-spacing:.12em;padding:5px 14px;border-radius:100px;background:rgba(169,199,255,.09);color:var(--sec);border:1px solid rgba(169,199,255,.18);white-space:nowrap;}
+
+/* ── Lens controls ── */
+.le{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.ltog{display:flex;border-radius:3px;overflow:hidden;border:1px solid var(--outv);}
+.ltb{padding:6px 14px;font-family:var(--fl);font-size:11px;font-weight:700;background:transparent;border:none;cursor:pointer;transition:all .2s;color:var(--osv);letter-spacing:.08em;}
+.ltb.cx{background:var(--ok);color:#000;}
+.ltb.cc{background:var(--err);color:#000;}
+.btn-add{font-family:var(--fl);font-size:11px;letter-spacing:.1em;font-weight:600;padding:8px 18px;border-radius:3px;background:rgba(255,212,117,.1);border:1px solid rgba(255,212,117,.28);color:var(--pri);cursor:pointer;transition:all .2s;}
+.btn-add:hover{background:rgba(255,212,117,.18);}
+.btn-rm{font-family:var(--fl);font-size:11px;letter-spacing:.1em;font-weight:600;padding:8px 14px;border-radius:3px;background:rgba(255,180,171,.1);border:1px solid rgba(255,180,171,.2);color:var(--err);cursor:pointer;transition:all .2s;}
+.btn-rm:hover{background:rgba(255,180,171,.18);}
+
+/* ── Formula ledger ── */
+.lgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:40px;}
+.lcard{padding:22px;background:var(--sc);border:1px solid var(--outv);border-radius:4px;display:flex;flex-direction:column;gap:8px;}
+.ln{font-family:var(--fl);font-size:9px;letter-spacing:.18em;color:var(--sec);}
+.lf{font-family:'Courier New',monospace;font-size:18px;color:var(--pri);font-weight:700;}
+.ld{font-size:12px;color:var(--osv);line-height:1.5;}
+
+/* ── NCERT Notes ── */
+.notes-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:36px;}
+.note-card{padding:24px;background:var(--sc);border:1px solid var(--outv);border-radius:4px;}
+.note-title{font-family:var(--fl);font-size:11px;letter-spacing:.15em;color:var(--pri);margin-bottom:10px;}
+.note-body{font-size:13px;color:var(--osv);line-height:1.7;}
+.note-body li{margin-left:16px;margin-bottom:4px;}
+
+/* ── Footer ── */
+footer{border-top:1px solid rgba(255,255,255,.05);padding:40px 0;background:var(--bg);}
+.ft-in{max-width:1200px;margin:0 auto;padding:0 80px;display:flex;align-items:center;justify-content:space-between;}
+.ft-logo{font-size:18px;font-weight:700;color:var(--pri);}
+.ft-txt{font-size:12px;color:var(--osv);}
+.ft-ic{display:flex;gap:14px;}
+.ft-ic span{color:var(--osv);cursor:pointer;font-size:20px;}
+
+/* ── Responsive ── */
+@media(max-width:860px){
+  .hero{grid-template-columns:1fr;padding:120px 24px 60px;}
+  .wrap,.hdr-in,.hero,.ft-in{padding-left:24px;padding-right:24px;}
+  .tgrid{grid-template-columns:1fr;}
+  .lgrid{grid-template-columns:repeat(2,1fr);}
+  .nav{display:none;}
+  .notes-grid{grid-template-columns:1fr;}
+  .sim-num{font-size:48px;}
+}
+</style>
+<link rel="stylesheet" href="site-nav.css">
+</head>
+<body>
+<div class="starfield" id="starfield"></div>
+
+<!-- ═══ HEADER ═══ -->
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="logo">Codexsec</div>
+    <nav class="nav">
+      <a href="#" class="active">Chapters</a>
+      <a href="#">Resources</a>
+      <a href="#">Practice</a>
+    </nav>
+    <div class="nav-ic">
+      <span class="material-symbols-outlined">search</span>
+      <span class="material-symbols-outlined">account_circle</span>
+    </div>
+  </div>
+</header>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div>
+    <span class="hero-lbl">NCERT CLASS 10 · CHAPTERS 10 & 11 · PHYSICS</span>
+    <h1 class="hero-h1">Light:<br><em>Reflection</em> &<br>Refraction</h1>
+    <p class="hero-p">Five interactive simulations covering every NCERT concept—from sign conventions to lens power combinations. Physics you can touch, drag, and see.</p>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-v">5</span><span class="stat-l">SIMULATIONS</span></div>
+      <div class="stat"><span class="stat-v">6</span><span class="stat-l">MIRROR CASES</span></div>
+      <div class="stat"><span class="stat-v">12</span><span class="stat-l">FORMULAE</span></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <canvas id="heroC"></canvas>
+  </div>
+</div>
+
+<!-- ═══ THEORY OVERVIEW ═══ -->
+<section style="background:var(--surface);">
+  <div class="wrap">
+    <span class="sec-lbl">CORE THEORY · NCERT PAGES 161–203</span>
+    <h2 class="sec-h2">Textbook Fundamentals</h2>
+    <p class="sec-p">Every formula, law, and principle from Chapters 10 & 11 condensed and connected to the simulations below.</p>
+    <div class="tgrid">
+      <div class="tcard">
+        <span class="material-symbols-outlined tcard-ic">flip</span>
+        <div class="tcard-t">NEW CARTESIAN SIGN CONVENTION</div>
+        <div class="tcard-b">All distances measured from Pole P. Direction of incident light = positive (+). Object always on left, so u is always negative. Heights above axis = positive.</div>
+        <div class="frm">u &lt; 0 always</div>
+      </div>
+      <div class="tcard">
+        <span class="material-symbols-outlined tcard-ic">radio_button_unchecked</span>
+        <div class="tcard-t">MIRROR FORMULA & MAGNIFICATION</div>
+        <div class="tcard-b">Relates object distance (u), image distance (v), focal length (f). Magnification m = –v/u. Negative m → real & inverted. f = R/2 always.</div>
+        <div class="frm">1/f = 1/v + 1/u</div>
+      </div>
+      <div class="tcard">
+        <span class="material-symbols-outlined tcard-ic">water</span>
+        <div class="tcard-t">SNELL'S LAW OF REFRACTION</div>
+        <div class="tcard-b">Ratio of sin of angles equals ratio of refractive indices. Light bends toward normal when entering denser medium. n = c/v where c = 3×10⁸ m/s.</div>
+        <div class="frm">n₁ sin i = n₂ sin r</div>
+      </div>
+      <div class="tcard">
+        <span class="material-symbols-outlined tcard-ic">lens_blur</span>
+        <div class="tcard-t">LENS FORMULA & POWER</div>
+        <div class="tcard-b">Convex lens f &gt; 0, concave f &lt; 0. Power P = 1/f(m) in Dioptres. For lenses in contact: net power is algebraic sum P = P₁ + P₂ + ...</div>
+        <div class="frm">1/v − 1/u = 1/f</div>
+      </div>
+      <div class="tcard">
+        <span class="material-symbols-outlined tcard-ic">science</span>
+        <div class="tcard-t">GLASS SLAB LATERAL SHIFT</div>
+        <div class="tcard-b">A rectangular slab produces emergent ray parallel to incident ray but displaced sideways. Lateral displacement d = t·sin(i−r)/cos(r) where t = slab thickness.</div>
+        <div class="frm">d = t·sin(i−r)/cos(r)</div>
+      </div>
+      <div class="tcard">
+        <span class="material-symbols-outlined tcard-ic">psychology</span>
+        <div class="tcard-t">HUMAN EYE & DEFECTS</div>
+        <div class="tcard-b">Near point: 25 cm. Far point: infinity (normal eye). Myopia corrected by concave lens. Hypermetropia by convex lens. Presbyopia by bifocal lenses.</div>
+        <div class="frm">Power of acc. = ciliary muscles</div>
+      </div>
+    </div>
+
+    <!-- NCERT Notes summary -->
+    <div class="notes-grid" style="margin-top:32px;">
+      <div class="note-card">
+        <div class="note-title">CONCAVE MIRROR — 6 NCERT CASES</div>
+        <div class="note-body">
+          <ul>
+            <li><b>Object at ∞:</b> Real, inverted, point image at F</li>
+            <li><b>Beyond C:</b> Real, inverted, diminished (between F & C)</li>
+            <li><b>At C:</b> Real, inverted, same size (at C)</li>
+            <li><b>Between C & F:</b> Real, inverted, magnified (beyond C)</li>
+            <li><b>At F:</b> Real, image at infinity</li>
+            <li><b>Between F & P:</b> Virtual, erect, magnified (behind mirror)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="note-card">
+        <div class="note-title">REFRACTION PHENOMENA (CH. 11)</div>
+        <div class="note-body">
+          <ul>
+            <li><b>Twinkling of Stars:</b> Atmospheric refraction fluctuation</li>
+            <li><b>Advanced sunrise:</b> ~2 min early due to atmospheric refraction</li>
+            <li><b>Blue sky:</b> Rayleigh scattering — shorter wavelengths scatter more</li>
+            <li><b>Red sunrise/sunset:</b> Blue scattered away, red passes through</li>
+            <li><b>Dispersion:</b> White light → VIBGYOR through prism</li>
+            <li><b>TIR:</b> Total Internal Reflection when angle exceeds critical angle</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SIM 1: SIGN CONVENTION ═══ -->
+<section class="sim-sec">
+  <div class="wrap">
+    <div class="sim-hdr">
+      <div class="sim-num">01</div>
+      <div class="sim-info">
+        <span class="sim-badge">NEW CARTESIAN SIGN CONVENTION</span>
+        <h2 class="sim-h2">Sign Convention Playground</h2>
+        <p class="sim-p">Use sliders to position an object on the coordinate grid. Distances and heights instantly show their correct sign. The pole P is the origin—left is negative, above is positive.</p>
+      </div>
+    </div>
+    <div class="ccard">
+      <div class="cvs-wrap"><canvas class="cvs" id="s1c" style="height:300px;"></canvas></div>
+      <div class="ctrls">
+        <div class="cg" style="flex:1;min-width:200px;">
+          <label class="cg-lbl">OBJECT DISTANCE FROM POLE (u)</label>
+          <input type="range" class="sldr" id="s1u" min="-380" max="200" value="-160" step="5">
+        </div>
+        <div class="cg" style="flex:1;min-width:200px;">
+          <label class="cg-lbl">OBJECT HEIGHT (h)</label>
+          <input type="range" class="sldr" id="s1h" min="-120" max="120" value="60" step="5">
+        </div>
+      </div>
+      <div class="rdout">
+        <div class="ri"><div class="rk">u (DISTANCE)</div><div class="rv" id="s1ru">−160</div></div>
+        <div class="ri"><div class="rk">h (HEIGHT)</div><div class="rv" id="s1rh">+60</div></div>
+        <div class="ri"><div class="rk">SIGN u</div><div class="rv" id="s1su">NEGATIVE ←</div></div>
+        <div class="ri"><div class="rk">SIGN h</div><div class="rv" id="s1sh">POSITIVE ↑</div></div>
+        <div class="ri"><div class="rk">REGION</div><div class="rv" id="s1rg">OBJECT SIDE (REAL)</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SIM 2: RAY TRACKER ═══ -->
+<section class="sim-sec" style="background:var(--surface);">
+  <div class="wrap">
+    <div class="sim-hdr">
+      <div class="sim-num">02</div>
+      <div class="sim-info">
+        <span class="sim-badge">GEOMETRIC OPTICS · MIRRORS & LENSES</span>
+        <h2 class="sim-h2">Interactive Ray Tracker</h2>
+        <p class="sim-p">Slide the object position to trace all 6 NCERT cases for concave mirrors, and equivalent positions for convex mirror, convex lens, and concave lens—with live image calculations.</p>
+      </div>
+    </div>
+    <div class="ccard">
+      <div class="tabs">
+        <button class="tb active" onclick="setMode(this,'cm')">⊃ Concave Mirror</button>
+        <button class="tb" onclick="setMode(this,'vm')">⊂ Convex Mirror</button>
+        <button class="tb" onclick="setMode(this,'cl')">◎ Convex Lens</button>
+        <button class="tb" onclick="setMode(this,'dl')">◎ Concave Lens</button>
+      </div>
+      <div class="cvs-wrap"><canvas class="cvs" id="s2c" style="height:340px;"></canvas></div>
+      <div class="ctrls">
+        <div class="cg" style="flex:1;min-width:200px;">
+          <label class="cg-lbl">OBJECT DISTANCE |u| FROM POLE/LENS</label>
+          <input type="range" class="sldr" id="s2sl" min="5" max="340" value="210" step="5" oninput="drawS2()">
+        </div>
+        <div class="cg">
+          <div class="cg-lbl">NCERT CASE</div>
+          <span class="case-badge" id="s2case">Between C & F → Magnified Real</span>
+        </div>
+      </div>
+      <div class="rdout">
+        <div class="ri"><div class="rk">u</div><div class="rv neg" id="s2u">—</div></div>
+        <div class="ri"><div class="rk">v</div><div class="rv" id="s2v">—</div></div>
+        <div class="ri"><div class="rk">m</div><div class="rv" id="s2m">—</div></div>
+        <div class="ri"><div class="rk">NATURE</div><div class="rv" id="s2nat">—</div></div>
+        <div class="ri"><div class="rk">SIZE</div><div class="rv" id="s2siz">—</div></div>
+        <div class="ri"><div class="rk">ORIENTATION</div><div class="rv" id="s2ori">—</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SIM 3: SNELL'S LAW ═══ -->
+<section class="sim-sec">
+  <div class="wrap">
+    <div class="sim-hdr">
+      <div class="sim-num">03</div>
+      <div class="sim-info">
+        <span class="sim-badge">SNELL'S LAW · n₁ sin i = n₂ sin r</span>
+        <h2 class="sim-h2">Snell's Law Refraction Lab</h2>
+        <p class="sim-p">Select two optical media and set the angle of incidence. Watch the ray bend at the interface with live angle calculations, light speed in each medium, and Total Internal Reflection when exceeded.</p>
+      </div>
+    </div>
+    <div class="ccard">
+      <div class="cvs-wrap"><canvas class="cvs" id="s3c" style="height:340px;"></canvas></div>
+      <div class="ctrls">
+        <div class="cg">
+          <label class="cg-lbl">UPPER MEDIUM (n₁)</label>
+          <select class="sel" id="s3m1" onchange="drawS3()">
+            <option value="1.00">Air (n = 1.00)</option>
+            <option value="1.33">Water (n = 1.33)</option>
+            <option value="1.50">Glass (n = 1.50)</option>
+            <option value="2.42">Diamond (n = 2.42)</option>
+          </select>
+        </div>
+        <div class="cg">
+          <label class="cg-lbl">LOWER MEDIUM (n₂)</label>
+          <select class="sel" id="s3m2" onchange="drawS3()">
+            <option value="1.00">Air (n = 1.00)</option>
+            <option value="1.33" selected>Water (n = 1.33)</option>
+            <option value="1.50">Glass (n = 1.50)</option>
+            <option value="2.42">Diamond (n = 2.42)</option>
+          </select>
+        </div>
+        <div class="cg" style="flex:1;min-width:180px;">
+          <label class="cg-lbl">ANGLE OF INCIDENCE (i)</label>
+          <input type="range" class="sldr" id="s3ang" min="0" max="89" value="40" step="1" oninput="drawS3()">
+        </div>
+      </div>
+      <div class="rdout">
+        <div class="ri"><div class="rk">∠i (INCIDENT)</div><div class="rv" id="s3i">40°</div></div>
+        <div class="ri"><div class="rk">∠r (REFRACTED)</div><div class="rv" id="s3r">—</div></div>
+        <div class="ri"><div class="rk">n₁</div><div class="rv" id="s3n1">1.00</div></div>
+        <div class="ri"><div class="rk">n₂</div><div class="rv" id="s3n2">1.33</div></div>
+        <div class="ri"><div class="rk">v₁ (m/s)</div><div class="rv" id="s3v1">—</div></div>
+        <div class="ri"><div class="rk">v₂ (m/s)</div><div class="rv" id="s3v2">—</div></div>
+        <div class="ri"><div class="rk">CRITICAL ANGLE</div><div class="rv" id="s3ca">—</div></div>
+        <div class="ri"><div class="rk">TIR?</div><div class="rv" id="s3tir">No</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SIM 4: GLASS SLAB ═══ -->
+<section class="sim-sec" style="background:var(--surface);">
+  <div class="wrap">
+    <div class="sim-hdr">
+      <div class="sim-num">04</div>
+      <div class="sim-info">
+        <span class="sim-badge">ACTIVITY 10.11 · LATERAL DISPLACEMENT</span>
+        <h2 class="sim-h2">Glass Slab Lateral Shifter</h2>
+        <p class="sim-p">A faithful recreation of NCERT Activity 10.11. The emergent ray is always parallel to the incident ray. Adjust angle, thickness, and refractive index—lateral displacement d = t·sin(i−r)/cos(r) shown live.</p>
+      </div>
+    </div>
+    <div class="ccard">
+      <div class="cvs-wrap"><canvas class="cvs" id="s4c" style="height:320px;"></canvas></div>
+      <div class="ctrls">
+        <div class="cg" style="flex:1;">
+          <label class="cg-lbl">ANGLE OF INCIDENCE (i)</label>
+          <input type="range" class="sldr" id="s4ang" min="0" max="75" value="35" step="1" oninput="drawS4()">
+        </div>
+        <div class="cg" style="flex:1;">
+          <label class="cg-lbl">SLAB THICKNESS (t)</label>
+          <input type="range" class="sldr" id="s4thk" min="40" max="160" value="100" step="5" oninput="drawS4()">
+        </div>
+        <div class="cg" style="flex:1;">
+          <label class="cg-lbl">REFRACTIVE INDEX (n)</label>
+          <input type="range" class="sldr" id="s4n" min="101" max="250" value="150" step="1" oninput="drawS4()">
+        </div>
+      </div>
+      <div class="rdout">
+        <div class="ri"><div class="rk">∠i (AIR)</div><div class="rv" id="s4i">35°</div></div>
+        <div class="ri"><div class="rk">∠r (GLASS)</div><div class="rv" id="s4r">—</div></div>
+        <div class="ri"><div class="rk">n (GLASS)</div><div class="rv" id="s4nv">1.50</div></div>
+        <div class="ri"><div class="rk">THICKNESS t</div><div class="rv" id="s4tv">100 px</div></div>
+        <div class="ri"><div class="rk">LATERAL DISP. d</div><div class="rv" id="s4ld">— px</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SIM 5: LENS POWER COMBINER ═══ -->
+<section class="sim-sec">
+  <div class="wrap">
+    <div class="sim-hdr">
+      <div class="sim-num">05</div>
+      <div class="sim-info">
+        <span class="sim-badge">P = P₁ + P₂ + … · DIOPTRE UNITS</span>
+        <h2 class="sim-h2">Lens Power Combiner</h2>
+        <p class="sim-p">Stack up to 4 thin lenses. Toggle each between convex (+) and concave (−), adjust focal lengths. Net power P = ΣPᵢ bends a parallel ray bundle in real time.</p>
+      </div>
+    </div>
+    <div class="ccard">
+      <div class="cvs-wrap"><canvas class="cvs" id="s5c" style="height:320px;"></canvas></div>
+      <div id="s5lc" style="padding:16px 22px;border-top:1px solid rgba(255,255,255,.05);"></div>
+      <div style="padding:12px 22px;border-top:1px solid rgba(255,255,255,.04);display:flex;gap:10px;">
+        <button class="btn-add" onclick="addLens()">+ Add Lens</button>
+        <button class="btn-rm" onclick="remLens()">Remove Last</button>
+      </div>
+      <div class="rdout">
+        <div class="ri"><div class="rk">TOTAL POWER</div><div class="rv" id="s5p">—</div></div>
+        <div class="ri"><div class="rk">NET FOCAL LENGTH</div><div class="rv" id="s5f">—</div></div>
+        <div class="ri"><div class="rk">LENS COUNT</div><div class="rv" id="s5cnt">2</div></div>
+        <div class="ri"><div class="rk">COMBINED TYPE</div><div class="rv" id="s5typ">—</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FORMULA LEDGER ═══ -->
+<section style="background:var(--surface);">
+  <div class="wrap">
+    <span class="sec-lbl">FORMULA LEDGER</span>
+    <h2 class="sec-h2">Complete Reference Sheet</h2>
+    <div class="lgrid">
+      <div class="lcard"><div class="ln">MIRROR FORMULA</div><div class="lf">1/f = 1/v + 1/u</div><div class="ld">Spherical mirrors. R = 2f. Always use sign convention.</div></div>
+      <div class="lcard"><div class="ln">MIRROR MAGNIFICATION</div><div class="lf">m = −v/u = h'/h</div><div class="ld">m &lt; 0: real, inverted. m &gt; 0: virtual, erect.</div></div>
+      <div class="lcard"><div class="ln">SNELL'S LAW</div><div class="lf">n₁ sin i = n₂ sin r</div><div class="ld">Also: n = v₁/v₂ = sin i/sin r = n₂₁.</div></div>
+      <div class="lcard"><div class="ln">ABSOLUTE REFRACTIVE INDEX</div><div class="lf">n = c / v</div><div class="ld">c = 3×10⁸ m/s. Higher n → slower speed in medium.</div></div>
+      <div class="lcard"><div class="ln">LENS FORMULA</div><div class="lf">1/v − 1/u = 1/f</div><div class="ld">f &gt; 0: convex (converging). f &lt; 0: concave (diverging).</div></div>
+      <div class="lcard"><div class="ln">LENS MAGNIFICATION</div><div class="lf">m = v/u = h'/h</div><div class="ld">For lenses: m = v/u (without negative sign).</div></div>
+      <div class="lcard"><div class="ln">LENS POWER</div><div class="lf">P = 1/f(m)</div><div class="ld">SI unit: Dioptre (D). 1 D = 1 m⁻¹. Convex P &gt; 0.</div></div>
+      <div class="lcard"><div class="ln">COMBINED LENSES</div><div class="lf">P = P₁+P₂+…</div><div class="ld">Algebraic sum for lenses in contact. Net 1/f = Σ1/fᵢ.</div></div>
+      <div class="lcard"><div class="ln">LATERAL DISPLACEMENT</div><div class="lf">d=t·sin(i−r)/cos r</div><div class="ld">t = slab thickness. i = incident, r = refracted angle.</div></div>
+      <div class="lcard"><div class="ln">POWER OF EYE</div><div class="lf">Near pt: 25 cm</div><div class="ld">Accommodation range: 25 cm (near) to ∞ (far point).</div></div>
+      <div class="lcard"><div class="ln">DISPERSION ORDER</div><div class="lf">V I B G Y O R</div><div class="ld">Violet bends most (shortest λ). Red bends least (longest λ).</div></div>
+      <div class="lcard"><div class="ln">FOCAL RELATION</div><div class="lf">f = R / 2</div><div class="ld">Radius of curvature R = 2f for spherical mirrors.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="ft-in">
+    <div class="ft-logo">Codexsec</div>
+    <div class="ft-txt">NCERT Class 10 Science · Ch. 10 & 11 · Interactive Physics Module</div>
+    <div class="ft-ic">
+      <span class="material-symbols-outlined">language</span>
+      <span class="material-symbols-outlined">public</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ================================================================
+   CONSTANTS & UTILITIES
+================================================================ */
+const C = 3e8; // speed of light
+
+function fmtSpeed(n){ return (C/n/1e8).toFixed(3)+'×10⁸ m/s'; }
+
+function setupCanvas(id){
+  const el=document.getElementById(id);
+  const ctx=el.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  function resize(){
+    const w=el.offsetWidth, h=el.offsetHeight;
+    el.width=w*dpr; el.height=h*dpr;
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(dpr,dpr);
+  }
+  resize();
+  window.addEventListener('resize',()=>{ resize(); });
+  return {el,ctx,dpr,W:()=>el.offsetWidth, H:()=>el.offsetHeight};
+}
+
+function arrow(ctx,x1,y1,x2,y2,col,lw,dashed){
+  ctx.save();
+  ctx.strokeStyle=col; ctx.fillStyle=col; ctx.lineWidth=lw||1.5;
+  if(dashed) ctx.setLineDash([5,4]);
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  ctx.setLineDash([]);
+  const a=Math.atan2(y2-y1,x2-x1), s=9;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-s*Math.cos(a-.4),y2-s*Math.sin(a-.4));
+  ctx.lineTo(x2-s*Math.cos(a+.4),y2-s*Math.sin(a+.4));
+  ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+
+function tip(ctx,x1,y1,x2,y2,col,s){
+  s=s||9;
+  const a=Math.atan2(y2-y1,x2-x1);
+  ctx.fillStyle=col;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-s*Math.cos(a-.4),y2-s*Math.sin(a-.4));
+  ctx.lineTo(x2-s*Math.cos(a+.4),y2-s*Math.sin(a+.4));
+  ctx.closePath(); ctx.fill();
+}
+
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+
+/* ================================================================
+   HERO CANVAS — animated concave mirror rays
+================================================================ */
+(function(){
+  const {el,ctx,W,H}=setupCanvas('heroC');
+  let t=0, rafId;
+  function draw(){
+    const w=W(),h=H();
+    ctx.clearRect(0,0,w,h);
+    const Px=w*.72, aY=h*.5;
+    const f=-100, scale=w/600;
+
+    // shaded region behind mirror
+    ctx.fillStyle='rgba(255,212,117,.03)';
+    ctx.fillRect(Px,0,w-Px,h);
+
+    // axis
+    ctx.strokeStyle='rgba(255,212,117,.18)'; ctx.lineWidth=1; ctx.setLineDash([7,5]);
+    ctx.beginPath(); ctx.moveTo(10,aY); ctx.lineTo(w-10,aY); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // mirror arc
+    ctx.strokeStyle='#ffd475'; ctx.lineWidth=2.5;
+    ctx.beginPath();
+    for(let dy=-90;dy<=90;dy+=2){
+      const R=2*Math.abs(f)*scale;
+      const dx=(dy*dy)/(2*R);
+      if(dy===-90) ctx.moveTo(Px+dx,aY+dy);
+      else ctx.lineTo(Px+dx,aY+dy);
+    }
+    ctx.stroke();
+
+    // animated object
+    const uAbs=150+40*Math.sin(t*.018);
+    const objCx=Px-uAbs*scale, objCy=aY-35;
+    const Fcx=Px+f*scale;
+
+    // 3 rays (pulsing)
+    const cols=['rgba(255,212,117,.75)','rgba(169,199,255,.7)','rgba(134,239,172,.65)'];
+    const offY=[0,20,-20];
+    offY.forEach((oy,i)=>{
+      const ry=objCy+oy;
+      // incident
+      ctx.strokeStyle=cols[i]; ctx.lineWidth=1.5;
+      ctx.globalAlpha=.5+.5*Math.abs(Math.sin(t*.03+i*.9));
+      ctx.beginPath(); ctx.moveTo(objCx,ry); ctx.lineTo(Px,ry); ctx.stroke();
+      // reflected toward F
+      const dx=Fcx-Px, dy=aY-ry;
+      const len=Math.sqrt(dx*dx+dy*dy), ext=350/len;
+      ctx.beginPath(); ctx.moveTo(Px,ry); ctx.lineTo(Px+dx*ext,ry+dy*ext); ctx.stroke();
+    });
+    ctx.globalAlpha=1;
+
+    // dots
+    [[Px,aY,'P','#ffd475'],[Fcx,aY,'F','#a9c7ff'],[Px+2*f*scale,aY,'C','#cdd8ff']].forEach(([x,y,l,c])=>{
+      if(x<0||x>w) return;
+      ctx.fillStyle=c; ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill();
+      ctx.font='bold 12px "Space Grotesk",sans-serif'; ctx.fillStyle=c;
+      ctx.fillText(l,x-4,y+22);
+    });
+
+    // object arrow
+    arrow(ctx,objCx,aY,objCx,objCy,'#86efac',2,false);
+
+    t++;
+    rafId=requestAnimationFrame(draw);
+  }
+  draw();
+  new ResizeObserver(()=>{ cancelAnimationFrame(rafId); draw(); }).observe(el);
+})();
+
+/* ================================================================
+   SIM 1 — SIGN CONVENTION PLAYGROUND
+================================================================ */
+(function(){
+  const {el,ctx,W,H}=setupCanvas('s1c');
+  const slU=document.getElementById('s1u');
+  const slH=document.getElementById('s1h');
+
+  function draw(){
+    const w=W(),h=H();
+    ctx.clearRect(0,0,w,h);
+    const u=parseInt(slU.value), hv=parseInt(slH.value);
+    const ox=w*.5, oy=h*.5; // origin (P)
+    const S=.5; // scale
+
+    // Quadrant shading
+    ctx.fillStyle='rgba(134,239,172,.03)'; ctx.fillRect(ox,0,w-ox,oy); // Q1
+    ctx.fillStyle='rgba(255,180,171,.04)'; ctx.fillRect(0,0,ox,oy);     // Q2
+    ctx.fillStyle='rgba(255,180,171,.03)'; ctx.fillRect(0,oy,ox,h-oy);  // Q3
+    ctx.fillStyle='rgba(134,239,172,.02)'; ctx.fillRect(ox,oy,w-ox,h-oy); // Q4
+
+    // Grid
+    ctx.strokeStyle='rgba(255,255,255,.04)'; ctx.lineWidth=1;
+    for(let x=ox%40;x<w;x+=40){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+    for(let y=oy%40;y<h;y+=40){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+
+    // Axes
+    ctx.strokeStyle='rgba(255,212,117,.35)'; ctx.lineWidth=1.5; ctx.setLineDash([8,5]);
+    ctx.beginPath(); ctx.moveTo(10,oy); ctx.lineTo(w-10,oy); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.strokeStyle='rgba(255,255,255,.15)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(ox,10); ctx.lineTo(ox,h-10); ctx.stroke();
+
+    // Axis labels
+    ctx.font='10px "Space Grotesk",sans-serif'; ctx.fillStyle='rgba(255,212,117,.45)';
+    ctx.fillText('+ direction →',ox+12,oy-8);
+    ctx.fillText('← − direction',20,oy-8);
+    ctx.fillStyle='rgba(134,239,172,.45)';
+    ctx.fillText('+ h',ox+6,20);
+    ctx.fillStyle='rgba(255,180,171,.45)';
+    ctx.fillText('− h',ox+6,h-10);
+
+    // Pole P
+    ctx.fillStyle='#ffd475';
+    ctx.beginPath(); ctx.arc(ox,oy,5,0,Math.PI*2); ctx.fill();
+    ctx.font='bold 14px "Space Grotesk",sans-serif'; ctx.fillStyle='#ffd475';
+    ctx.fillText('P',ox+8,oy+22);
+
+    // Mirror surface at P
+    ctx.strokeStyle='rgba(255,212,117,.3)'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(ox,oy-85); ctx.lineTo(ox,oy+85); ctx.stroke();
+
+    // Object canvas position
+    const objCx=ox+u*S;
+    const objCy=oy-hv*S;
+
+    // u measurement line
+    const uCol=u<0?'#ff8a80':'#86efac';
+    ctx.strokeStyle=uCol; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(objCx,oy); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // h measurement line
+    const hCol=hv>0?'#86efac':hv<0?'#ff8a80':'rgba(255,255,255,.3)';
+    ctx.strokeStyle=hCol; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(objCx,oy); ctx.lineTo(objCx,objCy); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Object arrow
+    arrow(ctx,objCx,oy,objCx,objCy,'#e5e2e1',2.5,false);
+
+    // Object tip dot
+    ctx.fillStyle='#ffd475';
+    ctx.beginPath(); ctx.arc(objCx,objCy,6,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#1a1200'; ctx.font='bold 10px "Space Grotesk",sans-serif';
+    ctx.fillText('O',objCx-4,objCy+4);
+
+    // Labels
+    ctx.font='bold 13px "Courier New",monospace';
+    const midU=(ox+objCx)/2;
+    ctx.fillStyle=uCol;
+    ctx.fillText(`u = ${u}`,midU-22,oy+26);
+    const midH=(oy+objCy)/2;
+    ctx.fillStyle=hCol;
+    ctx.fillText(`h = ${hv>0?'+':''}${hv}`,objCx+8,midH);
+
+    // Quadrant text (big, bg)
+    const qLabel=objCx>ox?(objCy<oy?'Q I':'Q IV'):(objCy<oy?'Q II':'Q III');
+    ctx.font='bold 40px "Space Grotesk",sans-serif';
+    ctx.fillStyle='rgba(255,255,255,.04)';
+    const qlx=objCx>ox?ox+20:20, qly=objCy<oy?oy-30:oy+55;
+    ctx.fillText(qLabel,qlx,qly);
+
+    // Readout
+    const sign=v=>(v>0?'+':'')+v;
+    document.getElementById('s1ru').textContent=sign(u);
+    document.getElementById('s1ru').className='rv '+(u<0?'neg':u>0?'pos':'neu');
+    document.getElementById('s1rh').textContent=sign(hv);
+    document.getElementById('s1rh').className='rv '+(hv>0?'pos':hv<0?'neg':'neu');
+    document.getElementById('s1su').textContent=u<0?'NEGATIVE ←':u>0?'POSITIVE →':'ZERO';
+    document.getElementById('s1su').className='rv '+(u<0?'neg':'pos');
+    document.getElementById('s1sh').textContent=hv>0?'POSITIVE ↑':hv<0?'NEGATIVE ↓':'ON AXIS';
+    document.getElementById('s1sh').className='rv '+(hv>0?'pos':hv<0?'neg':'neu');
+    const region=u<0?'OBJECT SIDE (REAL)':u>0?'IMAGE SIDE (VIRTUAL)':'AT POLE';
+    document.getElementById('s1rg').textContent=region;
+    document.getElementById('s1rg').className='rv '+(u<0?'pos':'neg');
+  }
+
+  slU.addEventListener('input',draw);
+  slH.addEventListener('input',draw);
+  new ResizeObserver(draw).observe(el);
+  draw();
+})();
+
+/* ================================================================
+   SIM 2 — RAY TRACKER
+================================================================ */
+let s2mode='cm';
+function setMode(btn,m){
+  document.querySelectorAll('.tabs .tb').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  s2mode=m;
+  const sl=document.getElementById('s2sl');
+  sl.value=m==='cm'?210:m==='vm'?150:m==='cl'?200:150;
+  drawS2();
+}
+
+(function(){
+  const {el,ctx,W,H}=setupCanvas('s2c');
+  window.drawS2=function(){
+    const w=W(),h=H();
+    ctx.clearRect(0,0,w,h);
+    if(s2mode==='cm'||s2mode==='vm') drawMirror(ctx,w,h,s2mode);
+    else drawLens(ctx,w,h,s2mode);
+  };
+  document.getElementById('s2sl').addEventListener('input',drawS2);
+  new ResizeObserver(drawS2).observe(el);
+  drawS2();
+})();
+
+function drawMirror(ctx,W,H,mode){
+  const aY=H/2;
+  const S=W/600;
+  const Px=W*.76;
+  const isConcave=mode==='cm';
+  // physics focal length (signed)
+  const f=isConcave?-100:100;
+  const R=2*f;
+  const objH=18; // object height in physics units
+  const uAbs=parseInt(document.getElementById('s2sl').value);
+  const u=-uAbs;
+
+  const cx=x=>Px+x*S;
+  const cy=y=>aY-y*S;
+  const Fcx=cx(f), Ccx=cx(R);
+  const objCx=cx(u), objCy=cy(objH);
+  const MH=85; // mirror half-height
+
+  // BG tint behind mirror
+  ctx.fillStyle='rgba(255,212,117,.025)';
+  ctx.fillRect(Px,0,W-Px,H);
+
+  // Axis
+  ctx.strokeStyle='rgba(255,212,117,.22)'; ctx.lineWidth=1; ctx.setLineDash([8,6]);
+  ctx.beginPath(); ctx.moveTo(10,aY); ctx.lineTo(W-10,aY); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Mirror arc
+  ctx.strokeStyle='#ffd475'; ctx.lineWidth=3;
+  ctx.beginPath();
+  const Rmag=Math.abs(R)*S;
+  for(let dy=-MH;dy<=MH;dy+=2){
+    const dx=isConcave?(dy*dy)/(2*Rmag):-(dy*dy)/(2*Rmag);
+    const mx=Px+dx, my=aY+dy;
+    dy===-MH?ctx.moveTo(mx,my):ctx.lineTo(mx,my);
+  }
+  ctx.stroke();
+
+  // Key points
+  [{x:Px,l:'P',c:'#ffd475'},{x:Fcx,l:'F',c:'#a9c7ff',ck:Fcx>5&&Fcx<W-5},
+   {x:Ccx,l:'C',c:'#cdd8ff',ck:Ccx>5&&Ccx<W-5}].forEach(({x,l,c,ck})=>{
+    if(ck===false) return;
+    ctx.fillStyle=c; ctx.beginPath(); ctx.arc(x,aY,4,0,Math.PI*2); ctx.fill();
+    ctx.font='bold 13px "Space Grotesk",sans-serif'; ctx.fillStyle=c;
+    ctx.fillText(l,x-5,aY+23);
+  });
+
+  // Image calculation
+  let v_p, m_p;
+  const AT_INF=uAbs>=335;
+  if(AT_INF){v_p=f;m_p=0;}
+  else if(Math.abs(u-f)<.5){v_p=Infinity;m_p=Infinity;}
+  else{v_p=(u*f)/(u-f); m_p=isFinite(v_p)?-v_p/u:NaN;}
+
+  // NCERT case classification
+  let caseText='';
+  if(isConcave){
+    const af=Math.abs(f);
+    if(AT_INF) caseText='Object at ∞ → Point image at F';
+    else if(uAbs>af*2+5) caseText='Beyond C → Real, Inverted, Diminished';
+    else if(Math.abs(uAbs-af*2)<=10) caseText='At C → Real, Inverted, Same Size';
+    else if(uAbs>af+5&&uAbs<af*2-5) caseText='Between C & F → Real, Inverted, Magnified';
+    else if(Math.abs(uAbs-af)<=8) caseText='At F → Image at Infinity';
+    else if(uAbs<af-5) caseText='Between F & P → Virtual, Erect, Magnified';
+  } else {
+    caseText='Convex: Always Virtual, Erect, Diminished';
+  }
+  document.getElementById('s2case').textContent=caseText;
+
+  // Object arrow
+  arrow(ctx,objCx,aY,objCx,objCy,'#86efac',2.5,false);
+  ctx.fillStyle='#86efac'; ctx.font='12px "Space Grotesk",sans-serif';
+  ctx.fillText('A',objCx+5,objCy-5);
+
+  const isVirtual=isFinite(v_p)&&v_p>0;
+  const RC=['rgba(255,212,117,.8)','rgba(169,199,255,.8)','rgba(134,239,172,.8)'];
+
+  // ─── RAY 1: Parallel → reflects through F ───
+  const hitY1=objCy; // horizontal ray hits mirror at same y
+  if(Math.abs(hitY1-aY)<=MH+5){
+    ctx.strokeStyle=RC[0]; ctx.lineWidth=1.5;
+    // Incident
+    ctx.beginPath(); ctx.moveTo(objCx,objCy); ctx.lineTo(Px,hitY1); ctx.stroke();
+    // Reflected
+    if(isConcave){
+      if(!AT_INF){
+        const dx=Fcx-Px, dy=aY-hitY1;
+        const len=Math.sqrt(dx*dx+dy*dy), ext=clamp(400/len,1,10);
+        const ex=Px+dx*ext, ey=hitY1+dy*ext;
+        ctx.beginPath(); ctx.moveTo(Px,hitY1); ctx.lineTo(ex,ey); ctx.stroke();
+        if(isVirtual){
+          // Dashed extension behind mirror
+          ctx.setLineDash([5,4]); ctx.strokeStyle='rgba(255,212,117,.25)';
+          ctx.beginPath(); ctx.moveTo(Px,hitY1); ctx.lineTo(Px-dx,hitY1-dy); ctx.stroke();
+          ctx.setLineDash([]);
+        }
+      } else {
+        // Image at F: reflected ray goes through F
+        const dx=Fcx-Px, dy=aY-hitY1;
+        const ext=300/Math.sqrt(dx*dx+dy*dy);
+        ctx.beginPath(); ctx.moveTo(Px,hitY1); ctx.lineTo(Px+dx*ext,hitY1+dy*ext); ctx.stroke();
+      }
+    } else {
+      // Convex: diverges as if from F behind mirror
+      const dx=Px-Fcx, dy=hitY1-aY;
+      const len=Math.sqrt(dx*dx+dy*dy), ext=300/len;
+      ctx.beginPath(); ctx.moveTo(Px,hitY1); ctx.lineTo(Px+dx*ext,hitY1+dy*ext); ctx.stroke();
+      ctx.setLineDash([5,4]); ctx.strokeStyle='rgba(255,212,117,.22)';
+      ctx.beginPath(); ctx.moveTo(Px,hitY1); ctx.lineTo(Fcx,aY); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  // ─── RAY 2: Through F → parallel ───
+  {
+    const dx2=Fcx-objCx, dy2=aY-objCy;
+    if(Math.abs(dx2)>0.1){
+      const t2=(Px-objCx)/dx2;
+      const hitY2=objCy+t2*dy2;
+      if(Math.abs(hitY2-aY)<=MH+5){
+        ctx.strokeStyle=RC[1]; ctx.lineWidth=1.5;
+        ctx.beginPath(); ctx.moveTo(objCx,objCy); ctx.lineTo(Px,hitY2); ctx.stroke();
+        // Reflected: parallel to axis going left
+        ctx.beginPath(); ctx.moveTo(Px,hitY2); ctx.lineTo(10,hitY2); ctx.stroke();
+        if(isVirtual){
+          ctx.setLineDash([5,4]); ctx.strokeStyle='rgba(169,199,255,.22)';
+          ctx.beginPath(); ctx.moveTo(Px,hitY2); ctx.lineTo(W-10,hitY2); ctx.stroke();
+          ctx.setLineDash([]);
+        }
+      }
+    }
+  }
+
+  // ─── RAY 3: Through C → back through C ───
+  {
+    const dx3=Ccx-objCx, dy3=aY-objCy;
+    if(Math.abs(dx3)>0.1){
+      const t3=(Px-objCx)/dx3;
+      const hitY3=objCy+t3*dy3;
+      if(Math.abs(hitY3-aY)<=MH+10){
+        ctx.strokeStyle=RC[2]; ctx.lineWidth=1.5;
+        ctx.beginPath(); ctx.moveTo(objCx,objCy); ctx.lineTo(Px,hitY3); ctx.stroke();
+        // Reflected: through C
+        const rdx=Ccx-Px, rdy=aY-hitY3;
+        const rlen=Math.sqrt(rdx*rdx+rdy*rdy), rext=clamp(400/rlen,1,10);
+        ctx.beginPath(); ctx.moveTo(Px,hitY3); ctx.lineTo(Px+rdx*rext,hitY3+rdy*rext); ctx.stroke();
+        if(isVirtual){
+          ctx.setLineDash([5,4]); ctx.strokeStyle='rgba(134,239,172,.22)';
+          ctx.beginPath(); ctx.moveTo(Px,hitY3); ctx.lineTo(Px-rdx*rext*.6,hitY3-rdy*rext*.6); ctx.stroke();
+          ctx.setLineDash([]);
+        }
+      }
+    }
+  }
+
+  // ─── Image arrow ───
+  if(isFinite(v_p)&&!isNaN(m_p)&&!AT_INF){
+    const imgCx=cx(v_p);
+    const imgH=m_p*objH;
+    const imgCy=cy(imgH);
+    if(imgCx>5&&imgCx<W-5){
+      arrow(ctx,imgCx,aY,imgCx,imgCy,isVirtual?'rgba(255,180,171,.7)':'#ffb4ab',2.5,isVirtual);
+      ctx.fillStyle='#ffb4ab'; ctx.font="12px 'Space Grotesk',sans-serif";
+      ctx.fillText("A'",imgCx+5,imgCy+(imgH>=0?-5:14));
+    }
+  }
+
+  // ─── Special: At Infinity rays ───
+  if(AT_INF){
+    [-30,0,30].forEach((oy,i)=>{
+      const ry=aY-oy;
+      ctx.strokeStyle=RC[i%3]; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(10,ry); ctx.lineTo(Px,ry); ctx.stroke();
+      const dx=Fcx-Px, dy=aY-ry;
+      const ext=300/Math.sqrt(dx*dx+dy*dy);
+      ctx.beginPath(); ctx.moveTo(Px,ry); ctx.lineTo(Px+dx*ext,ry+dy*ext); ctx.stroke();
+    });
+    // Image dot at F
+    ctx.fillStyle='#ffb4ab';
+    ctx.beginPath(); ctx.arc(Fcx,aY,5,0,Math.PI*2); ctx.fill();
+    ctx.font='12px "Space Grotesk",sans-serif'; ctx.fillStyle='#ffb4ab';
+    ctx.fillText("Image at F",Fcx+8,aY-10);
+  }
+
+  // ─── Readout ───
+  document.getElementById('s2u').textContent=u+' units';
+  document.getElementById('s2u').className='rv neg';
+  if(AT_INF||!isFinite(v_p)){
+    document.getElementById('s2v').textContent='∞';
+    document.getElementById('s2m').textContent='0';
+    document.getElementById('s2nat').textContent='Real';
+    document.getElementById('s2siz').textContent='Point / Diminished';
+    document.getElementById('s2ori').textContent='Inverted';
+  } else {
+    document.getElementById('s2v').textContent=v_p.toFixed(1)+' units';
+    document.getElementById('s2v').className='rv '+(v_p<0?'neg':'pos');
+    document.getElementById('s2m').textContent=isNaN(m_p)?'∞':m_p.toFixed(2)+'×';
+    document.getElementById('s2m').className='rv '+(m_p>=0?'pos':'neg');
+    document.getElementById('s2nat').textContent=v_p<0?'Real':'Virtual';
+    document.getElementById('s2nat').className='rv '+(v_p<0?'neg':'pos');
+    const abm=Math.abs(m_p);
+    document.getElementById('s2siz').textContent=abm<.99?'Diminished':abm>1.01?'Magnified':'Same Size';
+    document.getElementById('s2ori').textContent=m_p<0?'Inverted':'Erect';
+    document.getElementById('s2ori').className='rv '+(m_p<0?'neg':'pos');
+  }
+}
+
+function drawLens(ctx,W,H,mode){
+  const aY=H/2;
+  const S=W/600;
+  const Lx=W*.5;
+  const isConvex=mode==='cl';
+  const f=isConvex?100:-90;
+  const objH=18;
+  const uAbs=parseInt(document.getElementById('s2sl').value);
+  const u=-uAbs;
+
+  const cx=x=>Lx+x*S;
+  const cy=y=>aY-y*S;
+  const F1cx=cx(-Math.abs(f)), F2cx=cx(Math.abs(f));
+  const objCx=cx(u), objCy=cy(objH);
+  const LH=85;
+
+  // Axis
+  ctx.strokeStyle='rgba(255,212,117,.22)'; ctx.lineWidth=1; ctx.setLineDash([8,6]);
+  ctx.beginPath(); ctx.moveTo(10,aY); ctx.lineTo(W-10,aY); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Lens (double-headed arrow)
+  const lc=isConvex?'#86efac':'#ff8a80';
+  ctx.strokeStyle=lc; ctx.fillStyle=lc; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.moveTo(Lx,aY-LH); ctx.lineTo(Lx,aY+LH); ctx.stroke();
+  const la=isConvex?1:-1;
+  [[Lx,aY-LH,-1],[Lx,aY+LH,1]].forEach(([x,y,d])=>{
+    ctx.beginPath(); ctx.moveTo(x,y);
+    ctx.lineTo(x-8*la,y+d*13); ctx.lineTo(x+8*la,y+d*13);
+    ctx.closePath(); ctx.fill();
+  });
+
+  // Labels
+  ctx.font='bold 12px "Space Grotesk",sans-serif';
+  ctx.fillStyle=lc;
+  ctx.fillText(isConvex?'Convex':'Concave',Lx-28,aY-LH-10);
+
+  // Key points
+  [{x:Lx,l:'O',c:'#a9c7ff'},{x:F1cx,l:'F₁',c:'#ffd475',ck:F1cx>5},{x:F2cx,l:'F₂',c:'#ffd475',ck:F2cx<W-5}].forEach(({x,l,c,ck})=>{
+    if(ck===false) return;
+    ctx.fillStyle=c; ctx.beginPath(); ctx.arc(x,aY,4,0,Math.PI*2); ctx.fill();
+    ctx.font='bold 12px "Space Grotesk",sans-serif'; ctx.fillStyle=c;
+    ctx.fillText(l,x-8,aY+22);
+  });
+
+  // Image calc: 1/v - 1/u = 1/f → v = uf/(u+f)
+  let v_p, m_p;
+  if(Math.abs(u+f)<.5){v_p=Infinity;m_p=Infinity;}
+  else{v_p=(u*f)/(u+f); m_p=isFinite(v_p)?v_p/u:NaN;}
+
+  // NCERT case
+  const af=Math.abs(f);
+  let caseText='';
+  if(isConvex){
+    if(uAbs>af*2+5) caseText='Beyond 2F → Real, Inverted, Diminished';
+    else if(Math.abs(uAbs-af*2)<=10) caseText='At 2F → Real, Inverted, Same Size';
+    else if(uAbs>af+5&&uAbs<af*2-5) caseText='Between F & 2F → Real, Inverted, Magnified';
+    else if(Math.abs(uAbs-af)<=8) caseText='At F → Image at Infinity';
+    else caseText='Inside F → Virtual, Erect, Magnified';
+  } else {
+    caseText='Concave Lens: Always Virtual, Erect, Diminished';
+  }
+  document.getElementById('s2case').textContent=caseText;
+
+  // Object arrow
+  arrow(ctx,objCx,aY,objCx,objCy,'#86efac',2.5,false);
+  ctx.fillStyle='#86efac'; ctx.font="12px 'Space Grotesk',sans-serif";
+  ctx.fillText('A',objCx+5,objCy-5);
+
+  const isVirtual=isFinite(v_p)&&v_p<0;
+  const RC=['rgba(255,212,117,.8)','rgba(134,239,172,.8)','rgba(169,199,255,.8)'];
+
+  // ─── RAY 1: Parallel → through F2 (convex) or away from F1 (concave) ───
+  ctx.strokeStyle=RC[0]; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(objCx,objCy); ctx.lineTo(Lx,objCy); ctx.stroke();
+  if(isConvex){
+    // Through F2
+    const dx=F2cx-Lx, dy=aY-objCy;
+    const len=Math.sqrt(dx*dx+dy*dy), ext=clamp((W-Lx)/Math.abs(dx),1,8);
+    const ex=Lx+dx*ext, ey=objCy+dy*ext;
+    ctx.beginPath(); ctx.moveTo(Lx,objCy); ctx.lineTo(clamp(ex,0,W),ey); ctx.stroke();
+    if(isVirtual){
+      // Dashed back to virtual image
+      ctx.setLineDash([5,4]); ctx.strokeStyle='rgba(255,212,117,.25)';
+      ctx.beginPath(); ctx.moveTo(Lx,objCy); ctx.lineTo(cx(v_p),cy(m_p*objH)); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  } else {
+    // Appears from F1 (diverges away from F1)
+    const dx=Lx-F1cx, dy=objCy-aY;
+    const len=Math.sqrt(dx*dx+dy*dy), ext=clamp(350/len,1,8);
+    ctx.beginPath(); ctx.moveTo(Lx,objCy); ctx.lineTo(Lx+dx*ext,objCy+dy*ext); ctx.stroke();
+    ctx.setLineDash([5,4]); ctx.strokeStyle='rgba(255,212,117,.22)';
+    ctx.beginPath(); ctx.moveTo(Lx,objCy); ctx.lineTo(F1cx,aY); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // ─── RAY 2: Through optical center (straight) ───
+  ctx.strokeStyle=RC[1]; ctx.lineWidth=1.5;
+  const cdx=Lx-objCx, cdy=aY-objCy;
+  const cext=clamp(W/Math.sqrt(cdx*cdx+cdy*cdy),1,6);
+  ctx.beginPath(); ctx.moveTo(objCx,objCy); ctx.lineTo(Lx+cdx*cext,aY+cdy*cext); ctx.stroke();
+
+  // ─── RAY 3: Through F1 (convex) → parallel | toward F2 (concave) → parallel ───
+  ctx.strokeStyle=RC[2]; ctx.lineWidth=1.5;
+  if(isConvex&&uAbs>af+5){
+    const dx3=F1cx-objCx, dy3=aY-objCy;
+    if(Math.abs(dx3)>0.1){
+      const t3=(Lx-objCx)/dx3, hitY3=objCy+t3*dy3;
+      if(Math.abs(hitY3-aY)<=LH+8){
+        ctx.beginPath(); ctx.moveTo(objCx,objCy); ctx.lineTo(Lx,hitY3); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(Lx,hitY3); ctx.lineTo(W-10,hitY3); ctx.stroke();
+      }
+    }
+  } else if(!isConvex){
+    const dx3=F2cx-objCx, dy3=aY-objCy;
+    if(Math.abs(dx3)>0.1){
+      const t3=(Lx-objCx)/dx3, hitY3=objCy+t3*dy3;
+      if(Math.abs(hitY3-aY)<=LH+8){
+        ctx.beginPath(); ctx.moveTo(objCx,objCy); ctx.lineTo(Lx,hitY3); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(Lx,hitY3); ctx.lineTo(W-10,hitY3); ctx.stroke();
+        ctx.setLineDash([5,4]); ctx.strokeStyle='rgba(169,199,255,.22)';
+        ctx.beginPath(); ctx.moveTo(Lx,hitY3); ctx.lineTo(cx(v_p),cy(m_p*objH)); ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+  }
+
+  // ─── Image arrow ───
+  if(isFinite(v_p)&&!isNaN(m_p)){
+    const imgCx=cx(v_p), imgH=m_p*objH, imgCy=cy(imgH);
+    if(imgCx>5&&imgCx<W-5){
+      arrow(ctx,imgCx,aY,imgCx,imgCy,isVirtual?'rgba(255,180,171,.7)':'#ffb4ab',2.5,isVirtual);
+      ctx.fillStyle='#ffb4ab'; ctx.font="12px 'Space Grotesk',sans-serif";
+      ctx.fillText("A'",imgCx+5,imgCy+(imgH>=0?-5:14));
+    }
+  }
+
+  // Readout
+  document.getElementById('s2u').textContent=u+' units';
+  document.getElementById('s2u').className='rv neg';
+  if(!isFinite(v_p)){
+    document.getElementById('s2v').textContent='∞';
+    document.getElementById('s2m').textContent='∞';
+    document.getElementById('s2nat').textContent='At Infinity';
+    document.getElementById('s2siz').textContent='—';
+    document.getElementById('s2ori').textContent='—';
+  } else {
+    document.getElementById('s2v').textContent=v_p.toFixed(1)+' units';
+    document.getElementById('s2v').className='rv '+(v_p>0?'pos':'neg');
+    document.getElementById('s2m').textContent=isNaN(m_p)?'—':m_p.toFixed(2)+'×';
+    document.getElementById('s2m').className='rv '+(m_p>=0?'pos':'neg');
+    document.getElementById('s2nat').textContent=v_p>0?'Real':'Virtual';
+    document.getElementById('s2nat').className='rv '+(v_p>0?'pos':'neg');
+    const abm=Math.abs(m_p);
+    document.getElementById('s2siz').textContent=abm<.99?'Diminished':abm>1.01?'Magnified':'Same Size';
+    document.getElementById('s2ori').textContent=m_p<0?'Inverted':'Erect';
+    document.getElementById('s2ori').className='rv '+(m_p<0?'neg':'pos');
+  }
+}
+
+/* ================================================================
+   SIM 3 — SNELL'S LAW REFRACTION LAB
+================================================================ */
+(function(){
+  const {el,ctx,W,H}=setupCanvas('s3c');
+  window.drawS3=function(){
+    const w=W(),h=H();
+    ctx.clearRect(0,0,w,h);
+    const n1=parseFloat(document.getElementById('s3m1').value);
+    const n2=parseFloat(document.getElementById('s3m2').value);
+    const iDeg=parseInt(document.getElementById('s3ang').value);
+    const iRad=iDeg*Math.PI/180;
+    const ifY=h*.5, cx=w*.5;
+
+    // Medium labels and color
+    const alpha1=.04+(n1-1)*.1, alpha2=.04+(n2-1)*.1;
+    ctx.fillStyle=`rgba(169,199,255,${alpha1})`; ctx.fillRect(0,0,w,ifY);
+    ctx.fillStyle=`rgba(255,212,117,${alpha2})`; ctx.fillRect(0,ifY,w,h-ifY);
+
+    // Medium names
+    const getN=(sel)=>document.getElementById(sel).options[document.getElementById(sel).selectedIndex].text.split('(')[0].trim();
+    ctx.font='bold 13px "Space Grotesk",sans-serif';
+    ctx.fillStyle='rgba(169,199,255,.85)'; ctx.fillText(getN('s3m1')+` — n₁ = ${n1.toFixed(2)}`,18,28);
+    ctx.fillStyle='rgba(255,212,117,.85)'; ctx.fillText(getN('s3m2')+` — n₂ = ${n2.toFixed(2)}`,18,ifY+28);
+
+    // Interface
+    ctx.strokeStyle='rgba(255,255,255,.28)'; ctx.lineWidth=1.5; ctx.setLineDash([10,6]);
+    ctx.beginPath(); ctx.moveTo(0,ifY); ctx.lineTo(w,ifY); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Normal
+    ctx.strokeStyle='rgba(255,255,255,.22)'; ctx.lineWidth=1; ctx.setLineDash([5,5]);
+    ctx.beginPath(); ctx.moveTo(cx,ifY-120); ctx.lineTo(cx,ifY+120); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(255,255,255,.3)'; ctx.font='10px "Space Grotesk",sans-serif';
+    ctx.fillText('Normal',cx+5,ifY-108);
+
+    const incLen=180;
+    const sinR=(n1*Math.sin(iRad))/n2;
+    const critAngle=n1<=n2?null:Math.asin(n2/n1)*180/Math.PI;
+    const isTIR=sinR>1;
+
+    // Incident ray
+    const ix=cx-incLen*Math.sin(iRad), iy=ifY-incLen*Math.cos(iRad);
+    ctx.strokeStyle='#ffd475'; ctx.fillStyle='#ffd475'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(ix,iy); ctx.lineTo(cx,ifY); ctx.stroke();
+    tip(ctx,ix,iy,cx,ifY,'#ffd475',10);
+
+    // Angle i arc
+    ctx.strokeStyle='rgba(255,212,117,.5)'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.arc(cx,ifY,50,-Math.PI/2-iRad,-Math.PI/2); ctx.stroke();
+    ctx.fillStyle='#ffd475'; ctx.font='bold 12px "Space Grotesk",sans-serif';
+    ctx.fillText(`i=${iDeg}°`,cx-72,ifY-16);
+
+    if(isTIR){
+      // Total Internal Reflection
+      const rRad=iRad;
+      const rx=cx+incLen*Math.sin(rRad), ry=ifY-incLen*Math.cos(rRad);
+      ctx.strokeStyle='#ffd475'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.moveTo(cx,ifY); ctx.lineTo(rx,ry); ctx.stroke();
+      tip(ctx,cx,ifY,rx,ry,'#ffd475',10);
+
+      ctx.fillStyle='#ff8a80'; ctx.font='bold 14px "Space Grotesk",sans-serif';
+      ctx.fillText('⚡ Total Internal Reflection',cx-110,ifY+50);
+
+      document.getElementById('s3r').textContent='— (TIR)';
+      document.getElementById('s3r').className='rv neg';
+      document.getElementById('s3tir').textContent='YES ⚡';
+      document.getElementById('s3tir').className='rv neg';
+    } else {
+      const rRad=Math.asin(sinR);
+      const rDeg=(rRad*180/Math.PI).toFixed(1);
+      const refLen=170;
+      const rx=cx+refLen*Math.sin(rRad), ry=ifY+refLen*Math.cos(rRad);
+      ctx.strokeStyle='#a9c7ff'; ctx.fillStyle='#a9c7ff'; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.moveTo(cx,ifY); ctx.lineTo(rx,ry); ctx.stroke();
+      tip(ctx,cx,ifY,rx,ry,'#a9c7ff',10);
+
+      // Angle r arc
+      ctx.strokeStyle='rgba(169,199,255,.5)'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.arc(cx,ifY,50,Math.PI/2,Math.PI/2+rRad); ctx.stroke();
+      ctx.fillStyle='#a9c7ff'; ctx.font='bold 12px "Space Grotesk",sans-serif';
+      ctx.fillText(`r=${rDeg}°`,cx+12,ifY+22);
+
+      // n labels on rays
+      ctx.font='11px "Space Grotesk",sans-serif';
+      ctx.fillStyle='rgba(255,212,117,.7)';
+      ctx.fillText(`n₁=${n1}`,ix+5,iy+8);
+      ctx.fillStyle='rgba(169,199,255,.7)';
+      ctx.fillText(`n₂=${n2}`,rx-40,ry-5);
+
+      document.getElementById('s3r').textContent=rDeg+'°';
+      document.getElementById('s3r').className='rv pos';
+      document.getElementById('s3tir').textContent='No';
+      document.getElementById('s3tir').className='rv pos';
+    }
+
+    // Snell formula display
+    ctx.fillStyle='rgba(255,255,255,.18)'; ctx.font='13px "Courier New",monospace';
+    ctx.fillText(`n₁·sin(i) = n₂·sin(r)`,w-220,h-20);
+
+    // Update readout
+    document.getElementById('s3i').textContent=iDeg+'°';
+    document.getElementById('s3n1').textContent=n1.toFixed(2);
+    document.getElementById('s3n2').textContent=n2.toFixed(2);
+    document.getElementById('s3v1').textContent=fmtSpeed(n1);
+    document.getElementById('s3v2').textContent=fmtSpeed(n2);
+    document.getElementById('s3ca').textContent=critAngle?critAngle.toFixed(1)+'°':'N/A (going denser)';
+    document.getElementById('s3ca').className='rv '+(critAngle?'neg':'neu');
+  };
+  document.getElementById('s3ang').addEventListener('input',drawS3);
+  new ResizeObserver(drawS3).observe(el);
+  drawS3();
+})();
+
+/* ================================================================
+   SIM 4 — GLASS SLAB LATERAL DISPLACEMENT
+================================================================ */
+(function(){
+  const {el,ctx,W,H}=setupCanvas('s4c');
+  window.drawS4=function(){
+    const w=W(),h=H();
+    ctx.clearRect(0,0,w,h);
+
+    const iDeg=parseInt(document.getElementById('s4ang').value);
+    const thick=parseInt(document.getElementById('s4thk').value);
+    const n=parseInt(document.getElementById('s4n').value)/100;
+    const iRad=iDeg*Math.PI/180;
+
+    // Slab geometry
+    const slabTop=h*.3, slabBot=slabTop+thick;
+    const slabL=w*.2, slabR=w*.8;
+
+    // Air background
+    ctx.fillStyle='rgba(255,255,255,.015)'; ctx.fillRect(0,0,w,h);
+
+    // Air labels
+    ctx.font='12px "Space Grotesk",sans-serif';
+    ctx.fillStyle='rgba(255,255,255,.35)';
+    ctx.fillText('Air (n = 1.00)',slabL,slabTop-12);
+    ctx.fillText('Air (n = 1.00)',slabL,slabBot+18);
+
+    // Slab fill
+    const glassAlpha=0.06+(n-1)*0.1;
+    ctx.fillStyle=`rgba(169,199,255,${glassAlpha})`;
+    ctx.fillRect(slabL,slabTop,slabR-slabL,thick);
+
+    // Slab border
+    ctx.strokeStyle='rgba(169,199,255,.5)'; ctx.lineWidth=1.5;
+    // Top face
+    ctx.beginPath(); ctx.moveTo(slabL,slabTop); ctx.lineTo(slabR,slabTop); ctx.stroke();
+    // Bottom face
+    ctx.beginPath(); ctx.moveTo(slabL,slabBot); ctx.lineTo(slabR,slabBot); ctx.stroke();
+    // Side labels
+    ctx.fillStyle='rgba(169,199,255,.8)';
+    ctx.font='bold 12px "Space Grotesk",sans-serif';
+    ctx.fillText(`Glass  n = ${n.toFixed(2)}`,slabL+12,slabTop+22);
+    ctx.fillText(`Thickness t = ${thick} px`,slabL+12,slabTop+40);
+
+    // Thickness bracket
+    ctx.strokeStyle='rgba(169,199,255,.35)'; ctx.lineWidth=1;
+    const bx=slabR+15;
+    ctx.beginPath(); ctx.moveTo(bx,slabTop); ctx.lineTo(bx+10,slabTop); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(bx,slabBot); ctx.lineTo(bx+10,slabBot); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(bx+5,slabTop); ctx.lineTo(bx+5,slabBot); ctx.stroke();
+    ctx.fillStyle='rgba(169,199,255,.6)';
+    ctx.font='11px "Space Grotesk",sans-serif';
+    ctx.fillText('t',(bx+5)+6,(slabTop+slabBot)/2);
+
+    // Snell: sin(r)=sin(i)/n
+    const sinR=Math.sin(iRad)/n;
+    if(sinR>1){
+      ctx.fillStyle='#ff8a80'; ctx.font='bold 14px "Space Grotesk",sans-serif';
+      ctx.fillText('TIR inside slab!',w*.35,h*.6);
+      document.getElementById('s4i').textContent=iDeg+'°';
+      document.getElementById('s4r').textContent='N/A (TIR)';
+      document.getElementById('s4nv').textContent=n.toFixed(2);
+      document.getElementById('s4tv').textContent=thick+' px';
+      document.getElementById('s4ld').textContent='N/A';
+      return;
+    }
+    const rRad=Math.asin(sinR), rDeg=(rRad*180/Math.PI).toFixed(1);
+
+    // Entry point: center of top face
+    const entX=w*.42, entY=slabTop;
+
+    // Inside direction
+    const insDx=Math.sin(rRad), insDy=Math.cos(rRad);
+    // Exit point at bottom
+    const exitX=entX+insDx*(thick/insDy);
+    const exitY=slabBot;
+
+    // Incident ray
+    const incLen=140;
+    const incDx=Math.sin(iRad), incDy=Math.cos(iRad);
+    const startX=entX-incDx*incLen, startY=entY-incDy*incLen;
+
+    // Emergent ray (parallel to incident)
+    const emLen=160;
+    const endX=exitX+incDx*emLen, endY=exitY+incDy*emLen;
+
+    // Dashed extension of incident ray through slab
+    const extEndX=entX+incDx*(thick/incDy+emLen);
+    const extEndY=entY+incDy*(thick/incDy+emLen);
+    ctx.strokeStyle='rgba(255,212,117,.25)'; ctx.lineWidth=1.5; ctx.setLineDash([6,5]);
+    ctx.beginPath(); ctx.moveTo(entX,entY); ctx.lineTo(extEndX,extEndY); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Normals at entry and exit
+    ctx.strokeStyle='rgba(255,255,255,.2)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(entX,slabTop-70); ctx.lineTo(entX,slabTop+70); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(exitX,slabBot-70); ctx.lineTo(exitX,slabBot+70); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Incident ray
+    ctx.strokeStyle='#ffd475'; ctx.fillStyle='#ffd475'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(startX,startY); ctx.lineTo(entX,entY); ctx.stroke();
+    tip(ctx,startX,startY,entX,entY,'#ffd475',10);
+
+    // Ray inside slab
+    ctx.strokeStyle='#a9c7ff'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(entX,entY); ctx.lineTo(exitX,exitY); ctx.stroke();
+
+    // Emergent ray
+    ctx.strokeStyle='#86efac'; ctx.fillStyle='#86efac'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.moveTo(exitX,exitY); ctx.lineTo(endX,endY); ctx.stroke();
+    tip(ctx,exitX,exitY,endX,endY,'#86efac',10);
+
+    // Lateral displacement
+    const LD=thick*Math.sin(iRad-rRad)/Math.cos(rRad);
+
+    // Lateral displacement marker at a fixed Y below slab
+    const measureFrac=0.55; // fraction of emergent ray length
+    const emLen2=thick/incDy;
+    const mX1=exitX+incDx*emLen2*measureFrac;
+    const mY1=exitY+incDy*emLen2*measureFrac;
+    const mX2=entX+incDx*emLen2*measureFrac;
+    const mY2=entY+incDy*emLen2*measureFrac;
+
+    ctx.strokeStyle='#ff8a80'; ctx.lineWidth=2; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(mX1,mY1); ctx.lineTo(mX2,mY2); ctx.stroke();
+    ctx.setLineDash([]);
+    // Dots at endpoints
+    [mX1,mX2].forEach((x,i)=>{
+      ctx.fillStyle='#ff8a80'; ctx.beginPath();
+      ctx.arc(x,[mY1,mY2][i],3,0,Math.PI*2); ctx.fill();
+    });
+    // Label
+    ctx.fillStyle='#ff8a80'; ctx.font='bold 12px "Space Grotesk",sans-serif';
+    ctx.fillText(`d ≈ ${LD.toFixed(1)} px`,(mX1+mX2)/2-25,Math.min(mY1,mY2)-10);
+
+    // Angle labels
+    ctx.font='bold 12px "Space Grotesk",sans-serif';
+    ctx.fillStyle='#ffd475'; ctx.fillText(`i = ${iDeg}°`,entX+12,entY-25);
+    ctx.fillStyle='#a9c7ff'; ctx.fillText(`r = ${rDeg}°`,entX+12,entY+22);
+    ctx.fillStyle='#86efac'; ctx.fillText(`i = ${iDeg}°`,exitX+12,exitY+25);
+
+    // "Emergent ∥ Incident" label
+    ctx.fillStyle='rgba(134,239,172,.55)'; ctx.font='11px "Space Grotesk",sans-serif';
+    ctx.fillText('Emergent ray ∥ Incident ray',endX-130,endY+16);
+
+    // Readout
+    document.getElementById('s4i').textContent=iDeg+'°';
+    document.getElementById('s4r').textContent=rDeg+'°';
+    document.getElementById('s4nv').textContent=n.toFixed(2);
+    document.getElementById('s4tv').textContent=thick+' px';
+    document.getElementById('s4ld').textContent=LD.toFixed(1)+' px';
+  };
+  document.getElementById('s4ang').addEventListener('input',drawS4);
+  document.getElementById('s4thk').addEventListener('input',drawS4);
+  document.getElementById('s4n').addEventListener('input',drawS4);
+  new ResizeObserver(drawS4).observe(el);
+  drawS4();
+})();
+
+/* ================================================================
+   SIM 5 — LENS POWER COMBINER
+================================================================ */
+let lenses=[{type:'convex',fmm:200},{type:'concave',fmm:350}];
+
+function addLens(){if(lenses.length>=4)return;lenses.push({type:'convex',fmm:200});renderLensUI();drawS5();}
+function remLens(){if(lenses.length<=1)return;lenses.pop();renderLensUI();drawS5();}
+function toggleLT(i,t){lenses[i].type=t;renderLensUI();drawS5();}
+function updF(i,v,lbl){lenses[i].fmm=parseInt(v);const P=(1000/parseInt(v));lbl.textContent=`f = ${v} mm  →  P = ${(lenses[i].type==='convex'?P:-P).toFixed(2)} D`;drawS5();}
+
+function renderLensUI(){
+  const c=document.getElementById('s5lc');
+  c.innerHTML='';
+  lenses.forEach((l,i)=>{
+    const P=(1000/l.fmm).toFixed(2);
+    const d=document.createElement('div');
+    d.className='le';
+    d.innerHTML=`
+      <span style="font-family:var(--fl);font-size:10px;letter-spacing:.15em;color:var(--osv);min-width:55px;">LENS ${i+1}</span>
+      <div class="ltog">
+        <button class="ltb ${l.type==='convex'?'cx':''}" onclick="toggleLT(${i},'convex')">+ CONVEX</button>
+        <button class="ltb ${l.type==='concave'?'cc':''}" onclick="toggleLT(${i},'concave')">− CONCAVE</button>
+      </div>
+      <div style="flex:1;min-width:140px;display:flex;flex-direction:column;gap:6px;">
+        <label id="lbl${i}" style="font-family:var(--fl);font-size:10px;color:var(--osv);">f = ${l.fmm} mm  →  P = ${l.type==='convex'?P:'-'+P} D</label>
+        <input type="range" class="sldr" min="50" max="1000" value="${l.fmm}" step="25"
+          oninput="updF(${i},this.value,document.getElementById('lbl${i}'))">
+      </div>
+    `;
+    c.appendChild(d);
+  });
+  document.getElementById('s5cnt').textContent=lenses.length;
+}
+
+(function(){
+  const {el,ctx,W,H}=setupCanvas('s5c');
+  window.drawS5=function(){
+    const w=W(),h=H();
+    ctx.clearRect(0,0,w,h);
+    const aY=h/2;
+    const n=lenses.length;
+    const sp=w/(n+1);
+    const lensXs=lenses.map((_,i)=>sp*(i+1));
+
+    // Axis
+    ctx.strokeStyle='rgba(255,212,117,.2)'; ctx.lineWidth=1; ctx.setLineDash([8,6]);
+    ctx.beginPath(); ctx.moveTo(10,aY); ctx.lineTo(w-10,aY); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Total power
+    let Ptotal=0;
+    lenses.forEach(l=>{
+      const sign=l.type==='convex'?1:-1;
+      Ptotal+=sign*1000/l.fmm;
+    });
+    const ftot_m=Math.abs(Ptotal)>0.001?1/Ptotal:Infinity;
+
+    // Draw lenses
+    lenses.forEach((l,i)=>{
+      const lx=lensXs[i];
+      const isCvx=l.type==='convex';
+      const lc=isCvx?'#86efac':'#ff8a80';
+      const LH=75;
+      ctx.strokeStyle=lc; ctx.fillStyle=lc; ctx.lineWidth=2.5;
+      ctx.beginPath(); ctx.moveTo(lx,aY-LH); ctx.lineTo(lx,aY+LH); ctx.stroke();
+      const la=isCvx?1:-1;
+      [[lx,aY-LH,-1],[lx,aY+LH,1]].forEach(([x,y,d])=>{
+        ctx.beginPath(); ctx.moveTo(x,y);
+        ctx.lineTo(x-8*la,y+d*13); ctx.lineTo(x+8*la,y+d*13);
+        ctx.closePath(); ctx.fill();
+      });
+      const P=((isCvx?1:-1)*1000/l.fmm).toFixed(1);
+      ctx.font='bold 12px "Space Grotesk",sans-serif'; ctx.fillStyle=lc;
+      ctx.fillText(`L${i+1}`,lx-8,aY-LH-14);
+      ctx.font='11px "Space Grotesk",sans-serif'; ctx.fillStyle='rgba(255,255,255,.45)';
+      ctx.fillText(`${P}D`,lx-14,aY+LH+18);
+      ctx.fillText(`f=${l.fmm}mm`,lx-20,aY+LH+34);
+    });
+
+    // Trace parallel rays through each lens (paraxial approximation)
+    // f in canvas pixels: 1 mm → W/(600) px (for visual effect, use a larger scale)
+    const fScale=w/400; // visual scale for focal lengths
+
+    const rayYs=[-45,-22,0,22,45];
+    rayYs.forEach((initY,ri)=>{
+      const hue=180+ri*20;
+      ctx.strokeStyle=`hsla(${hue},70%,72%,.65)`; ctx.lineWidth=1.5;
+
+      let curX=15, curY=aY-initY, curSlope=0;
+      ctx.beginPath(); ctx.moveTo(curX,curY);
+
+      lenses.forEach((l,i)=>{
+        const lx=lensXs[i];
+        // travel to lens
+        const hitY=curY+curSlope*(lx-curX);
+        ctx.lineTo(lx,hitY);
+        // paraxial lens bending: Δslope = -(hitY - aY) / f_px
+        const fPx=(l.fmm/5)*fScale;
+        const fSigned=l.type==='convex'?fPx:-fPx;
+        const newSlope=curSlope-(hitY-aY)/fSigned;
+        curX=lx; curY=hitY; curSlope=newSlope;
+      });
+
+      // extend to right
+      const finalX=w-15;
+      const finalY=curY+curSlope*(finalX-curX);
+      ctx.lineTo(clamp(finalX,0,w),clamp(finalY,-h*2,h*3));
+      ctx.stroke();
+    });
+
+    // Draw convergence/divergence indicator
+    if(Math.abs(Ptotal)>0.01){
+      const fPx=(1/Ptotal*1000/5)*fScale;
+      const focX=lensXs[lensXs.length-1]+fPx;
+      if(focX>10&&focX<w-10&&Ptotal>0){
+        ctx.strokeStyle='rgba(255,212,117,.3)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+        ctx.beginPath(); ctx.moveTo(focX,aY-10); ctx.lineTo(focX,aY+10); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle='rgba(255,212,117,.6)'; ctx.font='11px "Space Grotesk",sans-serif';
+        ctx.fillText('F',focX+4,aY+22);
+      }
+    }
+
+    // Power readout bar at top
+    const barW=clamp(Math.abs(Ptotal)*15,0,w-60);
+    ctx.fillStyle=Ptotal>0?'rgba(134,239,172,.2)':'rgba(255,180,171,.2)';
+    ctx.fillRect(30,14,barW,12);
+    ctx.fillStyle=Ptotal>0?'#86efac':'#ff8a80';
+    ctx.font='bold 12px "Space Grotesk",sans-serif';
+    ctx.fillText(`Combined Power: ${Ptotal>0?'+':''}${Ptotal.toFixed(2)} D`,30,12);
+
+    // Readout
+    document.getElementById('s5p').textContent=(Ptotal>0?'+':'')+Ptotal.toFixed(2)+' D';
+    document.getElementById('s5p').className='rv '+(Ptotal>0?'pos':Ptotal<0?'neg':'neu');
+    document.getElementById('s5f').textContent=isFinite(ftot_m)?(ftot_m*1000).toFixed(0)+' mm':'∞';
+    document.getElementById('s5typ').textContent=Ptotal>0.1?'CONVERGING':Ptotal<-0.1?'DIVERGING':'NEUTRAL';
+    document.getElementById('s5typ').className='rv '+(Ptotal>0?'pos':Ptotal<0?'neg':'neu');
+  };
+  renderLensUI();
+  new ResizeObserver(drawS5).observe(el);
+  drawS5();
+})();
+
+/* ================================================================
+   SCROLL REVEAL
+================================================================ */
+const rvObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>rvObs.observe(el));
+
+/* ================================================================
+   PARALLAX STARFIELD (subtle)
+================================================================ */
+document.addEventListener('mousemove',e=>{
+  const mx=(e.clientX-window.innerWidth/2)*.008;
+  const my=(e.clientY-window.innerHeight/2)*.008;
+  document.getElementById('starfield').style.transform=`translate(${mx}px,${my}px)`;
+});
+
+/* Initial draws to ensure everything is ready */
+window.addEventListener('load',()=>{
+  drawS2(); drawS3(); drawS4(); drawS5();
+});
+</script>
+<script src="site-nav.js" defer></script>
+</body>
+</html>

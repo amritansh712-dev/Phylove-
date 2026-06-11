@@ -1,0 +1,359 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Codexsec | Explore Physics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;700&amp;family=Space+Grotesk:wght@600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .text-gradient {
+            background: linear-gradient(to bottom, #ffffff 0%, #ffd475 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        body {
+            background-color: #000000;
+            color: #e5e2e1;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#d6e3ff",
+                        "on-surface-variant": "#d1c5b1",
+                        "on-secondary-fixed": "#001b3d",
+                        "primary": "#ffd475",
+                        "on-secondary-fixed-variant": "#00468b",
+                        "surface-variant": "#353534",
+                        "secondary-container": "#044f9b",
+                        "secondary": "#a9c7ff",
+                        "on-secondary": "#003062",
+                        "surface-container-highest": "#353534",
+                        "surface-container-low": "#1c1b1b",
+                        "primary-container": "#e2b859",
+                        "surface-tint": "#ecc161",
+                        "on-background": "#e5e2e1",
+                        "on-secondary-container": "#a2c4ff",
+                        "outline-variant": "#4e4637",
+                        "on-tertiary-fixed": "#001847",
+                        "on-surface": "#e5e2e1",
+                        "inverse-primary": "#785a00",
+                        "inverse-on-surface": "#313030",
+                        "surface-container": "#201f1f",
+                        "error-container": "#93000a",
+                        "tertiary": "#cdd8ff",
+                        "on-primary-fixed-variant": "#5b4300",
+                        "on-primary": "#3f2e00",
+                        "on-error-container": "#ffdad6",
+                        "on-error": "#690005",
+                        "background": "#131313",
+                        "tertiary-container": "#a4bcff",
+                        "on-tertiary-container": "#314a85",
+                        "on-primary-container": "#624800",
+                        "secondary-fixed-dim": "#a9c7ff",
+                        "tertiary-fixed-dim": "#b1c5ff",
+                        "on-tertiary": "#102d67",
+                        "surface-dim": "#131313",
+                        "surface-container-high": "#2a2a2a",
+                        "surface": "#131313",
+                        "primary-fixed-dim": "#ecc161",
+                        "outline": "#9a8f7e",
+                        "primary-fixed": "#ffdf9d",
+                        "error": "#ffb4ab",
+                        "on-primary-fixed": "#251a00",
+                        "surface-bright": "#3a3939",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-container-lowest": "#0e0e0e",
+                        "tertiary-fixed": "#dae2ff",
+                        "on-tertiary-fixed-variant": "#2b447f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "margin-desktop": "80px",
+                        "margin-mobile": "24px",
+                        "gutter": "32px",
+                        "section-gap": "128px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "label-caps": ["Space Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg-mobile": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["48px", {"lineHeight": "56px", "fontWeight": "400"}],
+                        "display-lg": ["72px", {"lineHeight": "84px", "letterSpacing": "0.05em", "fontWeight": "300"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.15em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg-mobile": ["40px", {"lineHeight": "48px", "letterSpacing": "0.05em", "fontWeight": "300"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<link rel="stylesheet" href="site-nav.css">
+</head>
+<body class="bg-black">
+<!-- TopNavBar Component -->
+<nav class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-white/5">
+<div class="flex justify-between items-center px-margin-desktop py-6 max-w-container-max mx-auto">
+<div class="font-headline-md text-headline-md tracking-tighter text-on-surface">Codexsec</div>
+<div class="hidden md:flex items-center gap-10">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer active:scale-95 transition-transform" href="#">Chapters</a>
+<a class="font-label-caps text-label-caps text-primary border-b-2 border-primary pb-1 transition-all duration-300" href="virtual_lab.html">Virtual Lab</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors cursor-pointer active:scale-95 transition-transform" href="#">Resources</a>
+
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:bg-white/5 transition-all duration-300 p-2 rounded-full cursor-pointer active:scale-95">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="text-on-surface-variant hover:bg-white/5 transition-all duration-300 p-2 rounded-full cursor-pointer active:scale-95">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="relative min-h-screen flex flex-col items-center justify-center pt-32 overflow-hidden px-margin-mobile md:px-margin-desktop">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-b from-black via-black/20 to-black z-10"></div>
+<img class="w-full h-full object-cover opacity-60" data-alt="A breathtaking cinematic wide shot of a deep space nebula with swirling clouds of violet, gold, and deep blue gas. Thousands of tiny, sharp stars punctuate the dark void, creating an immersive observatory experience. The lighting is high-contrast with dark shadows and luminous stellar highlights, aligning with a premium educational aesthetic of mystery and discovery." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvIxLuJ-JpJfW9KUBrCA8Ms2HItapeRuYfoxDGuC3X29QiijFFZ_bx-j7wgIXs5JtsG8cqZAjhKZue0ZNNHxxFc6TCSRqmTZimyXeFcJHoDJ7zgZ8fZbI7TGa-BdjC947iY_7Tq-wmHiLPYJvoP2mnxY-tSrVmqZNH3VKa33I_4-Tm1JEVFeE72U3VY8RmmxTRb9RNRw3kabjnGqCvsUpjkTk7Lvho73cGBsC_Kn09OIRuPe8nJ00pVp5UiISYqSDlcJdfFPr6WhpA">
+</div>
+<div class="relative z-20 text-center max-w-4xl">
+<span class="font-label-caps text-label-caps text-primary tracking-[0.3em] mb-6 block animate-pulse">INITIATING SEQUENCE</span>
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg mb-8 text-gradient uppercase tracking-widest leading-none">
+                EXPLORE PHYSICS
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto mb-12">
+                We bridge the gap between high school physics and the future of technology, collaborating with schools to integrate AI/ML, Data Science, and Cyber Security into the curriculum.
+            </p>
+<div class="flex flex-wrap justify-center gap-6">
+<button class="bg-on-surface text-background px-10 py-4 font-label-caps text-label-caps hover:bg-primary transition-all duration-300 transform hover:-translate-y-1" onclick="var grid = document.querySelector('h2'); if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });">
+                    START LEARNING
+                </button>
+<button class="bg-primary text-on-primary border border-primary px-10 py-4 font-label-caps text-label-caps hover:bg-white hover:text-black hover:border-white transition-all duration-300 transform hover:-translate-y-1" onclick="window.location.href='virtual_lab.html'">
+                    LAUNCH VIRTUAL LAB 🧪
+                </button>
+</div>
+</div>
+</section>
+<!-- Tech Categories Bento -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<!-- AI/ML -->
+<div class="md:col-span-2 group relative overflow-hidden h-[400px] border border-white/5 bg-surface-container-low transition-all duration-500 hover:border-primary/50">
+<img class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-110 transition-transform duration-700" data-alt="A sophisticated close-up of a neural network visualization with glowing golden nodes and thin crystalline connections. The aesthetic is clean and futuristic, set against a true black background with soft atmospheric blue glows. The composition is artistic and minimalist, representing the intersection of physics and artificial intelligence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHlQkh-E1TqwUmbqiaE4zZ-glwK3csXpUDmZLc8zPLzUHcPe3fFG_bbRMaTbuOfCgWwG2tzexOHosqGa4WDlwK3Sf742nQQRX1vjopnJfL09cc8oQeUQUBO9CJjr4LHug4NnS8_SwmJaP4Fv86PBb6y67oXiaiFLCkF2cZQWMjGaMyhd_3SOjVaKJNtDRz9RMPzhFSvkK4yJYGpqMP6-g6n8JKh98qUXT0L2PoSkgRKFfOONPoGxrD1JeiYZKemce9QcuoTJTh1e1d">
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-10">
+<span class="font-label-caps text-label-caps text-primary mb-2 block">ADVANCED COMPUTING</span>
+<h3 class="font-headline-md text-headline-md mb-4">AI / Machine Learning</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-sm">Applying thermodynamic laws to neural architecture and algorithmic efficiency.</p>
+</div>
+</div>
+<!-- Data Science -->
+<div class="md:col-span-1 group relative overflow-hidden h-[400px] border border-white/5 bg-surface-container-low transition-all duration-500 hover:border-secondary/50">
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10"></div>
+<div class="p-8 relative z-20 flex flex-col h-full justify-end">
+<span class="material-symbols-outlined text-secondary mb-4" data-icon="data_thresholding" style="font-size: 32px;">data_thresholding</span>
+<h3 class="font-headline-md text-headline-md mb-2">Data Science</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Statistical mechanics for the modern analyst.</p>
+</div>
+</div>
+<!-- Cyber Security -->
+<div class="md:col-span-1 group relative overflow-hidden h-[400px] border border-white/5 bg-surface-container-low transition-all duration-500 hover:border-error/50">
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10"></div>
+<div class="p-8 relative z-20 flex flex-col h-full justify-end">
+<span class="material-symbols-outlined text-error mb-4" data-icon="shield_lock" style="font-size: 32px;">shield_lock</span>
+<h3 class="font-headline-md text-headline-md mb-2">Cyber Security</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Quantum cryptography and secure communications.</p>
+</div>
+</div>
+<!-- Education -->
+<div class="md:col-span-4 group relative overflow-hidden h-[200px] border border-white/5 bg-surface-container-low transition-all duration-500 hover:bg-white/5">
+<div class="flex items-center justify-between h-full px-12">
+<div>
+<h3 class="font-headline-md text-headline-md">Educational Excellence</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Empowering 10th-grade minds with future-ready curricula.</p>
+</div>
+<button class="bg-white/5 border border-white/10 px-8 py-3 font-label-caps text-label-caps hover:bg-white/20 transition-all">LEARN MORE</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Curriculum Grid -->
+<section class="bg-surface-container-lowest py-section-gap border-y border-white/5">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="mb-20 text-center">
+<span class="font-label-caps text-label-caps text-primary tracking-widest mb-4 block">CORE CURRICULUM</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Physics Chapters</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<!-- Chapter: Light -->
+<div class="group cursor-pointer">
+<div class="aspect-video mb-6 overflow-hidden bg-black border border-white/5">
+<img class="w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500" data-alt="A minimalist abstract photograph of light refracting through a crystal prism, creating a sharp, brilliant spectrum of colors against a pitch-black background. The lighting is dramatic and scientific, with clean lines and sharp focus, reflecting the precision of physics educational materials." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDx_YYR4yeb5VfDa8ScGSSGrvkM7WGIB9fIb5Ta1KMWrpKI7K5YRO5QK-jsv1547k-4M6S2L7SlHuo3MEqqAmk1dkynKxS_8DFf16hElGYRkjvtCj70ZFiPKfaJWw_ZN8gnPjTVhgYz7kw3cG_YjOYryWlOJzBskTdbEWBlQaAHKoNvCTV5_uW_fzKFF22IMHE7giEW3PO-yQHttp4RAh0hkUmv1QnQJpyC3ksXVTAKYgsVRLyw7e7TYyZ6xLWSoXrahTM5bpgEctL-">
+</div>
+<h4 class="font-headline-md text-headline-md mb-2 group-hover:text-primary transition-colors">Light</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Reflection, refraction, and the electromagnetic spectrum.</p>
+</div>
+<!-- Chapter: Human Eye -->
+<div class="group cursor-pointer">
+<div class="aspect-video mb-6 overflow-hidden bg-black border border-white/5">
+<img class="w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500" data-alt="An extreme macro photograph of a human iris, showing intricate fibers and crystalline patterns in shades of deep amber and gold. The lighting is cinematic, focusing on the complex biological architecture as a masterpiece of optical physics. The background is pure black to emphasize the detail." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAi0oLQDm4TW-0Cwh2Vexw1j58UDB3mG2bzm7proD92g0rIA-2Ab808HF0WWJBat-HxtIemunOX_TK9dD4RAGF4wME_ZFez1Xs2xw9kxt1siMPyYd3YP8RwfEvHn_pdb9CI0jCm9sRycV_rSlxxYPQwFfJoGiPLmRjX3KObCB7OYhkBG49hVJyP0_Z514reJt_ChTl29O1cNuGa8AEz3h2YJQV5vi04ZHbuVO_btqys1kYoly9nsDCSwd-4V39ak25_1Q62g-UM2-FZ">
+</div>
+<h4 class="font-headline-md text-headline-md mb-2 group-hover:text-primary transition-colors">Human Eye</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">The physics of vision and optical instruments.</p>
+</div>
+<!-- Chapter: Electricity -->
+<div class="group cursor-pointer">
+<div class="aspect-video mb-6 overflow-hidden bg-black border border-white/5">
+<img class="w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500" data-alt="A long exposure photograph of electric blue currents and lightning-like sparks arcing between two electrodes in a dark laboratory. The scene is high-contrast, with vibrant atmospheric blue energy illuminating a minimalist workspace. The mood is high-tech and experimental." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_WuuhGwJN1QauT4oA_hFT4Z3wlzqKSVE0SKV_md9CNH6f5DEAGjH5wg1yjdS6dI2yrMg3GqBynQRmERBGvh2Y30x85rLceafZfrvqbUm_5INxhwgcPQGhmTNMutSFfS3l34NDo4q88btzUwvT5bt8pGr7ogPeUNxhxL4TsvA2ScPghBDlNYEOh41uby0fI47Iuz5YjcDzTox2yFu5OMOdzSZHmS1eg7eZf0IPza-6LKWUh-1ZYF-xy6ZrGwsjSCrUycIZR_lE1gw8">
+</div>
+<h4 class="font-headline-md text-headline-md mb-2 group-hover:text-primary transition-colors">Electricity</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Circuits, resistance, and potential difference.</p>
+</div>
+<!-- Chapter: Magnetic Effects -->
+<div class="group cursor-pointer">
+<div class="aspect-video mb-6 overflow-hidden bg-black border border-white/5">
+<img class="w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500" data-alt="A visual representation of magnetic field lines using iron filings and glowing neon filaments on a dark metallic surface. The composition is rhythmic and symmetrical, with gold and blue light accents suggesting the invisible forces of electromagnetism in a high-end cinematic style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCggQ3Z30QWo_hZUQsHRj7FL0nfkmz5sobV0xv3-4WH3fic9rQDFVpagSttF-WsFpFmEh2hBD2Vnn5uejsmy7S2QIqSojKw_ZJdY6_O1syceXVO_iADdGQPpw3c2Mhw18nOrM9SgY3q7NMi9A9FrqsjhLz4BNdorOC3Hhb_Gc8A7o5xw5NCxlVWZTB959rPv42GXCfqg_6uGcw81L4DeI3kDEsXecRUKARmZJn5LhN2B7y2aBhJdojX5QZdhCFS9nCnuv44fpSJS1t3">
+</div>
+<h4 class="font-headline-md text-headline-md mb-2 group-hover:text-primary transition-colors">Magnetic Effects</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Magnetic fields, electromagnetism, and motor principles.</p>
+</div>
+<!-- Chapter: Energy Sources -->
+<div class="group cursor-pointer">
+<div class="aspect-video mb-6 overflow-hidden bg-black border border-white/5">
+<img class="w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500" data-alt="A dramatic shot of a high-tech fusion reactor core or solar concentrator reflecting a brilliant white light. The metallic textures are cold and sharp, contrasting with the intense energy at the center. The aesthetic is clean, professional, and forward-looking, representing sustainable power." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJ3Z9ufFNRdWt5YN2GtzoRFkkyF3lEsi0O_AAYDuPQDWBDqavJ0b9jOPL48LwRi-u9XO4hIpc9ui7P1DQyBBIYrXpyGSCkprmcPuuEtuk9QHLlpeQ5gv_tHyx69DuFP1UJa9zqLKrjazfmYJpFbKd4_2vnmYCJKv8Vq7-sonsCk8Q5U9YtjltV5_ZYSXRi9hJRy3z6hAvPkQghLuZwAVP3QShbHVJyJvrAiqtwTXCKuOANKDclEOzqIeHTM3HYCm0nFNXvKyHBhvQ9">
+</div>
+<h4 class="font-headline-md text-headline-md mb-2 group-hover:text-primary transition-colors">Energy Sources</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Renewable and non-renewable energy transitions.</p>
+</div>
+<!-- Chapter: Our Environment -->
+<div class="group cursor-pointer">
+<div class="aspect-video mb-6 overflow-hidden bg-black border border-white/5">
+<img class="w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500" data-alt="A detailed forest ecosystem with sunlight passing through layered leaves, showing food chains, biodiversity, and environmental balance." src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&amp;fit=crop&amp;w=1200&amp;q=80">
+</div>
+<h4 class="font-headline-md text-headline-md mb-2 group-hover:text-primary transition-colors">Our Environment</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Ecosystems, energy flow, ozone, waste, and biodiversity.</p>
+</div>
+<!-- Chapter: Sustainability -->
+<div class="group cursor-pointer">
+<div class="aspect-video mb-6 overflow-hidden bg-black border border-white/5">
+<img class="w-full h-full object-cover opacity-60 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500" data-alt="A serene image of a futuristic, sustainable city model integrated with lush greenery, viewed from above. The model is illuminated by soft, naturalistic lighting with a palette of deep forest greens and sleek charcoal grays. It captures a vision of harmonious technology and environmental physics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBW8bOrVLNSOjWvA2bcN8nDirmFVw1ffAPuun_yLSZ0lsc4llb8G-Ya1hdQsqPKVRkorFJshRaYBZ5kSOrFlwmcQU-O7axGh1yyHXrssAPV5g2OeJJchNYj4jbsoOpmIYC22JidQ0znM4F2BfwHqMTbuaM6_jWoFI88sp1F8pvP7jCx1kxZp2lk6D67z_JYe2lUciCwrEEyQpw8qnz1-MG-NUZhR7WAJmL62kbRIOp9kc7qh6fIU4oCzZFiwMkSmpRORpyJuIlo_uYM">
+</div>
+<h4 class="font-headline-md text-headline-md mb-2 group-hover:text-primary transition-colors">Sustainability</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Environmental physics and long-term ecological balance.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Observatory Subscription -->
+<section class="relative py-section-gap overflow-hidden">
+<div class="absolute inset-0 bg-primary/5 blur-[120px] rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
+<div class="glass-card p-16 text-center max-w-4xl mx-auto border border-white/10 rounded-xl">
+<span class="material-symbols-outlined text-primary mb-6" data-icon="telescope" style="font-size: 48px;">satellite</span>
+<h2 class="font-display-lg text-headline-lg-mobile md:text-headline-lg mb-6 text-on-surface">The Observatory</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-xl mx-auto">
+                    Subscribe to our newsletter for weekly insights into particle physics, astronomical discoveries, and technological breakthroughs.
+                </p>
+<form class="flex flex-col md:flex-row gap-4 max-w-lg mx-auto">
+<input class="flex-grow bg-white/5 border border-white/20 px-6 py-4 font-label-caps text-label-caps focus:outline-none focus:border-primary transition-colors text-white" placeholder="ENTER YOUR EMAIL" type="email">
+<button class="bg-primary text-on-primary px-8 py-4 font-label-caps text-label-caps hover:bg-white hover:text-black transition-all">SUBSCRIBE</button>
+</form>
+<p class="mt-6 font-label-caps text-label-caps text-on-surface-variant/50 text-[10px]">NO SPAM. ONLY SCIENCE. DISCONNECT ANYTIME.</p>
+</div>
+</div>
+</section>
+<!-- Footer Component -->
+<footer class="bg-surface relative border-t border-white/5">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop py-section-gap max-w-container-max mx-auto">
+<div class="flex flex-col gap-6">
+<div class="font-headline-md text-headline-md text-primary">Codexsec</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Redefining physics education through the lens of modern computing and cosmic exploration.</p>
+</div>
+<div class="flex flex-col gap-4">
+<span class="font-label-caps text-label-caps text-on-surface mb-2">Curriculum</span>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="virtual_lab.html">Virtual Physics Lab</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Quantum Physics</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Data Science</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Cyber Sec</a>
+</div>
+<div class="flex flex-col gap-4">
+<span class="font-label-caps text-label-caps text-on-surface mb-2">Company</span>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Partnerships</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Careers</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Newsletter</a>
+</div>
+<div class="flex flex-col gap-4">
+<span class="font-label-caps text-label-caps text-on-surface mb-2">Legal</span>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<div class="mt-4 flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer" data-icon="language">language</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer" data-icon="share">share</span>
+</div>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-desktop py-8 border-t border-white/5 flex justify-between items-center">
+<p class="font-body-md text-body-md text-on-surface-variant">© 2024 Codexsec. All rights reserved.</p>
+<div class="flex gap-8">
+<span class="font-label-caps text-label-caps text-on-surface-variant cursor-pointer hover:text-on-surface">INSTAGRAM</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant cursor-pointer hover:text-on-surface">LINKEDIN</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant cursor-pointer hover:text-on-surface">TWITTER</span>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interactions for hovering cards
+        document.querySelectorAll('.group').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0px)';
+            });
+        });
+ 
+        // Simple scroll reveal for nav
+        let lastScroll = 0;
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                nav.style.transform = 'translateY(-100%)';
+            } else {
+                nav.style.transform = 'translateY(0)';
+            }
+            lastScroll = currentScroll;
+        });
+    </script>
+ 
+ 
+<script src="site-nav.js" defer></script>
+</body></html>

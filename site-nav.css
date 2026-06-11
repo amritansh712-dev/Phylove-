@@ -1,0 +1,208 @@
+.codex-content-toggle {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 10000;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(255, 212, 117, 0.45);
+  border-radius: 8px;
+  background: rgba(10, 10, 10, 0.88);
+  color: #ffd475;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(16px);
+}
+
+.codex-content-toggle:hover,
+.codex-content-toggle:focus-visible {
+  background: rgba(255, 212, 117, 0.12);
+  outline: none;
+}
+
+.codex-content-toggle svg {
+  width: 22px;
+  height: 22px;
+}
+
+.codex-content-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  background: rgba(0, 0, 0, 0.56);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.codex-content-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.codex-content-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10002;
+  width: min(390px, 92vw);
+  height: 100vh;
+  transform: translateX(-102%);
+  transition: transform 220ms ease;
+  background: #090909;
+  color: #e5e2e1;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 24px 0 70px rgba(0, 0, 0, 0.44);
+  font-family: "Hanken Grotesk", "DM Sans", Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.codex-content-panel.is-open {
+  transform: translateX(0);
+}
+
+.codex-content-head {
+  padding: 22px 20px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.codex-content-kicker {
+  display: block;
+  color: #ffd475;
+  font: 700 11px/1.2 "Space Grotesk", "DM Mono", monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+
+.codex-content-title {
+  margin: 0;
+  color: #fff;
+  font-size: 23px;
+  line-height: 1.15;
+  font-weight: 650;
+  letter-spacing: 0;
+}
+
+.codex-content-close {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #e5e2e1;
+  cursor: pointer;
+}
+
+.codex-content-close:hover,
+.codex-content-close:focus-visible {
+  color: #ffd475;
+  border-color: rgba(255, 212, 117, 0.42);
+  outline: none;
+}
+
+.codex-content-list {
+  overflow: auto;
+  padding: 12px 14px 24px;
+}
+
+.codex-content-home {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #fff;
+  text-decoration: none;
+  padding: 13px 12px;
+  border-radius: 8px;
+  background: rgba(255, 212, 117, 0.08);
+  border: 1px solid rgba(255, 212, 117, 0.16);
+  margin-bottom: 12px;
+  font-weight: 650;
+}
+
+.codex-content-home:hover {
+  border-color: rgba(255, 212, 117, 0.38);
+}
+
+.codex-chapter-block {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.codex-chapter-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 12px;
+  color: #f7f3ea;
+  text-decoration: none;
+  font-size: 15px;
+  line-height: 1.25;
+  font-weight: 650;
+}
+
+.codex-chapter-link:hover,
+.codex-chapter-link.is-current {
+  color: #ffd475;
+  background: rgba(255, 212, 117, 0.06);
+}
+
+.codex-chapter-meta {
+  display: block;
+  margin-top: 3px;
+  color: #9a8f7e;
+  font: 700 10px/1.2 "Space Grotesk", "DM Mono", monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.codex-subtopic-list {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 8px 8px 10px;
+  display: grid;
+  gap: 4px;
+}
+
+.codex-subtopic-link {
+  display: block;
+  color: #d1c5b1;
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 1.35;
+  padding: 8px 10px;
+  border-radius: 6px;
+}
+
+.codex-subtopic-link:hover,
+.codex-subtopic-link.is-current {
+  color: #fff;
+  background: rgba(169, 199, 255, 0.09);
+}
+
+.codex-page-home .codex-content-toggle {
+  bottom: 24px;
+}
+
+@media (max-width: 640px) {
+  .codex-content-toggle {
+    left: 14px;
+    bottom: 14px;
+  }
+
+  .codex-content-head {
+    padding: 18px 16px 14px;
+  }
+}
